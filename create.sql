@@ -29,7 +29,14 @@ DROP TYPE IF EXISTS TODAY, TASK_STATE, COLOR, NOTIFICATION_TYPE CASCADE;
 CREATE DOMAIN TODAY AS TIMESTAMP DEFAULT CURRENT_TIMESTAMP CHECK (VALUE <= CURRENT_TIMESTAMP);
 
 CREATE TYPE TASK_STATE AS ENUM ('created', 'member_assigned', 'completed');
-CREATE TYPE NOTIFICATION_TYPE AS ENUM ('InvitationNotification', 'ThreadNotification', 'ThreadCommentNotification', 'TaskNotification', 'TaskCommentNotification', 'ProjectNotification');
+CREATE TYPE NOTIFICATION_TYPE AS ENUM (
+    'invitation_notification',
+    'thread_notification',
+    'thread_comment_notification',
+    'task_notification',
+    'task_comment_notification',
+    'project_notification'
+);
 
 CREATE DOMAIN COLOR AS INTEGER;
 
@@ -53,7 +60,7 @@ CREATE TABLE project (
     last_modification_date TIMESTAMP,
     archived BOOLEAN NOT NULL DEFAULT false,
     coordinator INTEGER NOT NULL,
-    FOREIGN KEY (coordinator) REFERENCES user_profile
+    FOREIGN KEY (coordinator) REFERENCES user_profile ON DELETE RESTRICT
 );
 
 CREATE TABLE task_group (
@@ -63,7 +70,7 @@ CREATE TABLE task_group (
     creation_date TODAY NOT NULL,
     position INTEGER NOT NULL,
     project INTEGER NOT NULL,
-    FOREIGN KEY (project) REFERENCES project,
+    FOREIGN KEY (project) REFERENCES project ON DELETE CASCADE,
     UNIQUE (position, project) DEFERRABLE INITIALLY DEFERRED
 );
 
@@ -72,8 +79,8 @@ CREATE TABLE project_invitation (
     expiration_date TIMESTAMP NOT NULL,
     creator INTEGER NOT NULL,
     project INTEGER NOT NULL,
-    FOREIGN KEY (creator) REFERENCES user_profile,
-    FOREIGN KEY (project) REFERENCES project
+    FOREIGN KEY (creator) REFERENCES user_profile ON DELETE CASCADE,
+    FOREIGN KEY (project) REFERENCES project ON DELETE CASCADE
 );
 
 CREATE TABLE project_timeline_action (
@@ -81,7 +88,7 @@ CREATE TABLE project_timeline_action (
     timestamp TODAY NOT NULL,
     description TEXT NOT NULL,
     project INTEGER NOT NULL,
-    FOREIGN KEY (project) REFERENCES project
+    FOREIGN KEY (project) REFERENCES project ON DELETE CASCADE
 );
 
 CREATE TABLE task (
@@ -91,11 +98,11 @@ CREATE TABLE task (
     creation_date TODAY NOT NULL,
     edit_date TIMESTAMP CHECK (edit_date <= CURRENT_TIMESTAMP),
     state TASK_STATE NOT NULL DEFAULT 'created',
-    creator INTEGER NOT NULL,
+    creator INTEGER,
     position INTEGER NOT NULL,
     task_group INTEGER NOT NULL,
-    FOREIGN KEY (creator) REFERENCES user_profile,
-    FOREIGN KEY (task_group) REFERENCES task_group,
+    FOREIGN KEY (creator) REFERENCES user_profile ON DELETE SET NULL,
+    FOREIGN KEY (task_group) REFERENCES task_group ON DELETE CASCADE,
     UNIQUE (position, task_group) DEFERRABLE INITIALLY DEFERRED
 );
 
@@ -104,10 +111,10 @@ CREATE TABLE task_comment (
     content TEXT NOT NULL,
     creation_date TODAY NOT NULL,
     edit_date TIMESTAMP CHECK (edit_date <= CURRENT_TIMESTAMP),
-    author INTEGER NOT NULL,
+    author INTEGER,
     task INTEGER NOT NULL,
-    FOREIGN KEY (author) REFERENCES user_profile,
-    FOREIGN KEY (task) REFERENCES task
+    FOREIGN KEY (author) REFERENCES user_profile ON DELETE SET NULL,
+    FOREIGN KEY (task) REFERENCES task ON DELETE CASCADE
 );
 
 CREATE TABLE tag (
@@ -116,7 +123,7 @@ CREATE TABLE tag (
     description TEXT,
     color COLOR NOT NULL,
     project INTEGER NOT NULL,
-    FOREIGN KEY (project) REFERENCES project
+    FOREIGN KEY (project) REFERENCES project ON DELETE CASCADE
 );
 
 CREATE TABLE thread (
@@ -125,10 +132,10 @@ CREATE TABLE thread (
     content TEXT NOT NULL,
     creation_date TODAY NOT NULL,
     edit_date TIMESTAMP CHECK (edit_date <= CURRENT_TIMESTAMP),
-    author INTEGER NOT NULL,
+    author INTEGER,
     project INTEGER NOT NULL,
-    FOREIGN KEY (author) REFERENCES user_profile,
-    FOREIGN KEY (project) REFERENCES project
+    FOREIGN KEY (author) REFERENCES user_profile ON DELETE SET NULL,
+    FOREIGN KEY (project) REFERENCES project ON DELETE CASCADE
 );
 
 CREATE TABLE thread_comment (
@@ -137,9 +144,9 @@ CREATE TABLE thread_comment (
     creation_date TODAY NOT NULL,
     edit_date TIMESTAMP CHECK (edit_date <= CURRENT_TIMESTAMP),
     thread INTEGER NOT NULL,
-    author INTEGER NOT NULL,
-    FOREIGN KEY (thread) REFERENCES thread,
-    FOREIGN KEY (author) REFERENCES user_profile
+    author INTEGER,
+    FOREIGN KEY (thread) REFERENCES thread ON DELETE CASCADE,
+    FOREIGN KEY (author) REFERENCES user_profile ON DELETE SET NULL
 );
 
 CREATE TABLE notification (
@@ -154,13 +161,13 @@ CREATE TABLE notification (
     task INTEGER,
     task_comment INTEGER,
     project INTEGER,
-    FOREIGN KEY (notified_user) REFERENCES user_profile,
-    FOREIGN KEY (invitation) REFERENCES project_invitation,
-    FOREIGN KEY (thread) REFERENCES thread,
-    FOREIGN KEY (thread_comment) REFERENCES thread_comment,
-    FOREIGN KEY (task) REFERENCES task,
-    FOREIGN KEY (task_comment) REFERENCES task_comment,
-    FOREIGN KEY (project) REFERENCES project,
+    FOREIGN KEY (notified_user) REFERENCES user_profile ON DELETE CASCADE,
+    FOREIGN KEY (invitation) REFERENCES project_invitation ON DELETE CASCADE,
+    FOREIGN KEY (thread) REFERENCES thread ON DELETE CASCADE,
+    FOREIGN KEY (thread_comment) REFERENCES thread_comment ON DELETE CASCADE,
+    FOREIGN KEY (task) REFERENCES task ON DELETE CASCADE,
+    FOREIGN KEY (task_comment) REFERENCES task_comment ON DELETE CASCADE,
+    FOREIGN KEY (project) REFERENCES project ON DELETE CASCADE,
     CHECK (
         (invitation IS NOT NULL)::INTEGER + (thread IS NOT NULL)::INTEGER +
         (thread_comment IS NOT NULL)::INTEGER + (task IS NOT NULL)::INTEGER +
@@ -174,10 +181,10 @@ CREATE TABLE report (
     reason TEXT NOT NULL,
     project INTEGER,
     user_profile INTEGER,
-    creator INTEGER NOT NULL,
-    FOREIGN KEY (project) REFERENCES project,
-    FOREIGN KEY (user_profile) REFERENCES user_profile,
-    FOREIGN KEY (creator) REFERENCES user_profile,
+    creator INTEGER,
+    FOREIGN KEY (project) REFERENCES project ON DELETE CASCADE,
+    FOREIGN KEY (user_profile) REFERENCES user_profile ON DELETE CASCADE,
+    FOREIGN KEY (creator) REFERENCES user_profile ON DELETE SET NULL,
     CHECK ((project IS NULL)::INTEGER + (user_profile IS NULL)::INTEGER = 1)
 );
 
@@ -186,24 +193,24 @@ CREATE TABLE project_member (
     project INTEGER,
     is_favorite BOOLEAN NOT NULL DEFAULT false,
     PRIMARY KEY (user_profile, project),
-    FOREIGN KEY (user_profile) REFERENCES user_profile,
-    FOREIGN KEY (project) REFERENCES project
+    FOREIGN KEY (user_profile) REFERENCES user_profile ON DELETE CASCADE,
+    FOREIGN KEY (project) REFERENCES project ON DELETE CASCADE
 );
 
 CREATE TABLE task_assignee (
     user_profile INTEGER,
     task INTEGER,
     PRIMARY KEY (user_profile, task),
-    FOREIGN KEY (user_profile) REFERENCES user_profile,
-    FOREIGN KEY (task) REFERENCES task
+    FOREIGN KEY (user_profile) REFERENCES user_profile ON DELETE CASCADE,
+    FOREIGN KEY (task) REFERENCES task ON DELETE CASCADE
 );
 
 CREATE TABLE task_tag (
     task INTEGER,
     tag INTEGER,
     PRIMARY KEY (task, tag),
-    FOREIGN KEY (task) REFERENCES task,
-    FOREIGN KEY (tag) REFERENCES tag
+    FOREIGN KEY (task) REFERENCES task ON DELETE CASCADE,
+    FOREIGN KEY (tag) REFERENCES tag ON DELETE CASCADE
 );
 
 ------------------------------------------------------------
