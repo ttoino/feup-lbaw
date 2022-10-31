@@ -20,7 +20,7 @@ DROP TABLE IF EXISTS
     task_tag
 CASCADE;
 
-DROP TYPE IF EXISTS TODAY, TASK_STATE, COLOR CASCADE;
+DROP TYPE IF EXISTS TODAY, TASK_STATE, COLOR, NOTIFICATION_TYPE CASCADE;
 
 ------------------------------------------------------------
 -- Types
@@ -29,6 +29,7 @@ DROP TYPE IF EXISTS TODAY, TASK_STATE, COLOR CASCADE;
 CREATE DOMAIN TODAY AS TIMESTAMP DEFAULT CURRENT_TIMESTAMP CHECK (VALUE <= CURRENT_TIMESTAMP);
 
 CREATE TYPE TASK_STATE AS ENUM ('created', 'member_assigned', 'completed');
+CREATE TYPE NOTIFICATION_TYPE AS ENUM ('InvitationNotification', 'ThreadNotification', 'ThreadCommentNotification', 'TaskNotification', 'TaskCommentNotification', 'ProjectNotification');
 
 CREATE DOMAIN COLOR AS INTEGER;
 
@@ -143,6 +144,7 @@ CREATE TABLE thread_comment (
 
 CREATE TABLE notification (
     id SERIAL PRIMARY KEY,
+    type NOTIFICATION_TYPE NOT NULL,
     creation_date TODAY NOT NULL,
     dismissed BOOLEAN NOT NULL DEFAULT FALSE,
     notified_user INTEGER NOT NULL,
@@ -211,6 +213,12 @@ CREATE TABLE task_tag (
 -- IDX101
 CREATE INDEX notification_search_idx ON notification USING HASH (notified_user);
 
+-- IDX102
+CREATE INDEX task_group_project ON task_group USING HASH (project);
+
+-- IDX103
+CREATE INDEX task_task_group ON task USING HASH (task_group);
+
 -- IDX201
 -- introduce auxiliary field to support FTS
 ALTER TABLE task ADD COLUMN fts_search TSVECTOR;
@@ -276,7 +284,7 @@ LANGUAGE plpgsql;
 --
 DROP TRIGGER IF EXISTS task_search_update ON task;
 CREATE TRIGGER task_search_update
-    BEFORE INSERT OR UPDATE ON task
+    BEFORE INSERT OR UPDATE of name, description ON task
     FOR EACH ROW
     EXECUTE PROCEDURE task_fts_update();
 --
@@ -407,3 +415,99 @@ CREATE TRIGGER invalid_task_tag
     BEFORE INSERT ON task_tag
     FOR EACH ROW
     EXECUTE FUNCTION invalid_task_tag();
+
+-- TRIGGER04
+CREATE OR REPLACE FUNCTION validate_notification_type() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    -- in the future we can support multiple entities referenced.
+    IF ((NEW.invitation IS NOT NULL)::INTEGER + (NEW.thread IS NOT NULL)::INTEGER + (NEW.thread_comment IS NOT NULL)::INTEGER + (NEW.task IS NOT NULL)::INTEGER + (NEW.task_comment IS NOT NULL)::INTEGER + (NEW.project IS NOT NULL)::INTEGER = 1) THEN
+        RETURN NEW;
+    ELSE
+        RAISE EXCEPTION 'Invalid notification data for %!', NEW.type;
+    END IF;
+END
+$BODY$
+LANGUAGE plpgsql;
+--
+DROP TRIGGER IF EXISTS validate_notification_type ON notification;
+CREATE TRIGGER validate_notification_type
+    BEFORE INSERT ON notification
+    FOR EACH ROW
+    EXECUTE FUNCTION validate_notification_type();
+
+-- TRIGGER05
+CREATE OR REPLACE FUNCTION validate_assignee_project_member() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF EXISTS (SELECT * FROM project_member pm JOIN task t ON t.id = NEW.task JOIN task_group tg ON tg.id = t.task_group WHERE pm.user_profile = NEW.user_profile AND tg.project = pm.project) THEN
+        RETURN NEW;
+    ELSE
+        RAISE EXCEPTION 'Task assignee must be a member of the task''s project!';
+    END IF;
+END
+$BODY$
+LANGUAGE plpgsql;
+--
+DROP TRIGGER IF EXISTS validate_assignee_project_member ON notification;
+CREATE TRIGGER validate_assignee_project_member
+    BEFORE INSERT OR UPDATE ON task_assignee
+    FOR EACH ROW
+    EXECUTE FUNCTION validate_assignee_project_member();
+
+-- TRIGGER06
+CREATE OR REPLACE FUNCTION validate_task_comment_author_project_member() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF EXISTS (SELECT * FROM project_member pm JOIN task t ON t.id = NEW.task JOIN task_group tg ON tg.id = t.task_group WHERE pm.user_profile = NEW.author AND tg.project = pm.project) THEN
+        RETURN NEW;
+    ELSE
+        RAISE EXCEPTION 'Task comment author must be a member of the task''s project!';
+    END IF;
+END
+$BODY$
+LANGUAGE plpgsql;
+--
+DROP TRIGGER IF EXISTS validate_task_comment_author_project_member ON notification;
+CREATE TRIGGER validate_task_comment_author_project_member
+    BEFORE INSERT ON task_comment
+    FOR EACH ROW
+    EXECUTE FUNCTION validate_task_comment_author_project_member();
+
+-- TRIGGER07
+CREATE OR REPLACE FUNCTION validate_thread_author_project_member() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF EXISTS (SELECT * FROM project_member WHERE project = NEW.project AND user_profile = NEW.author) THEN
+        RETURN NEW;
+    ELSE
+        RAISE EXCEPTION 'Thread author must be a member of the thread''s project!';
+    END IF;
+END
+$BODY$
+LANGUAGE plpgsql;
+--
+DROP TRIGGER IF EXISTS validate_thread_author_project_member ON notification;
+CREATE TRIGGER validate_thread_author_project_member
+    BEFORE INSERT ON thread
+    FOR EACH ROW
+    EXECUTE FUNCTION validate_thread_author_project_member();
+
+-- TRIGGER08
+CREATE OR REPLACE FUNCTION validate_thread_comment_author_project_member() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF EXISTS (SELECT * FROM project_member pm JOIN thread t ON NEW.thread = t.id WHERE t.project = pm.project AND pm.user_profile = NEW.author) THEN
+        RETURN NEW;
+    ELSE
+        RAISE EXCEPTION 'Thread author must be a member of the thread''s project!';
+    END IF;
+END
+$BODY$
+LANGUAGE plpgsql;
+--
+DROP TRIGGER IF EXISTS validate_thread_comment_author_project_member ON notification;
+CREATE TRIGGER validate_thread_comment_author_project_member
+    BEFORE INSERT ON thread_comment
+    FOR EACH ROW
+    EXECUTE FUNCTION validate_thread_comment_author_project_member();
