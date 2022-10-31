@@ -1097,70 +1097,70 @@ VALUES
         1,
         'molestie in, tempus',
         'Cras dictum ultricies ligula. Nullam enim.',
-        x 'f4b8b7' :: COLOR,
+        x'f4b8b7'::COLOR,
         3
     ),
     (
         2,
         'tellus eu augue',
         'dui lectus rutrum urna, nec luctus',
-        x '8ed863' :: COLOR,
+        x'8ed863'::COLOR,
         2
     ),
     (
         3,
         'varius et, euismod',
         'risus. Duis a mi fringilla mi',
-        x '8fd1e0' :: COLOR,
+        x'8fd1e0'::COLOR,
         3
     ),
     (
         4,
         'magna. Duis dignissim',
         'id ante dictum cursus. Nunc mauris',
-        x '3282ad' :: COLOR,
+        x'3282ad'::COLOR,
         5
     ),
     (
         5,
         'iaculis quis, pede.',
         'facilisi. Sed neque. Sed eget lacus.',
-        x '75dd77' :: COLOR,
+        x'75dd77'::COLOR,
         12
     ),
     (
         6,
         'dictum magna. Ut',
         'Fusce aliquet magna a neque. Nullam',
-        x '35ea5d' :: COLOR,
+        x'35ea5d'::COLOR,
         2
     ),
     (
         7,
         'augue ac ipsum.',
         'molestie in, tempus eu, ligula. Aenean',
-        x '009179' :: COLOR,
+        x'009179'::COLOR,
         2
     ),
     (
         8,
         'parturient montes, nascetur',
         'Morbi accumsan laoreet ipsum. Curabitur consequat,',
-        x '14369b' :: COLOR,
+        x'14369b'::COLOR,
         10
     ),
     (
         9,
         'eu enim. Etiam',
         'ut, nulla. Cras eu tellus eu',
-        x '4dc429' :: COLOR,
+        x'4dc429'::COLOR,
         4
     ),
     (
         10,
         'lacus pede sagittis',
         'Curae Phasellus ornare. Fusce mollis. Duis',
-        x 'b5eeff' :: COLOR,
+        x'b5eeff'::COLOR,
         5
     );
 
