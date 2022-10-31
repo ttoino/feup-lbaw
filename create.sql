@@ -175,7 +175,8 @@ CREATE TABLE report (
     creator INTEGER NOT NULL,
     FOREIGN KEY (project) REFERENCES project,
     FOREIGN KEY (user_profile) REFERENCES user_profile,
-    FOREIGN KEY (creator) REFERENCES user_profile
+    FOREIGN KEY (creator) REFERENCES user_profile,
+    CHECK ((project IS NULL)::INTEGER + (user_profile IS NULL)::INTEGER = 1)
 );
 
 CREATE TABLE project_member (
