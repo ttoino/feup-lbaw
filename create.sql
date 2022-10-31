@@ -221,10 +221,10 @@ CREATE TABLE task_tag (
 CREATE INDEX notification_search_idx ON notification USING HASH (notified_user);
 
 -- IDX102
-CREATE INDEX task_group_project ON task_group USING HASH (project);
+CREATE INDEX task_group_project ON task_group (project, position);
 
 -- IDX103
-CREATE INDEX task_task_group ON task USING HASH (task_group);
+CREATE INDEX task_task_group ON task (task_group, position);
 
 -- IDX201
 -- introduce auxiliary field to support FTS
