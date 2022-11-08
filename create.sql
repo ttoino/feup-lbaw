@@ -337,7 +337,7 @@ CREATE TRIGGER project_search_update
     FOR EACH ROW
     EXECUTE PROCEDURE project_fts_update();
 -- create index to make searches performant on the FTS auxiliary field
-CREATE INDEX project_fts_idx ON task USING GIN (fts_search);
+CREATE INDEX project_fts_idx ON project USING GIN (fts_search);
 
 ------------------------------------------------------------
 -- Triggers
