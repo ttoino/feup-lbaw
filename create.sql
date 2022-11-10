@@ -243,7 +243,7 @@ BEGIN
         NEW.fts_search = (
             setweight(to_tsvector('english', NEW.name), 'A') ||
             setweight(to_tsvector('english', COALESCE(NEW.description, '')), 'B') ||
-            setweight(to_tsvector('english', (SELECT task_tag_names FROM fts_task_tag WHERE task_id = NEW.id)), 'C')
+            setweight(to_tsvector('english', COALESCE((SELECT task_tag_names FROM fts_task_tag WHERE task_id = NEW.id), '')), 'C')
         );
     END IF;
     IF TG_OP = 'UPDATE' THEN
@@ -251,7 +251,7 @@ BEGIN
             NEW.fts_search = (
                 setweight(to_tsvector('english', NEW.name), 'A') ||
                 setweight(to_tsvector('english', COALESCE(NEW.description, '')), 'B') ||
-                setweight(to_tsvector('english', (SELECT task_tag_names FROM fts_task_tag WHERE task_id = NEW.id)), 'C')
+                setweight(to_tsvector('english', COALESCE((SELECT task_tag_names FROM fts_task_tag WHERE task_id = NEW.id), '')), 'C')
             );  
         END IF;
     END IF;
@@ -267,9 +267,7 @@ BEGIN
         UPDATE task SET fts_search=(
             setweight(to_tsvector('english', (SELECT name FROM curr_task)), 'A') || 
             setweight(to_tsvector('english', COALESCE((SELECT description FROM curr_task), '')), 'B') ||
-            setweight(to_tsvector('english', (
-                SELECT task_tag_names FROM fts_task_tag WHERE task_id = (SELECT id FROM curr_task)
-            )), 'C')
+            setweight(to_tsvector('english', COALESCE((SELECT task_tag_names FROM fts_task_tag WHERE task_id = (SELECT id FROM curr_task)), '')), 'C')
         ) WHERE id = (SELECT id FROM curr_task);
     END IF;
     IF TG_OP = 'DELETE' THEN
@@ -278,9 +276,7 @@ BEGIN
         UPDATE task SET fts_search=(
             setweight(to_tsvector('english', (SELECT name FROM curr_task)), 'A') || 
             setweight(to_tsvector('english', COALESCE((SELECT description FROM curr_task), '')), 'B') ||
-            setweight(to_tsvector('english', (
-                SELECT task_tag_names FROM fts_task_tag WHERE task_id = (SELECT id FROM curr_task)
-            )), 'C')
+            setweight(to_tsvector('english', COALESCE((SELECT task_tag_names FROM fts_task_tag WHERE task_id = (SELECT id FROM curr_task)), '')), 'C')
         ) WHERE id = (SELECT id FROM curr_task);  
     END IF;
     -- cleanup

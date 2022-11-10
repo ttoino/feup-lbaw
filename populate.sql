@@ -341,7 +341,6 @@ VALUES
     ('2022-07-08', 1, 1),
     ('2022-08-19', 3, 1),
     ('2021-10-24', 11, 1);
-
 INSERT INTO
     task(
         id,
@@ -357,7 +356,7 @@ INSERT INTO
 VALUES
     (
         1,
-        'Information serch',
+        'Information search',
         'Nothing done',
         '2021-06-09',
         '2021-06-13',
@@ -722,6 +721,22 @@ VALUES
         x'b5eeff'::COLOR,
         1
     );
+
+INSERT INTO
+    task_tag
+VALUES
+    (1, 1),
+    (1, 3),
+    (2, 3),
+    (5, 2),
+    (5, 6),
+    (5, 7),
+    (6, 6),
+    (10, 2),
+    (10, 7),
+    (12, 1),
+    (14, 1),
+    (14, 3);
 
 INSERT INTO
     report(
