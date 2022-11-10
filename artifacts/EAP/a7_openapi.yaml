@@ -1,42 +1,49 @@
 openapi: 3.0.0
 
 info:
-  version: '1.0'
-  title: 'LBAW Atrellado Web API'
-  description: 'Web Resources Specification (A7) for Atrellado'
+  version: "1.0"
+  title: "LBAW Atrellado Web API"
+  description: "Web Resources Specification (A7) for Atrellado"
 
 servers:
-- url: http://lbaw.fe.up.pt # TODO: change this
-  description: Production server # TODO: change this
+  - url: http://lbaw.fe.up.pt # TODO: change this
+    description: Production server # TODO: change this
 
 externalDocs:
   description: Find more info here.
   url: https://web.fe.up.pt/~ssn/wiki/teach/lbaw/medialib/a07 # TODO: change this
 
 tags:
-  - name: 'M01: Authentication and User Profile'
-  - name: 'M02: User Administration/Static pages'
-  - name: 'M03: Projects'
-  - name: 'M04: Search'
+  - name: "M01: Authentication and User Profile"
+  - name: "M02: User Administration/Static pages"
+  - name: "M03: Projects"
+  - name: "M04: Search"
 
 paths:
+  /:
+    get:
+      operationId: R001
+      responses:
+        "200":
+          description: "Ok."
+
   /login:
     get:
       operationId: R101
-      summary: 'R101: Login Form'
-      description: 'Provide login form. Access: PUB'
+      summary: "R101: Login Form"
+      description: "Provide login form. Access: PUB"
       tags:
-        - 'M01: Authentication and User Profile'
+        - "M01: Authentication and User Profile"
       responses:
-        '200':
-          description: 'Ok, Show Log-in UI'
+        "200":
+          description: "Ok, Show Log-in UI"
 
     post:
       operationId: R102
-      summary: 'R102: Login action'
-      description: 'Process the login form data. Access: PUB'
+      summary: "R102: Login action"
+      description: "Process the login form data. Access: PUB"
       tags:
-        - 'M01: Authentication and User Profile'
+        - "M01: Authentication and User Profile"
       requestBody:
         required: true
         content:
@@ -53,4 +60,212 @@ paths:
                 - password
 
       responses:
-        '200'
+        "302":
+          description: "Redirect after processing the login credentials"
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: "Successful authentication: redirecting to home page"
+                  value: "/"
+                302Error:
+                  description: "Failed to authenticate user, going back to login page"
+                  value: "/login"
+
+  /login/recover:
+    get:
+      operationId: R102 # FIXME: correctly assign operation Ids
+      responses:
+        "200":
+          description: "Ok."
+
+    post:
+      operationId: R101 # FIXME
+      responses:
+        "200":
+          description: "Ok."
+
+  /logout:
+    post:
+      operationId: R103
+      summary: "R103: Logout Action"
+      description: "Logout the current authenticated user. Access: USR, COORD, ADM"
+      tags:
+        - "M01: Authentication and User Profile"
+      responses:
+        "302":
+          description: "Redirect after processing logout."
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: "Successful logout. Redirect to login form."
+                  value: "/login"
+
+  /register:
+    get:
+      operationId: R104
+      summary: "R104: Register Form"
+      description: "Provide new user registration form. Access: PUB"
+      tags:
+        - "M01: Authentication and User Profile"
+      responses:
+        "200":
+          description: "Ok. Show Sign-Up UI"
+
+    post:
+      operationId: R105
+      summary: "R105: Register Action"
+      description: "Processes the user registration form data. Access: PUB"
+      tags:
+        - "M01: Authentication and User Profile"
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                picture:
+                  type: string
+                  format: binary
+                password:
+                  type: string
+              required:
+                - name
+                - email
+                - password
+
+      responses:
+        "302":
+          description: "Redirect after processing the new user information."
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: "Successful authentication. Redirect to user profile."
+                  value: "/users/{id}"
+                302Failure:
+                  description: "Failed authentication. Redirect to login form."
+                  value: "/login"
+
+  /search:
+    get:
+      operationId: R106
+      responses:
+        "200":
+          description: "Ok. Search"
+
+  /user/{id}:
+    get:
+      operationId: R107
+      responses:
+        "200":
+          description: "Ok."
+
+  /project/{id}:
+    get:
+      operationId: R108
+      responses:
+        "200":
+          description: "Ok."
+
+  /project/{id}/info:
+    get:
+      operationId: R101 # FIXME
+      responses:
+        "200":
+          description: "Ok."
+
+  /project/{id}/forum:
+    get:
+      operationId: R109
+      responses:
+        "200":
+          description: "Ok."
+
+  /project/{id}/forum/{threadId}:
+    get:
+      operationId: R110
+      responses:
+        "200":
+          description: "Ok."
+
+  /project/{id}/timeline:
+    get:
+      operationId: R111
+      responses:
+        "200":
+          description: "Ok."
+
+  /project/{id}/task/{taskId}:
+    get:
+      operationId: R109 # FIXME
+      responses:
+        "200":
+          description: "Ok."
+
+  /about:
+    get:
+      operationId: R201
+      responses:
+        "200":
+          description: "Ok."
+
+  /faq:
+    get:
+      operationId: R202
+      responses:
+        "200":
+          description: "Ok."
+
+  /contacts:
+    get:
+      operationId: R203
+      responses:
+        "200":
+          description: "Ok."
+
+  /services:
+    get:
+      operationId: R204
+      responses:
+        "200":
+          description: "Ok."
+
+  /admin:
+    get:
+      operationId: R301
+      responses:
+        "200":
+          description: "Ok."
+
+  /api:
+    get:
+      operationId: R401
+      responses:
+        "200":
+          description: "API health check endpoint"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+              examples:
+                200Success:
+                  description: "API is responding normally to requests"
+                  value:
+                    ok: true
