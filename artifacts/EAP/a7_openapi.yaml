@@ -1,0 +1,56 @@
+openapi: 3.0.0
+
+info:
+  version: '1.0'
+  title: 'LBAW Atrellado Web API'
+  description: 'Web Resources Specification (A7) for Atrellado'
+
+servers:
+- url: http://lbaw.fe.up.pt # TODO: change this
+  description: Production server # TODO: change this
+
+externalDocs:
+  description: Find more info here.
+  url: https://web.fe.up.pt/~ssn/wiki/teach/lbaw/medialib/a07 # TODO: change this
+
+tags:
+  - name: 'M01: Authentication and User Profile'
+  - name: 'M02: User Administration/Static pages'
+  - name: 'M03: Projects'
+  - name: 'M04: Search'
+
+paths:
+  /login:
+    get:
+      operationId: R101
+      summary: 'R101: Login Form'
+      description: 'Provide login form. Access: PUB'
+      tags:
+        - 'M01: Authentication and User Profile'
+      responses:
+        '200':
+          description: 'Ok, Show Log-in UI'
+
+    post:
+      operationId: R102
+      summary: 'R102: Login action'
+      description: 'Process the login form data. Access: PUB'
+      tags:
+        - 'M01: Authentication and User Profile'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+
+      responses:
+        '200'
