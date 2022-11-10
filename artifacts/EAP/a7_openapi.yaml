@@ -74,19 +74,6 @@ paths:
                   description: "Failed to authenticate user, going back to login page"
                   value: "/login"
 
-  /login/recover:
-    get:
-      operationId: R102 # FIXME: correctly assign operation Ids
-      responses:
-        "200":
-          description: "Ok."
-
-    post:
-      operationId: R101 # FIXME
-      responses:
-        "200":
-          description: "Ok."
-
   /logout:
     post:
       operationId: R103
@@ -269,3 +256,147 @@ paths:
                   description: "API is responding normally to requests"
                   value:
                     ok: true
+
+  /api/users:
+    get:
+      operationId: R402
+      responses:
+        "200":
+          description: "Ok."
+    post:
+      operationId: R404
+      responses:
+        "200":
+          description: "Ok."
+
+  /api/users/{id}:
+    get:
+      operationId: R403
+      responses:
+        "200":
+          description: "Ok."
+    
+    put:
+      operationId: R305
+      responses:
+        "200":
+          description: "Ok."
+
+  /api/project:
+    post:
+      operationId: R405
+      responses:
+        "200":
+          description: "Ok."
+
+  /api/project/{id}:
+    get:
+      operationId: R406
+      responses:
+        "200":
+          description: "Ok."
+
+    put:
+      operationId: R407
+      responses:
+        "200":
+          description: "Ok."
+    
+    delete:
+      operationId: R408
+      responses:
+        "200":
+          description: "Ok."
+
+  /api/project/{id}/archive:
+    put:
+      operationId: R409
+      responses:
+        "200":
+          description: "Ok."
+
+  /api/tasks:
+    get:
+      operationId: R410
+      responses:
+        "200":
+          description: "Ok."
+          
+    post:
+      operationId: R411
+      responses:
+        "200":
+          description: "Ok."
+
+  /api/task/{id}:
+    get:
+      operationId: R112
+      responses:
+        "200":
+          description: "Ok."
+
+    post:
+      operationId: R113
+      responses:
+        "200":
+          description: "Ok."
+
+    put:
+      operationId: R113
+      responses:
+        "200":
+          description: "Ok."
+
+  /api/task/{id}/assign:
+    post:
+      operationId: R420 # FIXME
+      responses:
+        "200":
+          description: "Ok."
+
+  /api/task/{id}/addTag/{id}/:
+    post:
+      operationId: R421 # FIXME
+      responses:
+        "200":
+          description: "Ok."
+
+  /api/task/{id}/archive:
+    put:
+      operationId: R114
+      responses:
+        "200":
+          description: "Ok."
+
+  /api/groups:
+    get:
+      operationId: R115
+      responses:
+        "200":
+          description: "Ok."
+    
+    post:
+      operationId: R115
+      responses:
+        "200":
+          description: "Ok."
+  
+  /api/groups/{id}:
+    get:
+      operationId: R116
+      responses:
+        "200":
+          description: "Ok."
+
+    post:
+      operationId: R117
+      responses:
+        "200":
+          description: "Ok."
+
+    put:
+      operationId: R118
+      responses:
+        "200":
+          description: "Ok."
+      
