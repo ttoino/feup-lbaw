@@ -33,7 +33,7 @@ paths:
       summary: "R101: Login Form"
       description: "Provide login form. Access: PUB"
       tags:
-        - "M01: Authentication and User Profile"
+        - "M01"
       responses:
         "200":
           description: "Ok, Show Log-in UI"
@@ -78,9 +78,9 @@ paths:
     post:
       operationId: R103
       summary: "R103: Logout Action"
-      description: "Logout the current authenticated user. Access: USR, COORD, ADM"
+      description: "Logout the current authenticated user. Access: USR, ADM"
       tags:
-        - "M01: Authentication and User Profile"
+        - "M01"
       responses:
         "302":
           description: "Redirect after processing logout."
@@ -99,7 +99,7 @@ paths:
       summary: "R104: Register Form"
       description: "Provide new user registration form. Access: PUB"
       tags:
-        - "M01: Authentication and User Profile"
+        - "M01"
       responses:
         "200":
           description: "Ok. Show Sign-Up UI"
@@ -109,7 +109,7 @@ paths:
       summary: "R105: Register Action"
       description: "Processes the user registration form data. Access: PUB"
       tags:
-        - "M01: Authentication and User Profile"
+        - "M01"
 
       requestBody:
         required: true
@@ -157,79 +157,174 @@ paths:
   /user/{id}:
     get:
       operationId: R107
+      summary: 'R107: View user profile'
+      description: 'Show the individual user profile. Access: USR, ADM'
+      tags:
+       - 'M01'
+      parameters:
+       - in: path
+         name: id
+         schema:
+           type: integer
+         required: true
       responses:
         "200":
-          description: "Ok."
+          description: "Ok. Show user profile UI"
 
   /project/{id}:
     get:
-      operationId: R108
+      operationId: R301
+      summary: 'R301: View project main page'
+      description: 'Show the specified project main page (Project Board). Access: MBR, COORD'
+      tags:
+       - 'M03'
+      parameters:
+       - in: path
+         name: id
+         schema:
+           type: integer
+         required: true
       responses:
         "200":
-          description: "Ok."
+          description: "Ok. Show project board UI"
 
   /project/{id}/info:
     get:
-      operationId: R101 # FIXME
+      operationId: R302 
+      summary: 'R302: View project info page'
+      description: 'Show the specified project info page. Access: MBR, COORD'
+      tags:
+       - 'M03'
+      parameters:
+       - in: path
+         name: id
+         schema:
+           type: integer
+         required: true
       responses:
         "200":
-          description: "Ok."
+          description: "Ok. Show project info page UI"
 
   /project/{id}/forum:
     get:
-      operationId: R109
+      operationId: R401 
+      summary: 'R401: View project forum page'
+      description: 'Show the specified project forum page. Access: MBR, COORD'
+      tags:
+       - 'M04'
+      parameters:
+       - in: path
+         name: id
+         schema:
+           type: integer
+         required: true
       responses:
         "200":
-          description: "Ok."
+          description: "Ok. Show project forum page UI"
 
   /project/{id}/forum/{threadId}:
     get:
-      operationId: R110
+      operationId: R402
+      summary: 'R402: View a thread page in project forum'
+      description: 'Show the specified thread in the project forum page. Access: MBR, COORD'
+      tags:
+       - 'M04'
+      parameters:
+       - in: path
+         name: id
+         schema:
+           type: integer
+         required: true
+       - in: path
+         name: threadId
+         schema:
+           type: integer
+         required: true  
       responses:
         "200":
-          description: "Ok."
+          description: "Ok. Show thread UI"
 
   /project/{id}/timeline:
     get:
-      operationId: R111
+      operationId: R303
+      summary: 'R303: View project timeline page'
+      description: 'Show the specified project timeline page. Access: MBR, COORD'
+      tags:
+       - 'M03'
+      parameters:
+       - in: path
+         name: id
+         schema:
+           type: integer
+         required: true
       responses:
         "200":
-          description: "Ok."
+          description: "Ok. Show project timeline page UI"
 
   /project/{id}/task/{taskId}:
     get:
-      operationId: R109 # FIXME
+      operationId: R304 
+      summary: 'R304: View a task in project page'
+      description: 'Show the specified task in the project page. Access: MBR, COORD'
+      tags:
+       - 'M03'
+      parameters:
+       - in: path
+         name: id
+         schema:
+           type: integer
+         required: true
+       - in: path
+         name: taskId
+         schema:
+           type: integer
+         required: true  
       responses:
         "200":
-          description: "Ok."
+          description: "Ok. Show task UI"
 
   /about:
     get:
       operationId: R201
+      summary: 'R201: View about page'
+      description: 'Show the About page. Access: PUB'
+      tags:
+       - 'M02'
       responses:
         "200":
-          description: "Ok."
+          description: "Ok. Show About page"
 
   /faq:
     get:
       operationId: R202
+      summary: 'R202: View FAQ page'
+      description: 'Show the FAQ page. Access: PUB'
+      tags:
+       - 'M02'
       responses:
         "200":
-          description: "Ok."
+          description: "Ok. Show FAQ page"
 
   /contacts:
     get:
       operationId: R203
+      summary: 'R203: View contacts page'
+      description: 'Show the Contacts page. Access: PUB'
+      tags:
+       - 'M02'
       responses:
         "200":
-          description: "Ok."
+          description: "Ok. Show Contacts page"
 
   /services:
-    get:
-      operationId: R204
+    operationId: R204
+      summary: 'R204: View services page'
+      description: 'Show the Services page. Access: PUB'
+      tags:
+       - 'M02'
       responses:
         "200":
-          description: "Ok."
+          description: "Ok. Show Services page"
 
   /admin:
     get:
