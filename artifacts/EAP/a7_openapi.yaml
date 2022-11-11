@@ -377,6 +377,20 @@ paths:
         "200":
           description: "Ok."
 
+  /api/users/{id}/block:
+    put:
+      operationId: R430 # FIXME
+      responses:
+        "200":
+          description: "Ok."
+
+  /api/users/{id}/unblock:
+    put:
+      operationId: R430 # FIXME
+      responses:
+        "200":
+          description: "Ok."
+
   /api/project:
     post:
       operationId: R405
