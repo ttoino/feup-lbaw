@@ -147,7 +147,7 @@ paths:
               examples:
                 302Success:
                   description: "Successful authentication. Redirect to user profile."
-                  value: "/users/{id}"
+                  value: "/user/{id}"
                 302Failure:
                   description: "Failed authentication. Redirect to login form."
                   value: "/login"
@@ -208,7 +208,7 @@ paths:
           description: "Ok. Show Edit User profile UI"
     post:
       operationId: R435 # FIXME
-      summary: "R434: Edit user profile"
+      summary: "R435: Edit user profile"
       description: "Process the 'Edit Profile' form data. Access: USR"
       tags:
         - "M01"
@@ -219,11 +219,37 @@ paths:
             type: integer
           required: true
       requestBody:
-        application/x-www-form-urlencoded:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                picture:
+                  type: string
+                  format: binary
+              required:
+                - name
+                - email
           
       responses:
-        "200":
-          description: "Ok. Show Edit User profile UI"
+        "302":
+          description: "Redirect after processing the edited user information."
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: "Successful edit. Redirect to user profile."
+                  value: "/user/{id}"
+                302Failure:
+                  description: "Failed edit. Redirect to edit form."
+                  value: "/user{id}/edit"
   
   /project/{id}:
     get:
@@ -448,10 +474,40 @@ paths:
 
   /api/project:
     post:
-      operationId: R405
+      operationId: R405 # FIXME
+      summary: "R405: Create project"
+      description: "Process the 'Create Project' form data. Access: MBR, COORD"
+      tags:
+        - "M01"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                coordinator:
+                  type: integer
+              required:
+                - name
+                - coordinator
+          
       responses:
-        "200":
-          description: "Ok."
+        "302":
+          description: "Redirect after creating project."
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: "Successful create project. Redirect to project page."
+                  value: "/project/{id}"
+                302Failure:
+                  description: "Failed create project. Redirect to home page."
+                  value: "/"
 
   /api/project/{id}:
     get:
@@ -482,15 +538,138 @@ paths:
   /api/tasks:
     get:
       operationId: R410
+      summary: 'R410: Search Tasks API'
+      description: 'Searches for tasks and returns the results as JSON. Access: MBR, COORD.'
+      tags:
+        - 'M03'
+
+      parameters:
+        - in: query
+          name: query
+          description: String to use for full-text search
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: name
+          description: Name of the task
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: description
+          description: Description of the task
+          schema:
+            type: string
+          required: false  
+        - in: query
+          name: creation_date
+          description: Creation date of the task
+          schema:
+            type: string
+            format: date
+          required: true
+        - in: query
+          name: edit_date
+          description: Last edit date of the task
+          schema:
+            type: string
+            format: date
+          required: false  
+        - in: query
+          name: state
+          description: State of the task
+          schema:
+            type: string
+          required: true  
+        - in: query
+          name: creator
+          description: Integer corresponding to the creator's id
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: position
+          description: Integer corresponding to the position in the task group
+          schema:
+            type: integer
+          required: true
+        - in: query
+          name: task_group
+          description: Integer corresponding to the task group's id
+          schema:
+            type: integer
+          required: true  
+
       responses:
-        "200":
-          description: "Ok."
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    creation_date:
+                      type: string
+                      format: date
+                    edit_date:
+                      type: string
+                      format: date   
+                    state:
+                      type: string  
+                    creator:
+                      type: integer   
+                    position:
+                      type: integer
+                    task_group:
+                      type: integer
 
     post:
       operationId: R411
+      summary: "R411: Create task"
+      description: "Process the 'Create Task' form data. Access: MBR, COORD"
+      tags:
+        - "M03"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string   
+                creator:
+                  type: integer   
+                task_group:
+                  type: integer
+              required:
+                - name
+                - creator
+                - task_group
+          
       responses:
-        "200":
-          description: "Ok."
+        "302":
+          description: "Redirect after creating task."
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: "Successful create task."
+                302Failure:
+                  description: "Failed create task."
 
   /api/task/{id}:
     get:
@@ -528,6 +707,24 @@ paths:
   /api/task/{id}/archive:
     put:
       operationId: R114
+      summary: "R114: Complete a task"
+      description: "Mark task as completed. Access: MBR, COORD"
+      tags:
+        - "M03"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                state:
+                  type: string
+              required:
+                - id
+                - state
       responses:
         "200":
           description: "Ok."
@@ -538,12 +735,43 @@ paths:
       responses:
         "200":
           description: "Ok."
+      
 
     post:
       operationId: R115
+      summary: "R115: Create group"
+      description: "Process the 'Create Group' form data. Access: MBR, COORD"
+      tags:
+        - "M03"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string   
+                project:
+                  type: integer
+              required:
+                - name
+                - project
+          
       responses:
-        "200":
-          description: "Ok."
+        "302":
+          description: "Redirect after creating task group."
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: "Successful create task group."
+                302Failure:
+                  description: "Failed create task group."
 
   /api/groups/{id}:
     get:
