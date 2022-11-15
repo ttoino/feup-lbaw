@@ -17,15 +17,20 @@ tags:
   - name: "M01: Authentication and User Profile"
   - name: "M02: User Administration/Static pages"
   - name: "M03: Projects"
-  - name: "M04: Search"
+  - name: "M04: Project Forum"
+  - name: "M05: Search"
 
 paths:
   /:
     get:
       operationId: R001
+      summary: "R001: Home page"
+      description: "Provides the home page. The projects  Access: PUB"
+      tags:
+        - "M00" # TODO: find new module
       responses:
         "200":
-          description: "Ok."
+          description: "Ok. Show Home page"
 
   /login:
     get:
@@ -150,74 +155,123 @@ paths:
   /search:
     get:
       operationId: R106
+      summary: "R106: Content Search"
+      description: "Shows the contents of a search made by the user. Access: USR, ADM"
+      tags:
+        - "M05"
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: limit
+          schema:
+            type: integer
       responses:
         "200":
-          description: "Ok. Search"
+          description: "Ok. Search page with search results"
 
   /user/{id}:
     get:
       operationId: R107
-      summary: 'R107: View user profile'
-      description: 'Show the individual user profile. Access: USR, ADM'
+      summary: "R107: View user profile"
+      description: "Show the individual user profile. Access: USR, ADM"
       tags:
-       - 'M01'
+        - "M01"
       parameters:
-       - in: path
-         name: id
-         schema:
-           type: integer
-         required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       responses:
         "200":
           description: "Ok. Show user profile UI"
 
+  /user/{id}/edit:
+    get:
+      operationId: R434 # FIXME
+      summary: "R434: Edit user profile"
+      description: "Show the 'Edit Profile' page. Access: USR"
+      tags:
+        - "M01"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        "200":
+          description: "Ok. Show Edit User profile UI"
+    post:
+      operationId: R435 # FIXME
+      summary: "R434: Edit user profile"
+      description: "Process the 'Edit Profile' form data. Access: USR"
+      tags:
+        - "M01"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        application/x-www-form-urlencoded:
+          
+      responses:
+        "200":
+          description: "Ok. Show Edit User profile UI"
+  
   /project/{id}:
     get:
       operationId: R301
-      summary: 'R301: View project main page'
-      description: 'Show the specified project main page (Project Board). Access: MBR, COORD'
+      summary: "R301: View project main page"
+      description: "Show the specified project main page (Project Board). Access: MBR, COORD"
       tags:
-       - 'M03'
+        - "M03"
       parameters:
-       - in: path
-         name: id
-         schema:
-           type: integer
-         required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       responses:
         "200":
           description: "Ok. Show project board UI"
 
   /project/{id}/info:
     get:
-      operationId: R302 
-      summary: 'R302: View project info page'
-      description: 'Show the specified project info page. Access: MBR, COORD'
+      operationId: R302
+      summary: "R302: View project info page"
+      description: "Show the specified project info page. Access: MBR, COORD"
       tags:
-       - 'M03'
+        - "M03"
       parameters:
-       - in: path
-         name: id
-         schema:
-           type: integer
-         required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       responses:
         "200":
           description: "Ok. Show project info page UI"
 
   /project/{id}/forum:
     get:
-      operationId: R401 
-      summary: 'R401: View project forum page'
-      description: 'Show the specified project forum page. Access: MBR, COORD'
+      operationId: R401
+      summary: "R401: View project forum page"
+      description: "Show the specified project forum page. Access: MBR, COORD"
       tags:
-       - 'M04'
+        - "M04"
       parameters:
-       - in: path
-         name: id
-         schema:
-           type: integer
-         required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       responses:
         "200":
           description: "Ok. Show project forum page UI"
@@ -225,21 +279,21 @@ paths:
   /project/{id}/forum/{threadId}:
     get:
       operationId: R402
-      summary: 'R402: View a thread page in project forum'
-      description: 'Show the specified thread in the project forum page. Access: MBR, COORD'
+      summary: "R402: View a thread page in project forum"
+      description: "Show the specified thread in the project forum page. Access: MBR, COORD"
       tags:
-       - 'M04'
+        - "M04"
       parameters:
-       - in: path
-         name: id
-         schema:
-           type: integer
-         required: true
-       - in: path
-         name: threadId
-         schema:
-           type: integer
-         required: true  
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: threadId
+          schema:
+            type: integer
+          required: true
       responses:
         "200":
           description: "Ok. Show thread UI"
@@ -247,38 +301,38 @@ paths:
   /project/{id}/timeline:
     get:
       operationId: R303
-      summary: 'R303: View project timeline page'
-      description: 'Show the specified project timeline page. Access: MBR, COORD'
+      summary: "R303: View project timeline page"
+      description: "Show the specified project timeline page. Access: MBR, COORD"
       tags:
-       - 'M03'
+        - "M03"
       parameters:
-       - in: path
-         name: id
-         schema:
-           type: integer
-         required: true
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
       responses:
         "200":
           description: "Ok. Show project timeline page UI"
 
   /project/{id}/task/{taskId}:
     get:
-      operationId: R304 
-      summary: 'R304: View a task in project page'
-      description: 'Show the specified task in the project page. Access: MBR, COORD'
+      operationId: R304
+      summary: "R304: View a task in project page"
+      description: "Show the specified task and its details in the project page. Access: MBR, COORD"
       tags:
-       - 'M03'
+        - "M03"
       parameters:
-       - in: path
-         name: id
-         schema:
-           type: integer
-         required: true
-       - in: path
-         name: taskId
-         schema:
-           type: integer
-         required: true  
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: path
+          name: taskId
+          schema:
+            type: integer
+          required: true
       responses:
         "200":
           description: "Ok. Show task UI"
@@ -286,10 +340,10 @@ paths:
   /about:
     get:
       operationId: R201
-      summary: 'R201: View about page'
-      description: 'Show the About page. Access: PUB'
+      summary: "R201: View about page"
+      description: "Show the About page. Access: PUB"
       tags:
-       - 'M02'
+        - "M02"
       responses:
         "200":
           description: "Ok. Show About page"
@@ -297,10 +351,10 @@ paths:
   /faq:
     get:
       operationId: R202
-      summary: 'R202: View FAQ page'
-      description: 'Show the FAQ page. Access: PUB'
+      summary: "R202: View FAQ page"
+      description: "Show the FAQ page. Access: PUB"
       tags:
-       - 'M02'
+        - "M02"
       responses:
         "200":
           description: "Ok. Show FAQ page"
@@ -308,20 +362,21 @@ paths:
   /contacts:
     get:
       operationId: R203
-      summary: 'R203: View contacts page'
-      description: 'Show the Contacts page. Access: PUB'
+      summary: "R203: View contacts page"
+      description: "Show the Contacts page. Access: PUB"
       tags:
-       - 'M02'
+        - "M02"
       responses:
         "200":
           description: "Ok. Show Contacts page"
 
   /services:
-    operationId: R204
-      summary: 'R204: View services page'
-      description: 'Show the Services page. Access: PUB'
+    get:
+      operationId: R204
+      summary: "R204: View services page"
+      description: "Show the Services page. Access: PUB"
       tags:
-       - 'M02'
+        - "M02"
       responses:
         "200":
           description: "Ok. Show Services page"
@@ -370,7 +425,7 @@ paths:
       responses:
         "200":
           description: "Ok."
-    
+
     put:
       operationId: R305
       responses:
@@ -410,7 +465,7 @@ paths:
       responses:
         "200":
           description: "Ok."
-    
+
     delete:
       operationId: R408
       responses:
@@ -430,7 +485,7 @@ paths:
       responses:
         "200":
           description: "Ok."
-          
+
     post:
       operationId: R411
       responses:
@@ -483,13 +538,13 @@ paths:
       responses:
         "200":
           description: "Ok."
-    
+
     post:
       operationId: R115
       responses:
         "200":
           description: "Ok."
-  
+
   /api/groups/{id}:
     get:
       operationId: R116
@@ -508,4 +563,3 @@ paths:
       responses:
         "200":
           description: "Ok."
-      
