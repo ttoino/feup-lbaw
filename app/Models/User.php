@@ -5,12 +5,11 @@ namespace App\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
-{
+class User extends Authenticatable {
     use Notifiable;
 
     // Don't add create and update timestamps in database.
-    public $timestamps  = false;
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -18,7 +17,11 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name',
+        'email',
+        'password',
+        'blocked',
+        'is_admin'
     ];
 
     /**
@@ -27,13 +30,17 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password'
     ];
 
-    /**
-     * The cards this user owns.
-     */
-     public function cards() {
-      return $this->hasMany('App\Models\Card');
+    public function projects() {
+        return $this->belongsToMany(
+            Project::class,
+            'project_member',
+            'user_profile',
+            'project'
+        )->withPivot('is_favorite');
     }
+
+    protected $table = "user_profile";
 }
