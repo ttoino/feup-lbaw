@@ -13,7 +13,8 @@ use Response;
  *     version="1.0.0",
  *   )
  * )
- * This class should be parent class for other API controllers
+ * This class should be parent class for other API controllers.
+ * 
  * Class AppBaseController
  */
 class AppBaseController extends Controller
