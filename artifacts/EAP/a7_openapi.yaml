@@ -6,12 +6,12 @@ info:
   description: "Web Resources Specification (A7) for Atrellado"
 
 servers:
-  - url: http://lbaw.fe.up.pt # TODO: change this
-    description: Production server # TODO: change this
+  - url: http://lbaw2265.lbaw.fe.up.pt
+    description: Production server
 
 externalDocs:
   description: Find more info here.
-  url: https://web.fe.up.pt/~ssn/wiki/teach/lbaw/medialib/a07 # TODO: change this
+  url: https://git.fe.up.pt/lbaw/lbaw2223/lbaw2265/-/wikis/eap#a7-web-resources-specification # TODO: change this
 
 tags:
   - name: "M01: Authentication and User Profile"
@@ -25,9 +25,14 @@ paths:
     get:
       operationId: R001
       summary: "R001: Home page"
-      description: "Provides the home page. The projects  Access: PUB"
+      description: "Provides the home page.
+        If the user is authenticated, the projects that the user has marked as favorite or the projects in which the user is a member should appear in this page.
+        If not, a static page with links to sign-in/sign-up is presented.
+        Access: PUB"
+
       tags:
-        - "M00" # TODO: find new module
+        - "M01" # TODO: find new module
+
       responses:
         "200":
           description: "Ok. Show Home page"
@@ -48,7 +53,7 @@ paths:
       summary: "R102: Login action"
       description: "Process the login form data. Access: PUB"
       tags:
-        - "M01: Authentication and User Profile"
+        - "M01"
       requestBody:
         required: true
         content:
@@ -66,7 +71,7 @@ paths:
 
       responses:
         "302":
-          description: "Redirect after processing the login credentials"
+          description: "See Other. Redirect after processing the login credentials."
           headers:
             Location:
               schema:
@@ -96,7 +101,7 @@ paths:
               examples:
                 302Success:
                   description: "Successful logout. Redirect to login form."
-                  value: "/login"
+                  value: "/"
 
   /register:
     get:
@@ -119,7 +124,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -146,37 +151,16 @@ paths:
                 type: string
               examples:
                 302Success:
-                  description: "Successful authentication. Redirect to user profile."
-                  value: "/user/{id}"
+                  description: "Successful account creation. Redirect to user profile."
+                  value: "/"
                 302Failure:
-                  description: "Failed authentication. Redirect to login form."
-                  value: "/login"
-
-  /search:
-    get:
-      operationId: R106
-      summary: "R106: Content Search"
-      description: "Shows the contents of a search made by the user. Access: USR, ADM"
-      tags:
-        - "M05"
-      parameters:
-        - in: query
-          name: q
-          schema:
-            type: string
-          required: true
-        - in: query
-          name: limit
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: "Ok. Search page with search results"
+                  description: "Failed user creation. Redirect to register form."
+                  value: "/register"
 
   /user/{id}:
     get:
-      operationId: R107
-      summary: "R107: View user profile"
+      operationId: R201
+      summary: "R201: View user profile"
       description: "Show the individual user profile. Access: USR, ADM"
       tags:
         - "M01"
@@ -188,40 +172,54 @@ paths:
           required: true
       responses:
         "200":
-          description: "Ok. Show user profile UI"
+          description: "Ok. Show user profile UI."
+        "403":
+          description: "Forbidden. The current user cannot access this profile."
+        "404":
+          description: "Not Found. User with the given id not found."
 
   /user/{id}/edit:
     get:
-      operationId: R434 # FIXME
-      summary: "R434: Edit user profile"
-      description: "Show the 'Edit Profile' page. Access: USR"
+      operationId: R202
+      summary: "R202: Edit user profile page"
+      description: "Show the 'Edit Profile' page. Access: OWN, ADM"
       tags:
         - "M01"
+
       parameters:
         - in: path
           name: id
           schema:
             type: integer
           required: true
+
       responses:
         "200":
           description: "Ok. Show Edit User profile UI"
+        "403":
+          description: "Forbidden. The current user cannot edit this profile."
+        "404":
+          description: "Not Found. User with the given id not found."
+
     post:
-      operationId: R435 # FIXME
-      summary: "R435: Edit user profile"
-      description: "Process the 'Edit Profile' form data. Access: USR"
+      operationId: R203
+      summary: "R203: Edit user profile action"
+      description: "Process the 'Edit Profile' form data. Access: OWN, ADM"
+
       tags:
         - "M01"
+
       parameters:
         - in: path
           name: id
           schema:
             type: integer
           required: true
+
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -235,7 +233,7 @@ paths:
               required:
                 - name
                 - email
-          
+
       responses:
         "302":
           description: "Redirect after processing the edited user information."
@@ -250,23 +248,80 @@ paths:
                 302Failure:
                   description: "Failed edit. Redirect to edit form."
                   value: "/user{id}/edit"
-  
+
   /project/{id}:
     get:
       operationId: R301
       summary: "R301: View project main page"
-      description: "Show the specified project main page (Project Board). Access: MBR, COORD"
+      description: "Show the specified project main page (Project Board). Access: MBR, ADM"
+
       tags:
         - "M03"
+
       parameters:
         - in: path
           name: id
           schema:
             type: integer
           required: true
+
       responses:
         "200":
           description: "Ok. Show project board UI"
+        "403":
+          description: "Forbidden. The current user cannot access the project."
+        "404":
+          description: "Not Found. No project with the given id exists."
+
+  /project/new:
+    get:
+      operationId: R302
+      summary: "R302: Create New Project form"
+      description: "Show the 'Create New Project' UI. Access: USR"
+
+      tags:
+        - "M03"
+
+      responses:
+        "200":
+          description: "Ok. Show the 'Create New Project' UI"
+
+    post:
+      operationId: R303
+      summary: "R303: Create new project action"
+      description: "Process the 'Create New Project' form data. Access: USR"
+
+      tags:
+        - "M03"
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+              required:
+                - name
+
+      responses:
+        "302":
+          description: "Redirect after processing the new project information."
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: "Successful project creation. Redirect to project board."
+                  value: "/project/{id}"
+                302Failure:
+                  description: "Failed project creation. Redirect to project creation form."
+                  value: "/project/new"
 
   /project/{id}/info:
     get:
@@ -285,69 +340,69 @@ paths:
         "200":
           description: "Ok. Show project info page UI"
 
-  /project/{id}/forum:
+  /project/{id}/task/new:
     get:
       operationId: R401
-      summary: "R401: View project forum page"
-      description: "Show the specified project forum page. Access: MBR, COORD"
-      tags:
-        - "M04"
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      responses:
-        "200":
-          description: "Ok. Show project forum page UI"
+      summary: "R401: 'Create New Task' UI"
+      description: "Show the task creation UI. Access: MBR"
 
-  /project/{id}/forum/{threadId}:
-    get:
-      operationId: R402
-      summary: "R402: View a thread page in project forum"
-      description: "Show the specified thread in the project forum page. Access: MBR, COORD"
-      tags:
-        - "M04"
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-        - in: path
-          name: threadId
-          schema:
-            type: integer
-          required: true
-      responses:
-        "200":
-          description: "Ok. Show thread UI"
-
-  /project/{id}/timeline:
-    get:
-      operationId: R303
-      summary: "R303: View project timeline page"
-      description: "Show the specified project timeline page. Access: MBR, COORD"
       tags:
         - "M03"
+
       parameters:
         - in: path
           name: id
           schema:
             type: integer
           required: true
+
       responses:
         "200":
-          description: "Ok. Show project timeline page UI"
+          description: "Ok. Show the Task creation UI"
+        "403":
+          description: "Forbidden. The current user can't create a task on the given project"
+        "404":
+          description: "Not Found. The given project does not exist"
+
+    post:
+      operationId: R402
+      summary: "R402: 'Create New Task' action"
+      description: "Process the 'Create New Task' form data. Access: MBR"
+
+      tags:
+        - "M03"
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        "302":
+          description: "Redirect after processing the new project information."
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                302Success:
+                  description: "Successful task creation. Redirect to project board."
+                  value: "/project/{id}"
+                302Failure:
+                  description: "Failed task creation. Redirect to task creation form."
+                  value: "/project/{id}/task/new"
 
   /project/{id}/task/{taskId}:
     get:
-      operationId: R304
-      summary: "R304: View a task in project page"
-      description: "Show the specified task and its details in the project page. Access: MBR, COORD"
+      operationId: R403
+      summary: "R403: View a task in project page"
+      description: "Show the specified task and its details in the project page. Access: MBR, ADM"
+
       tags:
         - "M03"
+
       parameters:
         - in: path
           name: id
@@ -359,53 +414,14 @@ paths:
           schema:
             type: integer
           required: true
+
       responses:
         "200":
           description: "Ok. Show task UI"
-
-  /about:
-    get:
-      operationId: R201
-      summary: "R201: View about page"
-      description: "Show the About page. Access: PUB"
-      tags:
-        - "M02"
-      responses:
-        "200":
-          description: "Ok. Show About page"
-
-  /faq:
-    get:
-      operationId: R202
-      summary: "R202: View FAQ page"
-      description: "Show the FAQ page. Access: PUB"
-      tags:
-        - "M02"
-      responses:
-        "200":
-          description: "Ok. Show FAQ page"
-
-  /contacts:
-    get:
-      operationId: R203
-      summary: "R203: View contacts page"
-      description: "Show the Contacts page. Access: PUB"
-      tags:
-        - "M02"
-      responses:
-        "200":
-          description: "Ok. Show Contacts page"
-
-  /services:
-    get:
-      operationId: R204
-      summary: "R204: View services page"
-      description: "Show the Services page. Access: PUB"
-      tags:
-        - "M02"
-      responses:
-        "200":
-          description: "Ok. Show Services page"
+        "403":
+          description: "Forbidden. The current user does not have permission to access this task or project"
+        "404":
+          description: "Not Found. Project or task with the given id not found"
 
   /admin:
     get:
@@ -417,9 +433,10 @@ paths:
   /api:
     get:
       operationId: R401
+      description: "API health check endpoint"
       responses:
         "200":
-          description: "API health check endpoint"
+          description: "Ok. API healthy"
           content:
             application/json:
               schema:
@@ -429,119 +446,279 @@ paths:
                     type: boolean
               examples:
                 200Success:
-                  description: "API is responding normally to requests"
                   value:
                     ok: true
 
-  /api/users:
+  /api/user:
     get:
       operationId: R402
-      responses:
-        "200":
-          description: "Ok."
-    post:
-      operationId: R404
-      responses:
-        "200":
-          description: "Ok."
+      summary: "R402: Get Users API Endpoint"
+      description: "Get users. Access: MBR, ADM"
 
-  /api/users/{id}:
+      tags:
+        - "M03"
+
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+
+      responses:
+        "200":
+          description: "Ok. Return as JSON data the users that the user that created the request has permission to access, or all users if the request is made by an admin"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    password:
+                      type: string
+                      format: password
+                    blocked:
+                      type: boolean
+                    is_admin:
+                      type: boolean
+
+  /api/user/{id}:
     get:
       operationId: R403
-      responses:
-        "200":
-          description: "Ok."
+      summary: "R403: Fetch User By Id API Endpoint"
+      description: "Returns the specified user. MBR, ADM."
 
-    put:
-      operationId: R305
-      responses:
-        "200":
-          description: "Ok."
-
-  /api/users/{id}/block:
-    put:
-      operationId: R430 # FIXME
-      responses:
-        "200":
-          description: "Ok."
-
-  /api/users/{id}/unblock:
-    put:
-      operationId: R430 # FIXME
-      responses:
-        "200":
-          description: "Ok."
-
-  /api/project:
-    post:
-      operationId: R405 # FIXME
-      summary: "R405: Create project"
-      description: "Process the 'Create Project' form data. Access: MBR, COORD"
       tags:
-        - "M01"
+        - "Mo3"
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        "200":
+          description: "Ok. Returns the user specified by the given id as JSON data."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  password:
+                    type: string
+                    format: password
+                  blocked:
+                    type: boolean
+                  is_admin:
+                    type: boolean
+        "403":
+          description: "Forbidden. The user that made the request foes not have permission to access the specified user information."
+        "404":
+          description: "Not Found. The specified user does not exist or could not be found"
+
+    put:
+      operationId: R404
+      summary: "R404: Edit User Profile"
+      description: "Edit a specific users profile information. Access: OWN, ADM"
+
+      tags:
+        - "M03"
+
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
               type: object
               properties:
                 name:
                   type: string
-                coordinator:
-                  type: integer
+                password:
+                  type: string
+                  format: password
               required:
                 - name
-                - coordinator
-          
+                - password
+
       responses:
-        "302":
-          description: "Redirect after creating project."
-          headers:
-            Location:
+        "200":
+          description: "Ok. User Profile edited successfully"
+          content:
+            application/json:
               schema:
-                type: string
-              examples:
-                302Success:
-                  description: "Successful create project. Redirect to project page."
-                  value: "/project/{id}"
-                302Failure:
-                  description: "Failed create project. Redirect to home page."
-                  value: "/"
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  password:
+                    type: string
+                    format: password
+                  blocked:
+                    type: boolean
+                  is_admin:
+                    type: boolean
+        "400":
+          description: "Bad request. The request body contains invalid data."
+        "403":
+          description: "Forbidden. The user that created the request does not have permission to edit the specified user"
+
+  /api/project:
+    get:
+      operationId: R405
+      summary: "R405: Project Fetch API Endpoint"
+      description: "Fetch projects from the Database. Access: MBR, ADM"
+
+      tags:
+        - M03
+
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+
+      responses:
+        "200":
+          description: "Ok. Return the projects that the user is a member of, or all the projects if the user is an admin"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    description:
+                      type: string
+                    creation_date:
+                      type: string
+                      format: date
+                    last_modification_date:
+                      type: string
+                      format: date
+                    archived:
+                      type: boolean
+                    coordinator:
+                      type: integer
+
+    post:
+      operationId: R406
+      summary: "R406: Project creation API Endpoint"
+      description: "Endpoint for creation new projects. Access: USR, ADM"
+
+      tags:
+        - M03
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+              required:
+                - name
+
+      responses:
+        "200":
+          description: "Ok. New project created successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  description:
+                    type: string
+                  creation_date:
+                    type: string
+                    format: date
+                  last_modification_date:
+                    type: string
+                    format: date
+                  archived:
+                    type: boolean
+                  coordinator:
+                    type: integer
+
+        "400":
+          description: "Bad request. The request body contains invalid data."
+        "403":
+          description: "Forbidden. The user that made the request cannot create a task with the given request body."
 
   /api/project/{id}:
     get:
-      operationId: R406
-      responses:
-        "200":
-          description: "Ok."
-
-    put:
       operationId: R407
-      responses:
-        "200":
-          description: "Ok."
+      summary: "R407: Get Project By ID API Endpoint"
+      description: "Fetch a project by id. Access: MBR, ADM"
 
-    delete:
-      operationId: R408
-      responses:
-        "200":
-          description: "Ok."
-
-  /api/project/{id}/archive:
-    put:
-      operationId: R409
-      responses:
-        "200":
-          description: "Ok."
-
-  /api/tasks:
-    get:
-      operationId: R410
-      summary: 'R410: Search Tasks API'
-      description: 'Searches for tasks and returns the results as JSON. Access: MBR, COORD.'
       tags:
-        - 'M03'
+        - M03
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        "200":
+          description: "Ok. Return project as JSON data"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  description:
+                    type: string
+                  creation_date:
+                    type: string
+                    format: date
+                  last_modification_date:
+                    type: string
+                    format: date
+                  archived:
+                    type: boolean
+                  coordinator:
+                    type: integer
+        
+        "403":
+          description: "Forbidden. The given project is not accessible by the user that created the request"
+        
+        "404":
+          description: "Not Found. The given project does not exist or could not be found"
+
+  /api/task:
+    get:
+      operationId: R408
+      summary: "R408: Search Tasks API"
+      description: "Searches for tasks and returns the results as JSON. Access: MBR, ADM."
+
+      tags:
+        - "M03"
 
       parameters:
         - in: query
@@ -551,59 +728,15 @@ paths:
             type: string
           required: false
         - in: query
-          name: name
-          description: Name of the task
-          schema:
-            type: string
-          required: true
-        - in: query
-          name: description
-          description: Description of the task
-          schema:
-            type: string
-          required: false  
-        - in: query
-          name: creation_date
-          description: Creation date of the task
-          schema:
-            type: string
-            format: date
-          required: true
-        - in: query
-          name: edit_date
-          description: Last edit date of the task
-          schema:
-            type: string
-            format: date
-          required: false  
-        - in: query
-          name: state
-          description: State of the task
-          schema:
-            type: string
-          required: true  
-        - in: query
-          name: creator
-          description: Integer corresponding to the creator's id
+          name: limit
+          description: Number of tasks to return
           schema:
             type: integer
           required: false
-        - in: query
-          name: position
-          description: Integer corresponding to the position in the task group
-          schema:
-            type: integer
-          required: true
-        - in: query
-          name: task_group
-          description: Integer corresponding to the task group's id
-          schema:
-            type: integer
-          required: true  
 
       responses:
-        '200':
-          description: Success
+        "200":
+          description: "Ok. Return all tasks that the user can see, or all tasks if the user is an admin"
           content:
             application/json:
               schema:
@@ -622,172 +755,313 @@ paths:
                       format: date
                     edit_date:
                       type: string
-                      format: date   
+                      format: date
                     state:
-                      type: string  
+                      type: string
                     creator:
-                      type: integer   
+                      type: integer
                     position:
                       type: integer
                     task_group:
                       type: integer
 
     post:
-      operationId: R411
-      summary: "R411: Create task"
-      description: "Process the 'Create Task' form data. Access: MBR, COORD"
+      operationId: R409
+      summary: "R409: Create Task API Endpoint"
+      description: "Create a new task. Access: MBR."
+
       tags:
         - "M03"
+
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
               type: object
               properties:
                 name:
                   type: string
                 description:
-                  type: string   
-                creator:
-                  type: integer   
+                  type: string
+                state:
+                  type: string
+                  default: CREATED
+                position:
+                  type: integer
                 task_group:
                   type: integer
               required:
                 - name
-                - creator
                 - task_group
-          
+                - position
+
       responses:
-        "302":
-          description: "Redirect after creating task."
-          headers:
-            Location:
+        "200":
+          description: "Ok. Task created successfully."
+          content:
+            application/json:
               schema:
-                type: string
-              examples:
-                302Success:
-                  description: "Successful create task."
-                302Failure:
-                  description: "Failed create task."
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  creation_date:
+                    type: string
+                    format: date
+                  edit_date:
+                    type: string
+                    format: date
+                  state:
+                    type: string
+                  creator:
+                    type: integer
+                  position:
+                    type: integer
+                  task_group:
+                    type: integer
+
+        "400":
+          description: "Bad request. The request body contains invalid data."
+
+        "403":
+          description: "Forbidden. The user that made the request cannot create a task with the given request body."
 
   /api/task/{id}:
     get:
-      operationId: R112
-      responses:
-        "200":
-          description: "Ok."
+      operationId: R410
+      summary: "R410: Get Task By Id API Endpoint"
+      description: "Fetch a Task by its id and return it as JSON data. Access: MBR, ADM."
 
-    post:
-      operationId: R113
-      responses:
-        "200":
-          description: "Ok."
-
-    put:
-      operationId: R113
-      responses:
-        "200":
-          description: "Ok."
-
-  /api/task/{id}/assign:
-    post:
-      operationId: R420 # FIXME
-      responses:
-        "200":
-          description: "Ok."
-
-  /api/task/{id}/addTag/{id}/:
-    post:
-      operationId: R421 # FIXME
-      responses:
-        "200":
-          description: "Ok."
-
-  /api/task/{id}/archive:
-    put:
-      operationId: R114
-      summary: "R114: Complete a task"
-      description: "Mark task as completed. Access: MBR, COORD"
       tags:
         - "M03"
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-                state:
-                  type: string
-              required:
-                - id
-                - state
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
       responses:
         "200":
-          description: "Ok."
+          description: "Ok. Returns specified task"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  creation_date:
+                    type: string
+                    format: date
+                  edit_date:
+                    type: string
+                    format: date
+                  state:
+                    type: string
+                  creator:
+                    type: integer
+                  position:
+                    type: integer
+                  task_group:
+                    type: integer
+        "403":
+          description: "Forbidden. The user that made the request does not have permission to fetch this Task"
+        "404":
+          description: "Not Found. The specified task does not exist or could not be found"
 
-  /api/groups:
+  /api/task/{id}/complete:
+    put:
+      operationId: R411
+      summary: "R411: Complete Task"
+      description: "Mark a given task as completed. Access: MBR."
+
+      tags:
+        - "M03"
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        "200":
+          description: "Ok. Task has successfully been marked as completed."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  creation_date:
+                    type: string
+                    format: date
+                  edit_date:
+                    type: string
+                    format: date
+                  state:
+                    type: string
+                    example: COMPLETED
+                  creator:
+                    type: integer
+                  position:
+                    type: integer
+                  task_group:
+                    type: integer
+        "403":
+          description: "Forbidden. The user that made the request does not have permission to marl this task as completed."
+        "404":
+          description: "Not Found. THe given task does not exist or could not be found."
+
+  /api/group:
     get:
-      operationId: R115
-      responses:
-        "200":
-          description: "Ok."
-      
+      operationId: R412
+      summary: "R412: Task Group Fetch API Endpoint"
+      description: "Fetch task groups. Access: MBR, ADM."
 
-    post:
-      operationId: R115
-      summary: "R115: Create group"
-      description: "Process the 'Create Group' form data. Access: MBR, COORD"
       tags:
         - "M03"
+
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+
+      responses:
+        "200":
+          description: "Ok. Task groups that the user has access to, or all task groups if the user is an admin."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    creation_date:
+                      type: string
+                      format: date
+                    project:
+                      type: integer
+                    position:
+                      type: integer
+
+    post:
+      operationId: R413
+      summary: "R413: Create group"
+      description: "Process the 'Create Group' form data. Access: MBR, COORD"
+
+      tags:
+        - "M03"
+
       requestBody:
         required: true
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
               type: object
               properties:
                 name:
                   type: string
                 description:
-                  type: string   
+                  type: string
                 project:
+                  type: integer
+                position:
                   type: integer
               required:
                 - name
                 - project
-          
+                - position
+
       responses:
-        "302":
-          description: "Redirect after creating task group."
-          headers:
-            Location:
+        "200":
+          description: "Ok. Task Group created successfully"
+          content:
+            application/json:
               schema:
-                type: string
-              examples:
-                302Success:
-                  description: "Successful create task group."
-                302Failure:
-                  description: "Failed create task group."
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  creation_date:
+                    type: string
+                    format: date
+                  project:
+                    type: integer
+                  position:
+                    type: integer
+        "400":
+          description: "Bad request. The request body contains invalid data."
+        "403":
+          description: "Forbidden. The user that made the request cannot create a task group with the given request body."
 
   /api/groups/{id}:
     get:
-      operationId: R116
-      responses:
-        "200":
-          description: "Ok."
+      operationId: R414
+      summary: "R414: Get Task Group By Id API Endpoint"
+      description: "Fetch a task group by its id. Access: MBR, ADM"
 
-    post:
-      operationId: R117
-      responses:
-        "200":
-          description: "Ok."
+      tags:
+        - M03
 
-    put:
-      operationId: R118
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
       responses:
         "200":
-          description: "Ok."
+          description: "Ok. Returns the fetched task group as JSON data"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  creation_date:
+                    type: string
+                    format: date
+                  project:
+                    type: integer
+                  position:
+                    type: integer
+        "403":
+          description: "Forbidden. The user that made the request does not have permission to fetch this Task"
+        "404":
+          description: "Not Found. The task group does not exist or could not be found"
