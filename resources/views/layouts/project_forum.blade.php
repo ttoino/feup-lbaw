@@ -23,23 +23,14 @@
   <body>
     <main>
       <header>
-        <h1><a href="{{ url('/') }}">Atrellado</a></h1>
+        <h1><a href="{{ url('/project/' . $id . '/forum') }}">Project {{$id}} Forum</a></h1>
         @if (Auth::check())
         <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
         @endif
       </header>
-      @if (Auth::check())
-      @else
-      <section class="home">
-        <img alt="Atrellado Logo">
-        <h2> Atrellado</h2>
-        <h3> Brief description and call to action</h3>
-        <section class="authButtons">
-          <a class="button" href="{{ url('/register') }}">Register</a> 
-          <a class="button" href="{{ url('/login') }}">Login</a> 
-        </section>
+      <section id="content">
+        @yield('content')
       </section>
-      @endif
     </main>
   </body>
 </html>
