@@ -323,23 +323,6 @@ paths:
                   description: "Failed project creation. Redirect to project creation form."
                   value: "/project/new"
 
-  /project/{id}/info:
-    get:
-      operationId: R302
-      summary: "R302: View project info page"
-      description: "Show the specified project info page. Access: MBR, COORD"
-      tags:
-        - "M03"
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-      responses:
-        "200":
-          description: "Ok. Show project info page UI"
-
   /project/{id}/task/new:
     get:
       operationId: R401
@@ -432,8 +415,14 @@ paths:
 
   /api:
     get:
-      operationId: R401
-      description: "API health check endpoint"
+      operationId: R501
+
+      summary: "R501: API Health check Endpoint"
+      description: "API health check endpoint. Access: PUB"
+
+      tags:
+        - M03
+
       responses:
         "200":
           description: "Ok. API healthy"
@@ -451,8 +440,8 @@ paths:
 
   /api/user:
     get:
-      operationId: R402
-      summary: "R402: Get Users API Endpoint"
+      operationId: R502
+      summary: "R502: Get Users API Endpoint"
       description: "Get users. Access: MBR, ADM"
 
       tags:
@@ -489,12 +478,12 @@ paths:
 
   /api/user/{id}:
     get:
-      operationId: R403
-      summary: "R403: Fetch User By Id API Endpoint"
+      operationId: R503
+      summary: "R503: Fetch User By Id API Endpoint"
       description: "Returns the specified user. MBR, ADM."
 
       tags:
-        - "Mo3"
+        - "M03"
 
       parameters:
         - in: path
@@ -528,8 +517,8 @@ paths:
           description: "Not Found. The specified user does not exist or could not be found"
 
     put:
-      operationId: R404
-      summary: "R404: Edit User Profile"
+      operationId: R504
+      summary: "R504: Edit User Profile"
       description: "Edit a specific users profile information. Access: OWN, ADM"
 
       tags:
@@ -577,8 +566,8 @@ paths:
 
   /api/project:
     get:
-      operationId: R405
-      summary: "R405: Project Fetch API Endpoint"
+      operationId: R505
+      summary: "R505: Project Fetch API Endpoint"
       description: "Fetch projects from the Database. Access: MBR, ADM"
 
       tags:
@@ -617,8 +606,8 @@ paths:
                       type: integer
 
     post:
-      operationId: R406
-      summary: "R406: Project creation API Endpoint"
+      operationId: R506
+      summary: "R506: Project creation API Endpoint"
       description: "Endpoint for creation new projects. Access: USR, ADM"
 
       tags:
@@ -668,8 +657,8 @@ paths:
 
   /api/project/{id}:
     get:
-      operationId: R407
-      summary: "R407: Get Project By ID API Endpoint"
+      operationId: R507
+      summary: "R507: Get Project By ID API Endpoint"
       description: "Fetch a project by id. Access: MBR, ADM"
 
       tags:
@@ -704,17 +693,36 @@ paths:
                     type: boolean
                   coordinator:
                     type: integer
-        
+
         "403":
           description: "Forbidden. The given project is not accessible by the user that created the request"
-        
+
         "404":
           description: "Not Found. The given project does not exist or could not be found"
 
+    delete:
+      operationId: R508
+      summary: "R508: Delete Project API Endpoint"
+      description: "Endpoint for project deletion. Access: ADM" # for the prototype only admins can delete projects
+
+      tags:
+        - M030
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+
+      responses:
+        "200":
+          description: "Ok."
+
   /api/task:
     get:
-      operationId: R408
-      summary: "R408: Search Tasks API"
+      operationId: R508
+      summary: "R508: Search Tasks API"
       description: "Searches for tasks and returns the results as JSON. Access: MBR, ADM."
 
       tags:
@@ -766,8 +774,8 @@ paths:
                       type: integer
 
     post:
-      operationId: R409
-      summary: "R409: Create Task API Endpoint"
+      operationId: R509
+      summary: "R509: Create Task API Endpoint"
       description: "Create a new task. Access: MBR."
 
       tags:
@@ -833,8 +841,8 @@ paths:
 
   /api/task/{id}:
     get:
-      operationId: R410
-      summary: "R410: Get Task By Id API Endpoint"
+      operationId: R510
+      summary: "R510: Get Task By Id API Endpoint"
       description: "Fetch a Task by its id and return it as JSON data. Access: MBR, ADM."
 
       tags:
@@ -882,8 +890,8 @@ paths:
 
   /api/task/{id}/complete:
     put:
-      operationId: R411
-      summary: "R411: Complete Task"
+      operationId: R511
+      summary: "R511: Complete Task"
       description: "Mark a given task as completed. Access: MBR."
 
       tags:
@@ -932,8 +940,8 @@ paths:
 
   /api/group:
     get:
-      operationId: R412
-      summary: "R412: Task Group Fetch API Endpoint"
+      operationId: R512
+      summary: "R512: Task Group Fetch API Endpoint"
       description: "Fetch task groups. Access: MBR, ADM."
 
       tags:
@@ -971,8 +979,8 @@ paths:
                       type: integer
 
     post:
-      operationId: R413
-      summary: "R413: Create group"
+      operationId: R513
+      summary: "R513: Create group"
       description: "Process the 'Create Group' form data. Access: MBR, COORD"
 
       tags:
@@ -1026,8 +1034,8 @@ paths:
 
   /api/groups/{id}:
     get:
-      operationId: R414
-      summary: "R414: Get Task Group By Id API Endpoint"
+      operationId: R514
+      summary: "R514: Get Task Group By Id API Endpoint"
       description: "Fetch a task group by its id. Access: MBR, ADM"
 
       tags:
