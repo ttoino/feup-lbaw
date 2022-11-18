@@ -406,13 +406,6 @@ paths:
         "404":
           description: "Not Found. Project or task with the given id not found"
 
-  /admin:
-    get:
-      operationId: R301
-      responses:
-        "200":
-          description: "Ok."
-
   /api:
     get:
       operationId: R501
@@ -445,7 +438,7 @@ paths:
       description: "Get users. Access: MBR, ADM"
 
       tags:
-        - "M03"
+        - "M05"
 
       parameters:
         - in: query
@@ -571,7 +564,7 @@ paths:
       description: "Fetch projects from the Database. Access: MBR, ADM"
 
       tags:
-        - M03
+        - "M05"
 
       parameters:
         - in: query
@@ -611,7 +604,7 @@ paths:
       description: "Endpoint for creation new projects. Access: USR, ADM"
 
       tags:
-        - M03
+        - "M03"
 
       requestBody:
         required: true
@@ -628,8 +621,8 @@ paths:
                 - name
 
       responses:
-        "200":
-          description: "Ok. New project created successfully"
+        "201":
+          description: "Created. New project created successfully"
           content:
             application/json:
               schema:
@@ -719,14 +712,45 @@ paths:
         "200":
           description: "Ok."
 
+  /api/project/{id}/add/{userId}: # this can later be merged or switched by the "invite" endpoint
+    post:
+      operationId: R508
+      summary: "R508: Add User to Project API Endpoint"
+      description: "Endpoint for adding a user to a project so they can become a member. Access: COORD"
+
+      tags:
+        - M03
+
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: "Project ID"
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+          description: "User ID"
+
+      responses:
+        "200":
+          description: "Ok. User was added to the project"
+        "403":
+          description: "Forbidden. The user that created the request either can't access the given project or does not have permissions to add the specified user"
+        "404":
+          description: "Not Found. The given user does not exist or could not be found"
+
   /api/task:
     get:
-      operationId: R508
-      summary: "R508: Search Tasks API"
+      operationId: R509
+      summary: "R509: Search Tasks API"
       description: "Searches for tasks and returns the results as JSON. Access: MBR, ADM."
 
       tags:
-        - "M03"
+        - "M05"
 
       parameters:
         - in: query
@@ -774,8 +798,8 @@ paths:
                       type: integer
 
     post:
-      operationId: R509
-      summary: "R509: Create Task API Endpoint"
+      operationId: R510
+      summary: "R510: Create Task API Endpoint"
       description: "Create a new task. Access: MBR."
 
       tags:
@@ -805,7 +829,7 @@ paths:
                 - position
 
       responses:
-        "200":
+        "201":
           description: "Ok. Task created successfully."
           content:
             application/json:
@@ -841,8 +865,8 @@ paths:
 
   /api/task/{id}:
     get:
-      operationId: R510
-      summary: "R510: Get Task By Id API Endpoint"
+      operationId: R511
+      summary: "R511: Get Task By Id API Endpoint"
       description: "Fetch a Task by its id and return it as JSON data. Access: MBR, ADM."
 
       tags:
@@ -890,8 +914,8 @@ paths:
 
   /api/task/{id}/complete:
     put:
-      operationId: R511
-      summary: "R511: Complete Task"
+      operationId: R512
+      summary: "R512: Complete Task"
       description: "Mark a given task as completed. Access: MBR."
 
       tags:
@@ -940,12 +964,12 @@ paths:
 
   /api/group:
     get:
-      operationId: R512
-      summary: "R512: Task Group Fetch API Endpoint"
+      operationId: R513
+      summary: "R513: Task Group Fetch API Endpoint"
       description: "Fetch task groups. Access: MBR, ADM."
 
       tags:
-        - "M03"
+        - "M05"
 
       parameters:
         - in: query
@@ -979,8 +1003,8 @@ paths:
                       type: integer
 
     post:
-      operationId: R513
-      summary: "R513: Create group"
+      operationId: R514
+      summary: "R514: Create group"
       description: "Process the 'Create Group' form data. Access: MBR, COORD"
 
       tags:
@@ -1007,7 +1031,7 @@ paths:
                 - position
 
       responses:
-        "200":
+        "201":
           description: "Ok. Task Group created successfully"
           content:
             application/json:
@@ -1034,8 +1058,8 @@ paths:
 
   /api/groups/{id}:
     get:
-      operationId: R514
-      summary: "R514: Get Task Group By Id API Endpoint"
+      operationId: R515
+      summary: "R515: Get Task Group By Id API Endpoint"
       description: "Fetch a task group by its id. Access: MBR, ADM"
 
       tags:
