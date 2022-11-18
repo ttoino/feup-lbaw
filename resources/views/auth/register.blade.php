@@ -2,7 +2,7 @@
 
 @section('content')
     <form method="POST" action="{{ route('register') }}">
-        {{ csrf_field() }}
+        @csrf
 
         <div class="mb-3">
             <label for="name" class="form-label">Name</label>
@@ -10,11 +10,11 @@
                 class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}"
                 id="name" type="text" name="name"
                 value="{{ old('name') }}" required autofocus>
-            @if ($errors->has('name'))
+            @error('name')
                 <div class="invalid-feedback" id="name-feedback">
-                    {{ $errors->first('name') }}
+                    {{ $message }}
                 </div>
-            @endif
+            @enderror
         </div>
 
         <div class="mb-3">
@@ -23,11 +23,11 @@
                 class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}"
                 id="email" type="email" name="email"
                 value="{{ old('email') }}" required>
-            @if ($errors->has('email'))
+            @error('email')
                 <div class="invalid-feedback" id="email-feedback">
-                    {{ $errors->first('email') }}
+                    {{ $message }}
                 </div>
-            @endif
+            @enderror
         </div>
 
         <div class="mb-3">
@@ -36,11 +36,11 @@
                 class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}"
                 aria-describedby="password-feedback" id="password" type="password"
                 name="password" required>
-            @if ($errors->has('password'))
+            @error('password')
                 <div class="invalid-feedback" id="password-feedback">
-                    {{ $errors->first('password') }}
+                    {{ $message }}
                 </div>
-            @endif
+            @enderror
         </div>
 
         <div class="mb-3">
@@ -50,11 +50,11 @@
                 class="form-control {{ $errors->has('password-confirm') ? 'is-invalid' : '' }}"
                 aria-describedby="password-confirm-feedback" id="password-confirm"
                 type="password" name="password-confirm" required>
-            @if ($errors->has('password-confirm'))
+            @error('password-confirm')
                 <div class="invalid-feedback" id="password-confirm-feedback">
-                    {{ $errors->first('password-confirm') }}
+                    {{ $message }}
                 </div>
-            @endif
+            @enderror
         </div>
 
         <button type="submit" class="btn btn-primary">

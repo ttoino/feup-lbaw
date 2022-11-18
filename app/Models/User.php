@@ -42,5 +42,5 @@ class User extends Authenticatable {
         )->withPivot('is_favorite');
     }
 
-    protected $table = "user_profile";
+    protected $table = 'user_profile';
 }

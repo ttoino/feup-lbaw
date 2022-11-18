@@ -2,7 +2,7 @@
 
 @section('content')
     <form method="POST" action="{{ route('login') }}">
-        {{ csrf_field() }}
+        @csrf
 
         <div class="mb-3">
             <label for="email" class="form-label">E-mail</label>
@@ -10,11 +10,11 @@
                 class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}"
                 id="email" type="email" name="email"
                 value="{{ old('email') }}" required autofocus>
-            @if ($errors->has('email'))
+            @error('email')
                 <div class="invalid-feedback" id="email-feedback">
-                    {{ $errors->first('email') }}
+                    {{ $message }}
                 </div>
-            @endif
+            @enderror
         </div>
 
         <div class="mb-3">
@@ -23,11 +23,11 @@
                 class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}"
                 aria-describedby="password-feedback" id="password" type="password"
                 name="password" required>
-            @if ($errors->has('password'))
+            @error('password')
                 <div class="invalid-feedback" id="password-feedback">
-                    {{ $errors->first('password') }}
+                    {{ $message }}
                 </div>
-            @endif
+            @enderror
         </div>
 
         <div class="mb-3 form-check">
