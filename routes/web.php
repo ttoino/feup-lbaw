@@ -12,7 +12,7 @@
 */
 // Home
 Route::get('/', function () {
-    return view('layouts/app');
+    return view('pages/home');
 });
 
 // Static
