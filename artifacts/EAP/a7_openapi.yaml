@@ -568,6 +568,11 @@ paths:
 
       parameters:
         - in: query
+          name: query
+          schema:
+            type: string
+          required: true
+        - in: query
           name: limit
           schema:
             type: integer
@@ -710,7 +715,7 @@ paths:
 
       responses:
         "200":
-          description: "Ok."
+          description: "Ok. project deleted successfully."
 
   /api/project/{id}/add/{userId}: # this can later be merged or switched by the "invite" endpoint
     post:
@@ -758,7 +763,7 @@ paths:
           description: String to use for full-text search
           schema:
             type: string
-          required: false
+          required: true
         - in: query
           name: limit
           description: Number of tasks to return
