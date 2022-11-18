@@ -44,6 +44,10 @@
                 @auth
                     <a href="#" class="nav-link"><i
                             class="bi-bell-fill"></i></a>
+                            <div>
+                    <span>{{ Auth::user()->name }}</span>
+                    <a class="btn btn-outline" href="{{ route('logout') }}">Logout</a>
+                    </div>
                 @endauth
                 @guest
                     <a href="{{ route('login') }}" class="nav-link">Login</a>

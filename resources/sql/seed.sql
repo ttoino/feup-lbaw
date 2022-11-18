@@ -523,10 +523,9 @@ CREATE TRIGGER validate_thread_comment_author_project_member
 --------------------------------------------------------------------------------------------------------------------------------
 
 INSERT INTO
-    user_profile(id, name, email, password, blocked, is_admin)
+    user_profile(name, email, password, blocked, is_admin)
 VALUES
     (
-        1,
         'Gleda Goodram',
         'ggoodram0@booking.com',
         'vvAKpaezQOO',
@@ -534,7 +533,6 @@ VALUES
         true
     ),
     (
-        2,
         'Gareth Edinburough',
         'gedinburough1@gnu.org',
         'd0U1Xs',
@@ -542,7 +540,6 @@ VALUES
         true
     ),
     (
-        3,
         'Brita Behrend',
         'bbehrend2@google.co.jp',
         'AT2Kwhvo4WNb',
@@ -550,7 +547,6 @@ VALUES
         false
     ),
     (
-        4,
         'Dev Camin',
         'dcamin3@gmpg.org',
         'vfW1BNW12T',
@@ -558,7 +554,6 @@ VALUES
         false
     ),
     (
-        5,
         'Syd McCerery',
         'smccerery4@nymag.com',
         'reEn1CiKgadp',
@@ -566,7 +561,6 @@ VALUES
         false
     ),
     (
-        6,
         'Edee Spillane',
         'espillane5@google.de',
         'Xg6elqWh2usd',
@@ -574,7 +568,6 @@ VALUES
         false
     ),
     (
-        7,
         'Emmi Pestor',
         'epestor6@google.co.uk',
         'sn6pA7E',
@@ -582,7 +575,6 @@ VALUES
         false
     ),
     (
-        8,
         'Hillard Britton',
         'hbritton7@woothemes.com',
         '9o1pW1hlQk13',
@@ -590,7 +582,6 @@ VALUES
         false
     ),
     (
-        9,
         'Katuscha Scarrisbrick',
         'kscarrisbrick8@ox.ac.uk',
         'yo2iNxDv',
@@ -598,7 +589,6 @@ VALUES
         false
     ),
     (
-        10,
         'Romain Kernell',
         'rkernell9@tripadvisor.com',
         'IfEHbvYoa',
@@ -606,7 +596,6 @@ VALUES
         false
     ),
     (
-        11,
         'Elly Cairns',
         'ecairnsa@nhs.uk',
         'pDn5hM1j6oq',
@@ -614,7 +603,6 @@ VALUES
         false
     ),
     (
-        12,
         'Jo ann Matchett',
         'jannb@businessinsider.com',
         'mdqH9Ti4T',
@@ -622,7 +610,6 @@ VALUES
         false
     ),
     (
-        13,
         'Bonita Cosbey',
         'bcosbeyc@census.gov',
         '2O05TUi3Y',
@@ -630,7 +617,6 @@ VALUES
         false
     ),
     (
-        14,
         'Sherm Zelley',
         'szelleyd@t.co',
         'InNwoChwfW8',
@@ -638,7 +624,6 @@ VALUES
         false
     ),
     (
-        15,
         'Harlen Sollam',
         'hsollame@google.com.br',
         'PT5X8HedpJ',
@@ -646,7 +631,6 @@ VALUES
         false
     ),
     (
-        16,
         'Belicia Thurlby',
         'bthurlbyf@adobe.com',
         'npaeAW3Oujw',
@@ -654,7 +638,6 @@ VALUES
         false
     ),
     (
-        17,
         'Jacquelin Reading',
         'jreadingg@youtu.be',
         'iDSqqCU746',
@@ -662,7 +645,6 @@ VALUES
         false
     ),
     (
-        18,
         'Grady Samwayes',
         'gsamwayesh@qq.com',
         'gFFhcZKueg',
@@ -670,7 +652,6 @@ VALUES
         false
     ),
     (
-        19,
         'Jamaal Lunam',
         'jlunami@marriott.com',
         '882qPKiuYor',
@@ -678,7 +659,6 @@ VALUES
         false
     ),
     (
-        20,
         'Kessiah Marcoolyn',
         'kmarcoolynj@ask.com',
         'EuuD1c9wqZz',

@@ -49,7 +49,7 @@
             <input
                 class="form-control {{ $errors->has('password-confirm') ? 'is-invalid' : '' }}"
                 aria-describedby="password-confirm-feedback" id="password-confirm"
-                type="password" name="password-confirm" required>
+                type="password" name="password_confirmation" required>
             @error('password-confirm')
                 <div class="invalid-feedback" id="password-confirm-feedback">
                     {{ $message }}
