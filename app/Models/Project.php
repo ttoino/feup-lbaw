@@ -15,7 +15,9 @@ class Project extends Model {
      */
     protected $fillable = [
         'name',
-        'archived'
+        'archived',
+        'description',
+        'coordinator'
     ];
 
     /**

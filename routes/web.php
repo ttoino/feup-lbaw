@@ -35,20 +35,16 @@ Route::get('services', function () {
 
 
 // User
-Route::get('user/{id}', function ($id){
-    return view('layouts/user', ['id' => $id]);
-})->where('id', '[0-9]+');
-
+Route::get('user/{id}', 'UserController@show')->where('id', '[0-9]+');
+/*
 Route::get('user/{id}/edit', function ($id){
     return view('layouts/user_edit', ['id' => $id]);
 })->where('id', '[0-9]+');
-
+*/
 
 // Project 
-Route::get('project/{id}', function ($id){
-    return view('layouts/project', ['id' => $id]);
-})->where('id', '[0-9]+');
-
+Route::get('project/{id}', 'ProjectController@show')->where('id', '[0-9]+');
+/*
 Route::get('project/{id}/info', function ($id){
     return view('layouts/project_info', ['id' => $id]);
 })->where('id', '[0-9]+');
@@ -71,6 +67,7 @@ Route::get('project/{id}/task/{taskId}', function ($id, $task_id){
 Route::get('search', function (Request $request){
     return view('layouts/search', ['q' => $request->q, 'limit' => $request->limit]);
 });
+*/
 
 // Authentication
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
