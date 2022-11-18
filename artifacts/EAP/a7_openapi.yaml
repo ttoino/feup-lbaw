@@ -11,7 +11,7 @@ servers:
 
 externalDocs:
   description: Find more info here.
-  url: https://git.fe.up.pt/lbaw/lbaw2223/lbaw2265/-/wikis/eap#a7-web-resources-specification # TODO: change this
+  url: https://git.fe.up.pt/lbaw/lbaw2223/lbaw2265/-/wikis/eap#a7-web-resources-specification
 
 tags:
   - name: "M01: Authentication and User Profile"
@@ -31,7 +31,7 @@ paths:
         Access: PUB"
 
       tags:
-        - "M01" # TODO: find new module
+        - "M01"
 
       responses:
         "200":
@@ -699,7 +699,7 @@ paths:
       description: "Endpoint for project deletion. Access: ADM" # for the prototype only admins can delete projects
 
       tags:
-        - M030
+        - "M03"
 
       parameters:
         - in: path
