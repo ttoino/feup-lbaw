@@ -13,7 +13,7 @@ class UserController extends Controller {
 
     public function show($id) {
         $user = User::find($id);
-        $this->authorize('show', $user);
+        //$this->authorize('show', $user);
         return view('', ['user' => $user]);
     }
 
@@ -25,7 +25,7 @@ class UserController extends Controller {
     public function list() {
         if (!Auth::check())
             return redirect('/login');
-        $this->authorize('list', User::class);
+        //$this->authorize('list', User::class);
         $users = Project::find($id)->users()->orderBy('id')->get();
         return view('', ['users' => $users]);
     }
@@ -38,7 +38,7 @@ class UserController extends Controller {
     public function create(Request $request) {
         $user = new User();
 
-        $this->authorize('create', $user);
+        //$this->authorize('create', $user);
 
         $user->name = $request->input('name');
         $user->email = $request->input('email');
