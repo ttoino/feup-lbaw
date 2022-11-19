@@ -2,5 +2,10 @@
 @section('title', $project->name)
 
 @section('content')
-  @include('partials.sidemenu', ['project' => $project])
+    <div class='row'>
+        @include('partials.sidemenu', ['project' => $project])
+        <div class="col-10">
+            
+        </div>
+    </div>
 @endsection

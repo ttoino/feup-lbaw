@@ -49,9 +49,8 @@ class UserController extends Controller {
         return $user;
     }
 
-/*
-public function delete(Request $request, $id)
-{
-}
-*/
+    /*
+    public function delete(Request $request, $id){
+    }
+    */
 }

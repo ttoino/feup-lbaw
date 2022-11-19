@@ -11,9 +11,9 @@
 |
 */
 // Home
-Route::get('/', function () {
-    return view('pages/home');
-});
+Route::get('/', fn() => Auth::check()
+    ? app()->make(\App\Http\Controllers\ProjectController::class)->list()
+    : view('pages.home'));
 
 // Static
 
@@ -68,6 +68,8 @@ Route::get('search', function (Request $request){
     return view('layouts/search', ['q' => $request->q, 'limit' => $request->limit]);
 });
 */
+
+Route::get('dump', 'DebugController@dump');
 
 // Authentication
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');

@@ -22,11 +22,9 @@ class ProjectController extends Controller {
      * @return Response
      */
     public function list() {
-        if (!Auth::check())
-            return redirect('/login');
-        $this->authorize('list', Project::class);
-        $projects = Auth::user()->projects()->orderBy('id')->get();
-        return view('', ['projects' => $projects]);
+        // $this->authorize('list', Project::class);
+        $projects = Auth::user()->projects;
+        return view('pages.home', ['projects' => $projects]);
     }
 
     /**
