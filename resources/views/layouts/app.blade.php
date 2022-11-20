@@ -8,9 +8,11 @@
 
             <nav class="navbar-nav">
                 @auth
+                    <a href="{{ url('project/new') }}" class="nav-link" data-toggle="tooltip" data-placement="left" title="Create new project">Create Project <i class="bi-plus-circle-fill"></i></a>
                     <a href="#" class="nav-link"><i class="bi-bell-fill"></i></a>
                     <a class="nav-link"
-                        href="{{ url('profile') }}">{{ Auth::user()->name }}</a>
+                        href="{{ url('profile') }}"
+                        data-toggle="tooltip" data-placement="left" title="Go to user profile">{{ Auth::user()->name }}</a>
                     <a class="nav-link" href="{{ route('logout') }}">Logout</a>
                 @endauth
                 @guest

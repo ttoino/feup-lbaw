@@ -44,6 +44,9 @@ Route::get('user/{id}/edit', function ($id){
 
 // Project 
 Route::get('project/{id}', 'ProjectController@show')->where('id', '[0-9]+');
+Route::get('project/{id}', function () {
+    return view('pages.project.new');
+});
 /*
 Route::get('project/{id}/info', function ($id){
     return view('layouts/project_info', ['id' => $id]);
