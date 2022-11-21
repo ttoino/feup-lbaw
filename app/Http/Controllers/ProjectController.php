@@ -13,14 +13,12 @@ use App\Models\Project;
 class ProjectController extends Controller {
 
     public function __construct() {
-        $this->middleware('auth');
+        //$this->middleware('auth');
     }
 
     public function showProjectByID($id) {
         $project = Project::find($id);
-
-        $this->authorize('view', $project);
-
+        //$this->authorize('show', $project);
         return view('pages.project', ['project' => $project], ['id' => $id]);
     }
 

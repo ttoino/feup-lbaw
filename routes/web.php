@@ -58,11 +58,17 @@ Route::get('project/{id}/forum', function ($id){
 return view('layouts/project_forum', ['id' => $id]);
 });
 Route::get('project/{id}/forum/{threadId}', function ($id, $thread_id){
-return response('Thread' . $thread_id); // placeholder
-})->where(['thread', '[0-9]+']);
-Route::get('project/{id}/task/{taskId}', function ($id, $task_id){
-return response('Task' . $task_id);  // placeholder
-})->where(['task', '[0-9]+']);
+    return response('Thread' . $thread_id); // placeholder
+})->where(['id', '[0-9]+'], ['thread', '[0-9]+']);
+*/
+
+Route::post('project/{id}/task/new', 'TaskController@create')->where('id', '[0-9]+');
+
+Route::get('project/{id}/task/{taskId}', 'TaskController@show')->where(['id', '[0-9]+'], ['taskId', '[0-9]+']);
+
+
+
+/*
 // Search 
 Route::get('search', function (Request $request){
 return view('layouts/search', ['q' => $request->q, 'limit' => $request->limit]);

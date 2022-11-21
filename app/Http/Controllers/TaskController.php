@@ -23,9 +23,18 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
+    public function create(Request $request) {
+        $task = new Task();
+
+        //$this->authorize('create', $task);
+
+        $task->name = $request->input('name');
+        $task->description = $request->input('description');
+        $task->task_group = $request->input('task_group');
+        $task->position = $request->input('position');
+        $task->save();
+
+        return $task;
     }
 
     /**
@@ -59,12 +68,13 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function show(Task $task)
-    {
-        //
+    public function show($project_id, $id) {
+        $task = Task::find($id);
+        $project = $task->project;
+        //$this->authorize('show', $task);
+        return view('pages.task', ['task' => $task], ['project' => $project]);
     }
 
     /**
@@ -95,8 +105,12 @@ class TaskController extends Controller
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Task $task)
-    {
-        //
+    public function delete(Request $request, $id) {
+        $task = Task::find($id);
+
+        //$this->authorize('delete', $task);
+        $task->delete();
+
+        return $task;
     }
 }

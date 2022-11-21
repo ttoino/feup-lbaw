@@ -35,8 +35,8 @@ class Task extends Model {
         return $this->hasOneThrough(
             Project::class,
             TaskGroup::class,
-            null,
-            null,
+            'id',
+            'id',
             'task_group',
             'project'
         );

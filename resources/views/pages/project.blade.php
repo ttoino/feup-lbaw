@@ -9,6 +9,4 @@
 
         @each('partials.project.board.task-group', $project->taskGroups, 'group')
         @include('partials.project.board.task-group')
-
-    </section>
-@endsection
+@endsection 
