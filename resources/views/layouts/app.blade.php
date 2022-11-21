@@ -4,14 +4,14 @@
     <header class="navbar navbar-expand navbar-dark sticky-top bg-primary shadow">
         <div class="container-fluid">
             <a class="navbar-brand"
-                href="{{ url('/') }}">{{ config('app.name', 'Laravel') }}</a>
+                href="{{ route('home') }}">{{ config('app.name', 'Laravel') }}</a>
 
             <nav class="navbar-nav">
                 @auth
                     <a href="{{ url('project/new') }}" class="nav-link" data-toggle="tooltip" data-placement="left" title="Create new project">Create Project <i class="bi-plus-circle-fill"></i></a>
                     <a href="#" class="nav-link"><i class="bi-bell-fill"></i></a>
                     <a class="nav-link"
-                        href="{{ url('profile') }}"
+                        href="{{ route('user.profile', ['id' => Auth::user()->id]) }}"
                         data-toggle="tooltip" data-placement="left" title="Go to user profile">{{ Auth::user()->name }}</a>
                     <a class="nav-link" href="{{ route('logout') }}">Logout</a>
                 @endauth

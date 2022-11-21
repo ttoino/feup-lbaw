@@ -18,7 +18,7 @@
                     </div>
                 @endforeach
                 <div class='col border border-secondary m-3 p-3 text-center'>
-                    <a href="{{ url('/project/' . $id) }}">&plus; Create group</a>
+                    <a href="{{ route('project.home', ['id' => $id]) }}">&plus; Create group</a>
                     {{-- change referral when OpenApi is updated --}}
                 </div>
             </div>

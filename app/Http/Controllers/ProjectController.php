@@ -38,7 +38,7 @@ class ProjectController extends Controller {
 
         return $request->wantsJson()
             ? new JsonResponse([$project], 201)
-            : redirect()->route('project_home', ['id' => $project->id]);
+            : redirect()->route('project.home', ['id' => $project->id]);
     }
 
     /**

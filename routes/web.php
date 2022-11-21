@@ -13,7 +13,7 @@
 // Home
 Route::get('/', fn() => Auth::check()
     ? app()->make(\App\Http\Controllers\ProjectController::class)->listUserProjects()
-    : view('pages.home'));
+    : view('pages.home'))->name('home');
 
 // Static
 
@@ -35,17 +35,38 @@ Route::get('services', function () {
 
 
 // User
-Route::get('user/{id}', 'UserController@show');
-/*
-Route::get('user/{id}/edit', function ($id){
-    return view('layouts/user_edit', ['id' => $id]);
+Route::prefix('user/')->name('user.')->controller('UserController')->group(function () {
+    
+    Route::prefix('{id}/')->group(function () {
+        Route::get('', 'show')->name('profile');
+        /* Route::get('/edit', function ($id){
+            return view('layouts/user_edit', ['id' => $id]);
+        }); */
+    });
 });
-*/
 
 // Project 
-Route::get('project/new', 'ProjectController@showProjectCreationPage');
-Route::post('project/new', 'ProjectController@createProject');
-Route::get('project/{id}', 'ProjectController@showProjectByID')->name('project_home');
+Route::prefix('project/')->name('project.')->controller('ProjectController')->group(function() {
+    Route::get('new', 'showProjectCreationPage')->name('new');
+    Route::post('new', 'createProject');
+
+    Route::prefix('{id}/')->group(function () {
+        Route::get('', 'showProjectByID')->name('home');
+    
+/*         Route::prefix('task/')->name('task')->group(function () {
+            
+            Route::get('new', 'showTaskCreationPage')->name('new');
+            Route::post('new', 'createTask');
+
+            Route::prefix('{taskId}/')->group(function () {
+
+                Route::get('', 'showTaskByID')->name('info');
+            });
+
+            Route::get('', 'search')->name('search');
+        }); */
+    });
+});
 /*
 Route::get('project/{id}/info', function ($id){
     return view('layouts/project_info', ['id' => $id]);
@@ -74,8 +95,13 @@ Route::get('search', function (Request $request){
 Route::get('dump', 'DebugController@dump');
 
 // Authentication
-Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-Route::post('login', 'Auth\LoginController@login');
-Route::get('logout', 'Auth\LoginController@logout')->name('logout');
-Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-Route::post('register', 'Auth\RegisterController@register');
+Route::controller('Auth\LoginController')->group(function () {
+    Route::get('login', 'showLoginForm')->name('login');
+    Route::post('login', 'login');
+    Route::get('logout', 'logout')->name('logout');
+});
+
+Route::controller('Auth\RegisterController')->group(function () {
+    Route::get('register', 'showRegistrationForm')->name('register');
+    Route::post('register', 'register');
+});
