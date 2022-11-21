@@ -12,7 +12,7 @@ use App\Models\Project;
 class UserController extends Controller {
 
     public function show($id) {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         //$this->authorize('show', $user);
         return view('', ['user' => $user]);
     }

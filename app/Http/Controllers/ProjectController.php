@@ -4,16 +4,54 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Project;
 
 class ProjectController extends Controller {
 
-    public function show($id) {
+    public function __construct() {
+        $this->middleware('auth');
+    }
+
+    public function showProjectByID($id) {
         $project = Project::find($id);
+
         //$this->authorize('show', $project);
+
         return view('pages.project', ['project' => $project], ['id' => $id]);
+    }
+
+    public function showProjectCreationPage() {
+        return view('pages.project.new');
+    }
+
+    public function createProject(Request $request) {
+
+        $requestData = $request->all();
+
+        $this->projectCreationValidator($requestData)->validate();
+
+        $project = $this->create($requestData);
+
+        return $request->wantsJson()
+            ? new JsonResponse([$project], 201)
+            : redirect()->route('project_home', ['id' => $project->id]);
+    }
+
+    /**
+     * Get a validator for an incoming project creation request.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function projectCreationValidator(array $data) {
+        return Validator::make($data, [
+            'name' => 'required|string|min:6|max:255',
+            'description' => 'string|min:6|max:512',
+        ]);
     }
 
     /**
@@ -21,7 +59,7 @@ class ProjectController extends Controller {
      *
      * @return Response
      */
-    public function list() {
+    public function listUserProjects() {
         // $this->authorize('list', Project::class);
         $projects = Auth::user()->projects;
         return view('pages.home', ['projects' => $projects]);
@@ -32,14 +70,16 @@ class ProjectController extends Controller {
      *
      * @return Project The project created.
      */
-    public function create(Request $request) {
+    public function create(array $data) {
+
         $project = new Project();
 
-        //$this->authorize('create', $project);
+        // no need to use policies here because this is an auth protected route
+        // $this->authorize('create', $project);
 
-        $project->name = $request->input('name');
+        $project->name = $data['name'];
         $project->archived = FALSE;
-        $project->description = $request->input('description');
+        $project->description = $data['description'];
         $project->coordinator = Auth::user()->id;
         $project->save();
 

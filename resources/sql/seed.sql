@@ -59,6 +59,7 @@ CREATE TABLE user_profile (
 CREATE TABLE project (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
+    description TEXT,
     creation_date TODAY NOT NULL,
     last_modification_date TIMESTAMP,
     archived BOOLEAN NOT NULL DEFAULT false,
@@ -668,7 +669,6 @@ VALUES
 
 INSERT INTO
     project(
-        id,
         name,
         creation_date,
         last_modification_date,
@@ -677,7 +677,6 @@ INSERT INTO
     )
 VALUES
     (
-        1,
         'Wyman Inc',
         '2021-08-26',
         NULL,
@@ -685,7 +684,6 @@ VALUES
         8
     ),
     (
-        2,
         'Borer LLC',
         '2021-09-09',
         NULL,
@@ -693,7 +691,6 @@ VALUES
         7
     ),
     (
-        3,
         'Abshire and Sons',
         '2022-02-04',
         '2022-05-19',
@@ -723,7 +720,6 @@ VALUES
 
 INSERT INTO
     task_group(
-        id,
         name,
         description,
         creation_date,
@@ -732,7 +728,6 @@ INSERT INTO
     )
 VALUES
     (
-        1,
         'To be done',
         'Task that needs to be done',
         '2022-02-04',
@@ -740,7 +735,6 @@ VALUES
         3
     ),
     (
-        2,
         'Doing',
         'Task in progress',
         '2022-02-04',
@@ -748,7 +742,6 @@ VALUES
         3
     ),
     (
-        3,
         'Done',
         'Task already completed',
         '2022-02-04',
@@ -756,7 +749,6 @@ VALUES
         3
     ),
     (
-        4,
         'In revision',
         'Task that needs to be reviewed',
         '2022-02-04',
@@ -764,7 +756,6 @@ VALUES
         3
     ),
     (
-        5,
         'To-Do',
         'Task that needs to be done',
         '2021-06-09',
@@ -772,7 +763,6 @@ VALUES
         1
     ),
     (
-        6,
         'In Progress',
         'Task in progress',
         '2021-06-09',
@@ -780,7 +770,6 @@ VALUES
         1
     ),
     (
-        7,
         'Done',
         'Task already completed',
         '2021-06-09',
@@ -788,7 +777,6 @@ VALUES
         1
     ),
     (
-        8,
         'Product Backlog',
         'Tasks that can be added to future releases',
         '2022-03-28',
@@ -796,7 +784,6 @@ VALUES
         2
     ),
     (
-        9,
         'Iteration Backlog',
         'Task that need to be completed before the end of the current iteration',
         '2022-03-28',
@@ -804,7 +791,6 @@ VALUES
         2
     ),
     (
-        10,
         'In Progress',
         'Task in progress',
         '2022-03-28',
@@ -812,14 +798,12 @@ VALUES
         2
     ), 
     (
-        11,
         'In Review',
         'Tasks that need to be reviewed',
         '2022-03-28',
         4,
         2
     ), (
-        12,
         'Done',
         'Task that have been completed',
         '2022-03-28',
@@ -847,7 +831,6 @@ VALUES
     ('2021-10-24', 11, 1);
 INSERT INTO
     task(
-        id,
         name,
         description,
         creation_date,
@@ -859,7 +842,6 @@ INSERT INTO
     )
 VALUES
     (
-        1,
         'Information search',
         'Nothing done',
         '2021-06-09',
@@ -870,7 +852,6 @@ VALUES
         1
     ),
     (
-        2,
         'Information analysis',
         'stil things left to do',
         '2022-02-02',
@@ -881,7 +862,6 @@ VALUES
         1
     ),
     (
-        3,
         'Information Architecture',
         'Develop the architecture',
         '2021-06-07',
@@ -892,7 +872,6 @@ VALUES
         1
     ),
     (
-        4,
         'Potential Clients',
         'Search for potential clients',
         '2022-02-02',
@@ -903,7 +882,6 @@ VALUES
         4
     ),
     (
-        5,
         'Design review',
         'Design review with stakeholders',
         '2021-06-09',
@@ -914,7 +892,6 @@ VALUES
         12
     ),
     (
-        6,
         'Implementation',
         'Implement landing page',
         '2022-02-04',
@@ -925,7 +902,6 @@ VALUES
         12
     ),
     (
-        7,
         'User research',
         'Summarize user reseach insights',
         '2022-02-04',
@@ -936,7 +912,6 @@ VALUES
         7
     ),
     (
-        8,
         'Finalize use cases',
         'Sign off user quotes',
         '2022-02-04',
@@ -947,7 +922,6 @@ VALUES
         7
     ),
     (
-        9,
         'Info search',
         'Need more info',
         '2022-02-04',
@@ -958,7 +932,6 @@ VALUES
         9
     ),
     (
-        10,
         'Design new website',
         'Is missing the last item',
         '2022-02-04',
@@ -969,7 +942,6 @@ VALUES
         9
     ),
     (
-        11,
         'Design',
         'Do the page design',
         '2021-03-02',
@@ -980,7 +952,6 @@ VALUES
         4
     ),
     (
-        12,
         'Front',
         'Frontend',
         '2021-05-05',
@@ -991,7 +962,6 @@ VALUES
         4
     ),
     (
-        13,
         'Implement',
         'Implementing frontend',
         '2021-05-04',
@@ -1002,7 +972,6 @@ VALUES
         4
     ),
     (
-        14,
         'Project definition',
         'divide tasks',
         '2021-02-06',
@@ -1013,7 +982,6 @@ VALUES
         4
     ),
     (
-        15,
         'info analysis',
         'more more',
         '2022-05-03',
@@ -1024,7 +992,6 @@ VALUES
         3
     ),
     (
-        16,
         'info search',
         'need more info',
         '2022-04-23',
@@ -1035,7 +1002,6 @@ VALUES
         3
     ),
     (
-        17,
         'potential members',
         'look for potential members',
         '2022-07-23',
@@ -1046,7 +1012,6 @@ VALUES
         3
     ),
     (
-        18,
         'information Architecture',
         'architecture development',
         '2022-04-23',
@@ -1057,7 +1022,6 @@ VALUES
         12
     ),
     (
-        19,
         'generic research',
         'everything',
         '2021-10-31',
@@ -1068,7 +1032,6 @@ VALUES
         8
     ),
     (
-        20,
         'user research',
         'summarize user research',
         '2021-11-08',
@@ -1081,7 +1044,6 @@ VALUES
 
 INSERT INTO
     task_comment(
-        id,
         content,
         creation_date,
         edit_date,
@@ -1090,7 +1052,6 @@ INSERT INTO
     )
 VALUES
     (
-        1,
         'Need Improvement',
         '2022-04-15',
         '2022-04-16',
@@ -1098,7 +1059,6 @@ VALUES
         10
     ),
     (
-        2,
         'Things to do',
         '2022-04-17',
         NULL,
@@ -1106,7 +1066,6 @@ VALUES
         18
     ),
     (
-        3,
         'So far so Good',
         '2021-06-17',
         '2021-06-18',
@@ -1114,7 +1073,6 @@ VALUES
         3
     ),
     (
-        4,
         'Need some attention',
         '2021-06-17',
         '2021-06-18',
@@ -1122,7 +1080,6 @@ VALUES
         5
     ),
     (
-        5,
         'More information needed',
         '2021-06-12',
         NULL,
@@ -1130,7 +1087,6 @@ VALUES
         1
     ),
     (
-        6,
         'Some errors',
         '2021-06-12',
         NULL,
@@ -1138,7 +1094,6 @@ VALUES
         1
     ),
     (
-        7, 
         'Errors', 
         '2022-03-05', 
         NULL, 
@@ -1148,7 +1103,6 @@ VALUES
 
 INSERT INTO
     tag(
-        id,
         title,
         description,
         color,
@@ -1156,70 +1110,60 @@ INSERT INTO
     )
 VALUES
     (
-        1,
         'molestie in, tempus',
         'Cras dictum ultricies ligula. Nullam enim.',
         x'f4b8b7'::COLOR,
         3
     ),
     (
-        2,
         'tellus eu augue',
         'dui lectus rutrum urna, nec luctus',
         x'8ed863'::COLOR,
         2
     ),
     (
-        3,
         'varius et, euismod',
         'risus. Duis a mi fringilla mi',
         x'8fd1e0'::COLOR,
         3
     ),
     (
-        4,
         'magna. Duis dignissim',
         'id ante dictum cursus. Nunc mauris',
         x'3282ad'::COLOR,
         1
     ),
     (
-        5,
         'iaculis quis, pede.',
         'facilisi. Sed neque. Sed eget lacus.',
         x'75dd77'::COLOR,
         1
     ),
     (
-        6,
         'dictum magna. Ut',
         'Fusce aliquet magna a neque. Nullam',
         x'35ea5d'::COLOR,
         2
     ),
     (
-        7,
         'augue ac ipsum.',
         'molestie in, tempus eu, ligula. Aenean',
         x'009179'::COLOR,
         2
     ),
     (
-        8,
         'parturient montes, nascetur',
         'Morbi accumsan laoreet ipsum. Curabitur consequat,',
         x'14369b'::COLOR,
         3
     ),
     (
-        9,
         'eu enim. Etiam',
         'ut, nulla. Cras eu tellus eu',
         x'4dc429'::COLOR,
         2
     ),
     (
-        10,
         'lacus pede sagittis',
         'Curae Phasellus ornare. Fusce mollis. Duis',
         x'b5eeff'::COLOR,
