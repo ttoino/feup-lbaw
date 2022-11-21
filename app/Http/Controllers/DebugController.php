@@ -21,7 +21,7 @@ class DebugController extends Controller {
         echo 'notifications: ';
         print_r(Notification::all()->toArray());
         echo 'projects: ';
-        print_r(Project::with('tasks', 'taskGroups')->get()->toArray());
+        print_r(Project::with('tasks', 'taskGroups', 'users')->get()->toArray());
         echo 'invitations: ';
         print_r(ProjectInvitation::with('creator', 'project')->get()->toArray());
         echo 'timeline: ';
