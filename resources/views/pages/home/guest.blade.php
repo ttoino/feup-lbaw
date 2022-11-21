@@ -5,7 +5,7 @@
         'd-flex',
         'align-items-center',
         'justify-content-center',
-        'flex-grow-1',
+        'flex-fill',
         'text-bg-primary',
         'p-4',
     ])>

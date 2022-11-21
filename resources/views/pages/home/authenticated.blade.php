@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <h2>Your projects:</h2>
+    <h2>Your projects</h2>
+
     @forelse ($projects as $p)
         <p>Project -> {{ $p->name }}</p>
     @empty

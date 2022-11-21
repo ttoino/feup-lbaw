@@ -39,7 +39,7 @@
     <script type="text/javascript" src={{ asset('js/app.js') }} defer></script>
 </head>
 
-<body class="h-100 d-flex flex-column">
+<body class="h-100 d-flex flex-column @stack('body-classes')">
     @yield('body')
 </body>
 
