@@ -5,6 +5,8 @@
 @section('form')
     @csrf
 
+    <h2 class="text-center h1">Create your new idea!</h2>
+
     {{-- Should allow for pictures --}}
 
     <div class="form-floating">
@@ -23,7 +25,7 @@
     </div>
 
     <div class="form-floating">
-        <textarea placeholder=""
+        <textarea placeholder="" style="height: 240px"
             class="form-control {{ $errors->has('description') ? 'is-invalid' : '' }}"
             aria-describedby="description-feedback" id="description" name="description"
             required></textarea>

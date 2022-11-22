@@ -11,9 +11,9 @@
     @else
         <div class="hstack justify-content-between">
             <h2>Your projects</h2>
-            <button class="btn btn-primary hstack gap-2">
+            <a href="{{ route('project.new') }}" class="btn btn-primary hstack gap-2">
                 <i class="bi bi-plus"></i> Create project
-            </button>
+            </a>
         </div>
 
         <ul class="list-group">
