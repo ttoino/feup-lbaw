@@ -18,7 +18,7 @@ class ProjectController extends Controller {
 
     public function showProjectByID($id) {
         $project = Project::find($id);
-        //$this->authorize('show', $project);
+        $this->authorize('view', $project);
         return view('pages.project', ['project' => $project], ['id' => $id]);
     }
 

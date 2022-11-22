@@ -30,7 +30,7 @@ class TaskPolicy
      */
     public function view(User $user, Task $task)
     {
-        //
+        return $task->project->users->contains($user);
     }
 
     /**
@@ -92,6 +92,13 @@ class TaskPolicy
         //
     }
 
+    /**
+     * Determine if the user is allowed to mark this task as completed.
+     *  
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Task  $task
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
     public function complete(User $user, Task $task) {
         return $task->project->users->contains($user);
     }

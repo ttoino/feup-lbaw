@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\TaskGroup;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -23,18 +26,48 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request) {
-        $task = new Task();
+    public function createTask(Request $request) {
+        $requestData = $request->all();
+
+        $this->taskCreationValidator($requestData)->validate();
 
         //$this->authorize('create', $task);
 
-        $task->name = $request->input('name');
-        $task->description = $request->input('description');
-        $task->task_group = $request->input('task_group');
-        $task->position = $request->input('position');
+        $task = $this->create($requestData);
+
+        $projectId = TaskGroup::findOrFail($task->task_group)->project;
+
+        return $request->wantsJson()
+            ? new JsonResponse([$task], 201)
+            : redirect()->route('project.home', ['id' => $projectId]);
+    }
+
+    public function create(array $data) {
+
+        $task = new Task();
+
+        $task->name = $data['name'];
+        $task->description = $data['description'] ?? '';
+        $task->task_group = $data['task_group'];
+        $task->position = $data['position'];
         $task->save();
 
         return $task;
+    }
+
+    /**
+     * Get a validator for an incoming project creation request.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function taskCreationValidator(array $data) {
+        return Validator::make($data, [
+            'name' => 'required|string|min:4|max:255',
+            'description' => 'string|min:6|max:512',
+            'position' => 'required|integer|min:0',
+            'task_group' => 'required|integer'
+        ]);
     }
 
     /**
@@ -73,7 +106,7 @@ class TaskController extends Controller
     public function show($project_id, $id) {
         $task = Task::find($id);
         $project = $task->project;
-        //$this->authorize('show', $task);
+        $this->authorize('view', $task);
         return view('pages.task', ['task' => $task], ['project' => $project]);
     }
 

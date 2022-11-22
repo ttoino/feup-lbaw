@@ -519,6 +519,28 @@ CREATE TRIGGER validate_thread_comment_author_project_member
     FOR EACH ROW
     EXECUTE FUNCTION validate_thread_comment_author_project_member();
 
+-- TRIGGER09
+CREATE OR REPLACE FUNCTION add_coordinator_as_project_member() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        INSERT INTO project_member VALUES (NEW.coordinator, NEW.id, 'false');
+    END IF;
+    IF TG_OP = 'UPDATE' THEN
+        UPDATE project_member SET user_profile = NEW.coordinator WHERE user_profile = OLD.user_profile AND project = NEW.project;
+    END IF;
+
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+--
+DROP TRIGGER IF EXISTS add_coordinator_as_project_member ON project;
+CREATE TRIGGER add_coordinator_as_project_member
+    AFTER INSERT OR UPDATE OF coordinator ON project
+    FOR EACH ROW
+    EXECUTE FUNCTION add_coordinator_as_project_member();
+
 --------------------------------------------------------------------------------------------------------------------------------
 -- Populate
 --------------------------------------------------------------------------------------------------------------------------------
@@ -529,140 +551,140 @@ VALUES
     (
         'Gleda Goodram',
         'ggoodram0@booking.com',
-        'vvAKpaezQOO',
+        '$2a$12$HXIQ3hqLzAE/t6Z4.aL1Ne75CR26WL7JESGTuaKmiUF78ZPA13d9e',
         false,
         true
     ),
     (
         'Gareth Edinburough',
         'gedinburough1@gnu.org',
-        'd0U1Xs',
+        '$2a$12$HXIQ3hqLzAE/t6Z4.aL1Ne75CR26WL7JESGTuaKmiUF78ZPA13d9e',
         false,
         true
     ),
     (
         'Brita Behrend',
         'bbehrend2@google.co.jp',
-        'AT2Kwhvo4WNb',
+        '$2a$12$HXIQ3hqLzAE/t6Z4.aL1Ne75CR26WL7JESGTuaKmiUF78ZPA13d9e',
         false,
         false
     ),
     (
         'Dev Camin',
         'dcamin3@gmpg.org',
-        'vfW1BNW12T',
+        '$2a$12$HXIQ3hqLzAE/t6Z4.aL1Ne75CR26WL7JESGTuaKmiUF78ZPA13d9e',
         false,
         false
     ),
     (
         'Syd McCerery',
         'smccerery4@nymag.com',
-        'reEn1CiKgadp',
+        '$2a$12$HXIQ3hqLzAE/t6Z4.aL1Ne75CR26WL7JESGTuaKmiUF78ZPA13d9e',
         false,
         false
     ),
     (
         'Edee Spillane',
         'espillane5@google.de',
-        'Xg6elqWh2usd',
+        '$2a$12$HXIQ3hqLzAE/t6Z4.aL1Ne75CR26WL7JESGTuaKmiUF78ZPA13d9e',
         false,
         false
     ),
     (
         'Emmi Pestor',
         'epestor6@google.co.uk',
-        'sn6pA7E',
+        '$2a$12$HXIQ3hqLzAE/t6Z4.aL1Ne75CR26WL7JESGTuaKmiUF78ZPA13d9e',
         true,
         false
     ),
     (
         'Hillard Britton',
         'hbritton7@woothemes.com',
-        '9o1pW1hlQk13',
+        '$2a$12$HXIQ3hqLzAE/t6Z4.aL1Ne75CR26WL7JESGTuaKmiUF78ZPA13d9e',
         false,
         false
     ),
     (
         'Katuscha Scarrisbrick',
         'kscarrisbrick8@ox.ac.uk',
-        'yo2iNxDv',
+        '$2a$12$HXIQ3hqLzAE/t6Z4.aL1Ne75CR26WL7JESGTuaKmiUF78ZPA13d9e',
         false,
         false
     ),
     (
         'Romain Kernell',
         'rkernell9@tripadvisor.com',
-        'IfEHbvYoa',
+        '$2a$12$HXIQ3hqLzAE/t6Z4.aL1Ne75CR26WL7JESGTuaKmiUF78ZPA13d9e',
         false,
         false
     ),
     (
         'Elly Cairns',
         'ecairnsa@nhs.uk',
-        'pDn5hM1j6oq',
+        '$2a$12$HXIQ3hqLzAE/t6Z4.aL1Ne75CR26WL7JESGTuaKmiUF78ZPA13d9e',
         false,
         false
     ),
     (
         'Jo ann Matchett',
         'jannb@businessinsider.com',
-        'mdqH9Ti4T',
+        '$2a$12$HXIQ3hqLzAE/t6Z4.aL1Ne75CR26WL7JESGTuaKmiUF78ZPA13d9e',
         true,
         false
     ),
     (
         'Bonita Cosbey',
         'bcosbeyc@census.gov',
-        '2O05TUi3Y',
+        '$2a$12$HXIQ3hqLzAE/t6Z4.aL1Ne75CR26WL7JESGTuaKmiUF78ZPA13d9e',
         false,
         false
     ),
     (
         'Sherm Zelley',
         'szelleyd@t.co',
-        'InNwoChwfW8',
+        '$2a$12$HXIQ3hqLzAE/t6Z4.aL1Ne75CR26WL7JESGTuaKmiUF78ZPA13d9e',
         false,
         false
     ),
     (
         'Harlen Sollam',
         'hsollame@google.com.br',
-        'PT5X8HedpJ',
+        '$2a$12$HXIQ3hqLzAE/t6Z4.aL1Ne75CR26WL7JESGTuaKmiUF78ZPA13d9e',
         false,
         false
     ),
     (
         'Belicia Thurlby',
         'bthurlbyf@adobe.com',
-        'npaeAW3Oujw',
+        '$2a$12$HXIQ3hqLzAE/t6Z4.aL1Ne75CR26WL7JESGTuaKmiUF78ZPA13d9e',
         false,
         false
     ),
     (
         'Jacquelin Reading',
         'jreadingg@youtu.be',
-        'iDSqqCU746',
+        '$2a$12$HXIQ3hqLzAE/t6Z4.aL1Ne75CR26WL7JESGTuaKmiUF78ZPA13d9e',
         true,
         false
     ),
     (
         'Grady Samwayes',
         'gsamwayesh@qq.com',
-        'gFFhcZKueg',
+        '$2a$12$HXIQ3hqLzAE/t6Z4.aL1Ne75CR26WL7JESGTuaKmiUF78ZPA13d9e',
         false,
         false
     ),
     (
         'Jamaal Lunam',
         'jlunami@marriott.com',
-        '882qPKiuYor',
+        '$2a$12$HXIQ3hqLzAE/t6Z4.aL1Ne75CR26WL7JESGTuaKmiUF78ZPA13d9e',
         true,
         false
     ),
     (
         'Kessiah Marcoolyn',
         'kmarcoolynj@ask.com',
-        'EuuD1c9wqZz',
+        '$2a$12$HXIQ3hqLzAE/t6Z4.aL1Ne75CR26WL7JESGTuaKmiUF78ZPA13d9e',
         true,
         false
     );
@@ -702,10 +724,8 @@ INSERT INTO
     project_member(user_profile, project, is_favorite)
 VALUES
     (3, 2, 'false'),
-    (4, 3, 'false'),
     (5, 2, 'true'),
     (6, 3, 'false'),
-    (7, 2, 'false'),
     (8, 2, 'false'),
     (9, 2, 'true'),
     (10, 2, 'true'),

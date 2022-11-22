@@ -38,15 +38,15 @@ Route::prefix('project/')->name('project.')->controller('ProjectController')->gr
     Route::prefix('{id}/')->group(function () {
         Route::get('', 'showProjectByID')->name('home');
 
-        /*         Route::prefix('task/')->name('task')->group(function () {
-        
-        Route::get('new', 'showTaskCreationPage')->name('new');
-        Route::post('new', 'createTask');
-        Route::prefix('{taskId}/')->group(function () {
-        Route::get('', 'showTaskByID')->name('info');
+        Route::prefix('task/')->name('task.')->controller('TaskController')->group(function () {
+            Route::post('new', 'createTask');
+
+            Route::prefix('{taskId}/')->where(['taskId', '[0-9]+'])->group(function () {
+                Route::get('', 'show')->name('info');
+            });
+
+            // Route::get('', 'search')->name('search');
         });
-        Route::get('', 'search')->name('search');
-        }); */
     }
     );
 });
@@ -61,12 +61,6 @@ Route::get('project/{id}/forum/{threadId}', function ($id, $thread_id){
     return response('Thread' . $thread_id); // placeholder
 })->where(['id', '[0-9]+'], ['thread', '[0-9]+']);
 */
-
-Route::post('project/{id}/task/new', 'TaskController@create')->where('id', '[0-9]+');
-
-Route::get('project/{id}/task/{taskId}', 'TaskController@show')->where(['id', '[0-9]+'], ['taskId', '[0-9]+']);
-
-
 
 /*
 // Search 
