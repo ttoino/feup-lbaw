@@ -1,15 +1,21 @@
 @extends('layouts.app')
 
-@push('main-classes', 'flex-column p-3 container gap-2')
+@push('main-classes', 'flex-column p-3 container gap-3')
 
 @section('content')
-    <h2>Your projects</h2>
 
     @empty($projects)
         <p>You don't have any projects yet!</p>
         <a href="{{ route('project.new') }}" class="btn btn-primary"><i
                 class="bi bi-plus"></i> Create your first</a>
     @else
+        <div class="hstack justify-content-between">
+            <h2>Your projects</h2>
+            <button class="btn btn-primary hstack gap-2">
+                <i class="bi bi-plus"></i> Create project
+            </button>
+        </div>
+
         <ul class="list-group">
             @foreach ($projects as $project)
                 <li
