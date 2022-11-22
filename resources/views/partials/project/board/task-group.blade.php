@@ -2,21 +2,24 @@
     'shadow-sm',
     'rounded',
     'p-2',
-    'text-center',
     'd-flex',
     'flex-column',
-    'gap-2',
+    'gap-3',
     'mh-100',
     'bg-light',
     'flex-shrink-0',
-]) style="width: 270px; overflow-y: auto">
+]) style="width: 270px">
 
     @isset($group)
-        <p class="m-0">{{ $group->name }}</p>
-        @foreach ($group->tasks as $t)
-            <a href="{{ route('project.task.info', ['id' => $group->project, 'taskId' => $t->id]) }}"
-                class="shadow-sm rounded p-1 bg-white">{{ $t->name }}</a>
-        @endforeach
+        <p class="m-0 text-center">{{ $group->name }}</p>
+
+        @if (!$group->tasks->isEmpty())
+            <ul class="list-unstyled vstack gap-2 p-2"
+                style="overflow-y: auto; margin: -.5rem">
+                @each ('partials.project.board.task', $group->tasks, 'task')
+            </ul>
+        @endif
+
         <form method="POST" action="{{ url("/project/$group->project/task/new") }}">
             @csrf
             <div class="input-group">
