@@ -28,7 +28,7 @@
         </div>
     </header>
 
-    <main class="d-flex flex-row flex-fill @stack('main-classes')">
+    <main class="d-flex flex-fill @stack('main-classes')">
         @yield('content')
     </main>
 @endsection

@@ -18,18 +18,27 @@
                 {{ $project->name }}
             </a>
             <ul class="dropdown-menu w-100">
+                @foreach ($other_projects as $p)
+                    <li>
+                        <a class="dropdown-item"
+                            href="{{ route('project.home', ['id' => $p->id]) }}">{{ $p->name }}</a>
+                    </li>
+                @endforeach
+
+                <hr class="dropdown-divider">
                 <li>
-                    <a class="dropdown-item" href="#">Other project</a>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="#">Other project 2</a>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="#">Other project 3</a>
+                    <a class="dropdown-item" href="{{ route('project.new') }}">
+                        <i class="bi bi-plus"></i> Create project
+                    </a>
                 </li>
             </ul>
         </div>
-        @foreach ([['label' => 'Info', 'path' => "project/$project->id/info"], ['label' => 'Board', 'path' => "project/$project->id"], ['label' => 'Timeline', 'path' => "project/$project->id/timeline"], ['label' => 'Forum', 'path' => "project/$project->id/forum"]] as $item)
+        @foreach ([
+            ['label' => 'Info', 'path' => "project/$project->id/info"],
+            ['label' => 'Board', 'path' => "project/$project->id"],
+            ['label' => 'Timeline', 'path' => "project/$project->id/timeline"],
+            ['label' => 'Forum', 'path' => "project/$project->id/forum"]
+        ] as $item)
             @include('partials.project.drawer.item', $item)
         @endforeach
     </nav>

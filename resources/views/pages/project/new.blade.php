@@ -23,16 +23,16 @@
     </div>
 
     <div class="form-floating">
-        <input placeholder=""
+        <textarea placeholder=""
             class="form-control {{ $errors->has('description') ? 'is-invalid' : '' }}"
-            aria-describedby="description-feedback" id="description"
-            type="password" name="description" required>
+            aria-describedby="description-feedback" id="description" name="description"
+            required></textarea>
         <label for="description" class="form-label">Description</label>
         <div class="invalid-feedback" id="description-feedback">
             @error('description')
                 {{ $message }}
             @else
-                Invalid descrioption
+                Invalid description
             @enderror
         </div>
     </div>

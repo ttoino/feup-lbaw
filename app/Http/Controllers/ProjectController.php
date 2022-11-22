@@ -18,8 +18,12 @@ class ProjectController extends Controller {
 
     public function showProjectByID($id) {
         $project = Project::find($id);
+
         $this->authorize('view', $project);
-        return view('pages.project', ['project' => $project]);
+
+        $other_projects = Auth::user()->projects->except($id);
+
+        return view('pages.project', ['project' => $project, 'other_projects' => $other_projects]);
     }
 
     public function showProjectCreationPage() {
