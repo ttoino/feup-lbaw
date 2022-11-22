@@ -19,7 +19,7 @@ class ProjectController extends Controller {
     public function showProjectByID($id) {
         $project = Project::find($id);
         $this->authorize('view', $project);
-        return view('pages.project', ['project' => $project], ['id' => $id]);
+        return view('pages.project', ['project' => $project]);
     }
 
     public function showProjectCreationPage() {

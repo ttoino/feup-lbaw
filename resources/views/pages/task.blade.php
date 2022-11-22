@@ -1,12 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.project')
+
 @section('title', $task->name)
 
-@section('content')
-<div class='row'>
-    @include('partials.sidemenu')
+@section('project-content')
     <div class="col-10">
         <p>{{$task->name}}</p>
         <p>Description: {{$task->description}}</p>
     </div>
-</div>
 @endsection

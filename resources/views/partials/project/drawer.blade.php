@@ -29,7 +29,7 @@
                 </li>
             </ul>
         </div>
-        @foreach ([['label' => 'Info', 'path' => "project/$id/info"], ['label' => 'Board', 'path' => "project/$id"], ['label' => 'Timeline', 'path' => "project/$id/timeline"], ['label' => 'Forum', 'path' => "project/$id/forum"]] as $item)
+        @foreach ([['label' => 'Info', 'path' => "project/$project->id/info"], ['label' => 'Board', 'path' => "project/$project->id"], ['label' => 'Timeline', 'path' => "project/$project->id/timeline"], ['label' => 'Forum', 'path' => "project/$project->id/forum"]] as $item)
             @include('partials.project.drawer.item', $item)
         @endforeach
     </nav>

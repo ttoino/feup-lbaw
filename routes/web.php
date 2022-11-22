@@ -47,6 +47,10 @@ Route::prefix('project/')->name('project.')->controller('ProjectController')->gr
 
             // Route::get('', 'search')->name('search');
         });
+
+        Route::prefix('task-group/')->name('task-group.')->controller('TaskGroupController')->group(function () {
+            Route::post('new', 'createTaskGroup');
+        });
     }
     );
 });
