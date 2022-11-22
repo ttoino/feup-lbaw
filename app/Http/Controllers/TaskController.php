@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use App\Models\TaskGroup;
+use App\Models\Project;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -103,11 +104,19 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show($project_id, $id) {
+    public function show(int $project_id, $id) {
         $task = Task::find($id);
-        $project = $task->project;
+
+        if ($project_id !== $task->project->id) {
+            abort(400, 'Task with id ' . $task->id . ' does not belong to project with id ' . $project_id);
+        }
+        
         $this->authorize('view', $task);
-        return view('pages.task', ['task' => $task], ['project' => $project]);
+
+        $other_projects = Auth::user()->projects->except($project_id);
+        $project = Project::findOrFail($project_id);
+
+        return view('pages.task', ['task' => $task], ['project' => $project, 'other_projects' => $other_projects]);
     }
 
     /**
