@@ -17,7 +17,7 @@
                 aria-expanded="false">
                 {{ $project->name }}
             </a>
-            <ul class="dropdown-menu w-100">
+            <ul class="dropdown-menu w-100 shadow-sm">
                 @foreach ($other_projects as $p)
                     <li>
                         <a class="dropdown-item"

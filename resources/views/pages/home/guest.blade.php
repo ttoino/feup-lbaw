@@ -16,7 +16,7 @@
 
             <div class="vstack text-center text-md-start" style="max-width: 40ch">
                 <h1 class="display-1">
-                    <img width="200px" height="200px"
+                    <img width="200" height="200"
                         src="https://picsum.photos/200"
                         alt="{{ config('app.name', 'Laravel') }} logo"
                         class="d-md-none w-auto align-top" style="height: 1.2em">
