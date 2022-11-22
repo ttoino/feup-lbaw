@@ -13,12 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 // every route defined in this file should be inserted inside this group in order to automatically be registered as an API route
-Route::middleware('api')->group(function () {
-    Route::middleware('auth')->get('/user', 'Auth\LoginController@getUser');
+Route::get('/user', 'Auth\LoginController@getUser')->middleware('auth:api');
 
-    Route::prefix('/task')->controller('TaskController')->group(function () {
-        Route::prefix('/{id}')->group(function () {
-            Route::put('/complete', 'complete');
-        });
+// TODO: figure out API authentication
+Route::prefix('/task')->controller('TaskController')->group(function () {
+    Route::prefix('/{id}')->group(function () {
+        Route::put('/complete', 'complete');
     });
 });

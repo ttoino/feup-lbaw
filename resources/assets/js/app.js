@@ -6,3 +6,6 @@
  */
 
 require('./bootstrap');
+
+require('./task');
+require('./forms');

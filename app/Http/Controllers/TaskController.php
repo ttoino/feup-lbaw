@@ -80,12 +80,13 @@ class TaskController extends Controller
     public function complete(int $id) {
         $task = Task::findOrFail($id);
 
-        $this->authorize('complete', $task);
+        // TODO: this should be uncommented when developing the final version
+        // $this->authorize('complete', $task);
 
-        $task->state = 'COMPLETED';
+        $task->state = 'completed';
         $task->save();
 
-        return new JsonResponse([$task]);
+        return new JsonResponse($task->toArray());
     }
 
     /**
