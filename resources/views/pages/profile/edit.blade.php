@@ -10,13 +10,16 @@
     <div class=container11>
       <div class=profile_image>
         <img src="https://picsum.photos/500" width=500 height=500 alt="Profile Picture">
+        <input class="btn btn-primary" type="button" value="Change Profile Picture">
       </div>
-      <div>
-        <li>Name: {{ $user->name }}</li>
-        <li>Email: {{ $user->email }}</li>
-        @include('partials.project.list', ['projects' => $user->projects])
-        <a href="{{ route('user.edit', ['id' => $user->id]) }}" class="btn btn-primary">Edit Profile</a>
-      </div>
+      <form id="iprof" method="POST" action>
+        @csrf
+        <div>Name:<input type="text" class="form-control" name="name" placeholder="{{$user->name}}"></div><br>
+        
+        <button type="submit" class="btn btn-primary">
+          Edit
+        </button>
+      </form>
     </div>
     @endif
   </header>

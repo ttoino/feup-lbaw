@@ -3,8 +3,10 @@
 namespace App\Http\Controllers; 
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 
 use App\Models\User;
 use App\Models\Project;
@@ -13,9 +15,12 @@ use App\Models\Project;
 
 class UserController extends Controller {
 
-
-
-    public function show($id) {
+    /**
+     * Shows the user profile of the user identified by the argument id
+     * 
+     * @param int $id the id of the user to show
+     */
+    public function show(int $id) {
         $user = User::findOrFail($id);
         //$this->authorize('show', $user);
         return view('pages.profile', ['user' => $user]);
@@ -40,51 +45,84 @@ class UserController extends Controller {
      * @return User The user registered.
      */
     public function create(Request $request) {
-        $user = new User();
+        
+      $requestData = $request->all();
 
-        //$this->authorize('create', $user);
+      $this->userCreationValidator($requestData)->validate();
 
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->password = $request->input('password');
-        $user->is_blocked = FALSE;
-        $user->save();
+      //$this->authorize('create', $user);
 
-        return $user;
+      $user = $this->createProfile($requestData);
+
+      return $request->wantsJson()
+        ? new JsonResponse($user->toArray(), 201)
+        : redirect()->route('user.profile', ['id' => $user->id]);
     }
 
-    public function edit(Request $request, $id)
-    {
-      $user = User::find($id);
-      if ($request->input('name') == null) $name = $user->name;
-      else $name = $request->input('name');
-      if ($request->input('email') == null) $email = $user->email;
-      else $email = $request->input('email');
-      if ($request->input('about') == null) $about = $user->about;
-      else $about = $request->input('about');
-      $user->name = $name;
-      $user->about = $about;
-      $user->email = $email;
+    public function createUser(array $data) {
+      $user = new User();
 
+      //$this->authorize('create', $user);
+
+      $user->name = $data['name'];
+      $user->email = $data['email'];
+      $user->password = $data['password'];
+      $user->is_blocked = FALSE;
       $user->save();
 
       return $user;
     }
-    
-    public function editPage($id)
-    {
-      $user = User::find($id);
-      return view('pages.edit_profile', ['user' => $user]);
+
+    public function userCreationValidator(array $data) {
+      return Validator::make($data, [
+        'name' => 'required|string|min:6|max:255',
+        'email' => 'required|string|email',
+        'password' => [
+          'required', 
+          'confirmed', 
+          Password::min(8)
+            ->letters()
+            ->uncompromised(3)
+        ]
+      ]);
+    }
+
+    public function edit(Request $request, int $id) {
+
+      $requestData = $request->all();
+
+      $this->userEditionValidator($requestData)->validate();
+
+      // TODO: implement policies
+
+      $user = $this->editUser($id, $requestData);
+      
+      return $request->wantsJson()
+        ? new JsonResponse($user->toArray(), 201)
+        : redirect()->route('user.profile', ['id' => $user->id]);
+    }
+
+    public function editUser(int $id, array $data) {
+      $user = User::findOrFail($id);
+
+      if ($data['name'] !== null) $user->name = $data['name'];
+      
+      $user->save();
+
+      return $user;
+    }
+
+    protected function userEditionValidator(array $data) {
+      return Validator::make($data, [
+          'name' => 'string|min:6|max:255',
+      ]);
     }
     
-    /*
-    public function editProfile(Request $request){
-          $user = User::find($request->input('user'));
-          $user->names = $request->input('name');
-          $user->save();
-          return redirect('profile/'.$request->input('user'));
-        }
-    */
+    public function showProfileEditPage($id) {
+      $user = User::findOrFail($id);
+      
+      return view('pages.profile.edit', ['user' => $user]);
+    }
 
     public function delete(Request $request, $id){
         $user2 = User::find($id);
@@ -93,6 +131,6 @@ class UserController extends Controller {
         $user2->delete();
   
         return $user2;
-      }
+    }
   
-    }    
+}    

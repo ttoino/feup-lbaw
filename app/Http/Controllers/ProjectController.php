@@ -39,7 +39,7 @@ class ProjectController extends Controller {
         $project = $this->create($requestData);
 
         return $request->wantsJson()
-            ? new JsonResponse([$project], 201)
+            ? new JsonResponse($project->toArray(), 200)
             : redirect()->route('project.home', ['id' => $project->id]);
     }
 

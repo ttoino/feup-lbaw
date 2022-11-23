@@ -24,14 +24,12 @@ Route::prefix('user/')->name('user.')->controller('UserController')->group(funct
     Route::prefix('{id}/')->group(function () {
         Route::get('', 'show')->name('profile');
         
-        /* Route::get('/edit', function ($id){
-        return view('layouts/user_edit', ['id' => $id]);
-        }); */
+        Route::prefix('/edit')->group(function () {
+            Route::get('', 'showProfileEditPage')->name('edit');
+            Route::post('', 'edit');
+        });
     });
 });
-
-Route::get('profile/{user_id}/edit', 'UserController@editPage');
-Route::put('profile/{user_id}/edit/update', 'UserController@edit');
 
 // Project 
 Route::prefix('project/')->name('project.')->controller('ProjectController')->group(function () {

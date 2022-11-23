@@ -25,7 +25,7 @@
                     </a>
                     <nav class="dropdown-menu dropdown-menu-end shadow-sm"
                         style="min-width: 240px">
-                        <a href="{{ url('profile') }}"
+                        <a href="{{ route('user.profile', ['id' => Auth::user()->id]) }}"
                             class="dropdown-item hstack gap-2">
                             <i class="bi bi-person-fill"></i> {{ Auth::user()->name }}
                         </a>
