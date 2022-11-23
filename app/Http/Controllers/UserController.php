@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers; 
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -9,12 +9,16 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Project;
 
+
+
 class UserController extends Controller {
+
+
 
     public function show($id) {
         $user = User::findOrFail($id);
         //$this->authorize('show', $user);
-        return view('', ['user' => $user]);
+        return view('pages.profile', ['user' => $user]);
     }
 
     /**
@@ -49,8 +53,46 @@ class UserController extends Controller {
         return $user;
     }
 
-    /*
-    public function delete(Request $request, $id){
+    public function edit(Request $request, $id)
+    {
+      $user = User::find($id);
+      if ($request->input('name') == null) $name = $user->name;
+      else $name = $request->input('name');
+      if ($request->input('email') == null) $email = $user->email;
+      else $email = $request->input('email');
+      if ($request->input('about') == null) $about = $user->about;
+      else $about = $request->input('about');
+      $user->name = $name;
+      $user->about = $about;
+      $user->email = $email;
+
+      $user->save();
+
+      return $user;
     }
+    
+    public function editPage($id)
+    {
+      $user = User::find($id);
+      return view('pages.edit_profile', ['user' => $user]);
+    }
+    
+    /*
+    public function editProfile(Request $request){
+          $user = User::find($request->input('user'));
+          $user->names = $request->input('name');
+          $user->save();
+          return redirect('profile/'.$request->input('user'));
+        }
     */
-}
+
+    public function delete(Request $request, $id){
+        $user2 = User::find($id);
+  
+        $this->authorize('delete', $user2);
+        $user2->delete();
+  
+        return $user2;
+      }
+  
+    }    
