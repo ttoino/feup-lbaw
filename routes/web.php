@@ -23,11 +23,12 @@ Route::get('{name}', 'StaticController@show')
 Route::prefix('user/')->name('user.')->controller('UserController')->group(function () {
     Route::prefix('{id}/')->group(function () {
         Route::get('', 'show')->name('profile');
-        /* Route::get('/edit', function ($id){
-        return view('layouts/user_edit', ['id' => $id]);
-        }); */
-    }
-    );
+        
+        Route::prefix('/edit')->group(function () {
+            Route::get('', 'showProfileEditPage')->name('edit');
+            Route::post('', 'edit');
+        });
+    });
 });
 
 // Project 
@@ -54,6 +55,18 @@ Route::prefix('project/')->name('project.')->controller('ProjectController')->gr
     }
     );
 });
+
+// Profile
+//Route::get('profile/{id}', 'UserController@show');
+//Route::get('edit_profile{id}', 'UserController@showEdit');
+//Route::post('edit_profile{id}', 'UserController@editProfile');
+
+/*
+Route::prefix('profile/')->name('profile.')->controller('UserController')->group(function () {
+    Route::get('show', 'show')->name('show');
+    Route::get('edit', 'showEdit')->name('edit');
+});*/
+
 /*
 Route::get('project/{id}/info', function ($id){
 return view('layouts/project_info', ['id' => $id]);
@@ -86,3 +99,4 @@ Route::controller('Auth\RegisterController')->group(function () {
     Route::get('register', 'showRegistrationForm')->name('register');
     Route::post('register', 'register');
 });
+

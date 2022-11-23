@@ -34,6 +34,7 @@
             </ul>
         </div>
         @foreach ([
+            // TODO: change this to routes once they are in place
             ['label' => 'Info', 'path' => "project/$project->id/info"],
             ['label' => 'Board', 'path' => "project/$project->id"],
             ['label' => 'Timeline', 'path' => "project/$project->id/timeline"],
