@@ -43,7 +43,10 @@ class Project extends Model {
     }
 
     public function taskGroups() {
-        return $this->hasMany(TaskGroup::class, 'project');
+        return $this->hasMany(
+            TaskGroup::class, 
+            'project'
+        )->orderBy('position');
     }
 
     public function tasks() {

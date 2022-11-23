@@ -33,7 +33,7 @@ class TaskGroup extends Model {
         return $this->hasMany(
             Task::class,
             'task_group'
-        );
+        )->orderBy('position');
     }
 
     protected $table = 'task_group';

@@ -527,7 +527,7 @@ BEGIN
         INSERT INTO project_member VALUES (NEW.coordinator, NEW.id, 'false');
     END IF;
     IF TG_OP = 'UPDATE' THEN
-        UPDATE project_member SET user_profile = NEW.coordinator WHERE user_profile = OLD.user_profile AND project = NEW.project;
+        UPDATE project_member SET user_profile = NEW.coordinator WHERE user_profile = OLD.coordinator AND project = NEW.id;
     END IF;
 
     RETURN NEW;
