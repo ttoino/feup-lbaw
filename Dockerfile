@@ -10,7 +10,7 @@ COPY --chown=www-data . /var/www/
 # Copy project configurations
 COPY ./etc/php/php.ini /usr/local/etc/php/conf.d/php.ini
 COPY ./etc/nginx/default.conf /etc/nginx/sites-enabled/default
-COPY .env /var/www/.env
+COPY .env_production /var/www/.env
 COPY docker_run.sh /docker_run.sh
 
 # Start command
