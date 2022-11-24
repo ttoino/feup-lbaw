@@ -53,7 +53,8 @@ CREATE TABLE user_profile (
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
     blocked BOOLEAN NOT NULL DEFAULT false,
-    is_admin BOOLEAN NOT NULL DEFAULT false
+    is_admin BOOLEAN NOT NULL DEFAULT false,
+    remember_token TEXT
 );
 
 CREATE TABLE project (
