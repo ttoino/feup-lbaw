@@ -1,8 +1,7 @@
-<li class="list-group-item list-group-item-action position-relative d-flex flex-row align-items-center"
+<li class="list-group-item list-group-item-action position-relative d-flex flex-row align-items-center gap-2"
     data-project-id="{{ $item->id }}">
     <div class="vstack flex-fill">
-        <a href="{{ route('project', ['id' => $item->id]) }}"
-            class="stretched-link fw-bold">
+        <a href="{{ route('project', ['id' => $item->id]) }}" class="stretched-link fw-bold">
             {{ $item->name }}
         </a>
         <span>Coordinator:
@@ -13,8 +12,8 @@
         <span class="text-danger">
             {{ $item->reports_count }} Reports
         </span>
+        <button class="btn btn-outline-danger" style="z-index: 5"><i class="bi bi-trash3"></i></button>
     @else
-        <button class="btn btn-outline" style="z-index: 5"><i
-                class="bi bi-heart"></i></button>
+        <button class="btn btn-outline" style="z-index: 5"><i class="bi bi-heart"></i></button>
     @endif
 </li>

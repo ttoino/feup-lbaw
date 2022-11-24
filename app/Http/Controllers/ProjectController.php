@@ -104,12 +104,12 @@ class ProjectController extends Controller {
         return $project;
     }
 
-    public function delete(Request $request, $id) {
+    public function delete($id) {
         $project = Project::find($id);
 
-        //$this->authorize('delete', $project);
+        $this->authorize('delete', $project);
         $project->delete();
 
-        return $project;
+        return new JsonResponse($project->toArray(), 200);
     }
 }

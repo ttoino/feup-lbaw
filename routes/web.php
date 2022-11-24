@@ -92,7 +92,14 @@ Route::name('')->group(function () {
     });
 });
 
-Route::prefix('/api')->name('api.')->group(function () {
+Route::prefix('/api')->name('api')->group(function () {
+
+    Route::prefix('/project')->name('.project')->controller('ProjectController')->group(function() {
+        Route::prefix('/{id}')->group(function () {
+            Route::delete('', 'delete')->name('.delete');
+        });
+    });
+
     Route::prefix('/task')->name('task')->controller('TaskController')->group(function () {
         Route::prefix('/{id}')->group(function () {
             Route::put('/complete', 'complete')->name('complete');

@@ -61,9 +61,8 @@ class ProjectPolicy
      * @param  \App\Models\Project  $project
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Project $project)
-    {
-        //
+    public function delete(User $user, Project $project) {
+        return $user->is_admin || $project->coordinator === $user->id;
     }
 
     /**
