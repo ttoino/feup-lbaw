@@ -28,7 +28,7 @@ const attachCompletionHandler =
 
                 const icon = taskCompletionButton.querySelector("i");
 
-                icon.classList.replace("bi-heart", "bi-heart-fill");
+                icon.classList.replace("bi-check-circle", "bi-check-circle-fill");
             }
         });
 }

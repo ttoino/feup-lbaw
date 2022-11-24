@@ -6,8 +6,8 @@
     <button class="btn btn-outline" style="z-index: 50">
         <i @class([
             'bi', 
-            'bi-heart' => $task->state !== 'completed', 
-            'bi-heart-fill' => $task->state === 'completed'
+            'bi-check-circle' => $task->state !== 'completed', 
+            'bi-check-circle-fill' => $task->state === 'completed'
             ])></i>
     </button>
 </li>

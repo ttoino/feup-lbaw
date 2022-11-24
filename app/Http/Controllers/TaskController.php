@@ -9,6 +9,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 
 class TaskController extends Controller
 {
@@ -87,6 +89,28 @@ class TaskController extends Controller
         $task->save();
 
         return new JsonResponse($task->toArray());
+    }
+
+    public function search(Request $request, int $projectId) {
+
+        $searchTerm = $request->query('q') ?? '';
+
+        // $this->authorize('search');
+
+        $tasks = $this->searchTasks($searchTerm, $projectId);
+
+        // TODO: figure this out later
+        return new JsonResponse($tasks);
+    }
+
+    public function searchTasks(string $searchTerm, int $projectId) {
+        return DB::table('task')
+            ->join('task_group', 'task.task_group', '=', 'task_group.id')
+            ->select('task.*')
+            ->whereRaw('(task.fts_search @@ plainto_tsquery(\'english\', ?) OR task.name = ?)', [$searchTerm, $searchTerm])
+            ->whereRaw('task_group.project = ?', [$projectId])
+            ->orderByRaw('ts_rank(task.fts_search, plainto_tsquery(\'english\', ?)) DESC', [$searchTerm])
+            ->paginate(10);
     }
 
     /**

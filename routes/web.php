@@ -46,11 +46,11 @@ Route::prefix('project')->name('project.')->controller('ProjectController')->gro
         Route::prefix('task/')->name('task.')->controller('TaskController')->group(function () {
             Route::post('new', 'createTask');
 
+            Route::get('', 'search')->name('search');
+
             Route::prefix('{taskId}/')->where(['taskId', '[0-9]+'])->group(function () {
                 Route::get('', 'show')->name('info');
             });
-
-            // Route::get('', 'search')->name('search');
         });
 
         Route::prefix('task-group/')->name('task-group.')->controller('TaskGroupController')->group(function () {
@@ -58,6 +58,11 @@ Route::prefix('project')->name('project.')->controller('ProjectController')->gro
         });
     });
 });
+
+// Project Search
+// due to naming collisions this was taken out of the Project router
+// TODO: see if this is fixable (better name/route, etc...)
+Route::get('/search', 'ProjectController@search')->name('project.search');
 
 // Admin
 Route::prefix('admin')->name('admin.')->controller('AdminController')->group(function () {

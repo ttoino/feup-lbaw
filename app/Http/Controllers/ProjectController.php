@@ -26,6 +26,23 @@ class ProjectController extends Controller {
         return view('pages.project.board', ['project' => $project, 'other_projects' => $other_projects]);
     }
 
+    public function search(Request $request) {
+
+        $searchTerm = $request->query('q') ?? '';
+
+        // $this->authorize('search');
+
+        $projects = $this->searchProjects($searchTerm);
+
+        return new JsonResponse($projects);
+    }
+
+    public function searchProjects(string $searchTerm) {
+        return Project::whereRaw('(fts_search @@ plainto_tsquery(\'english\', ?) OR project.name = ?)', [$searchTerm, $searchTerm])
+            ->orderByRaw('ts_rank(fts_search, plainto_tsquery(\'english\', ?)) DESC', [$searchTerm])
+            ->paginate(10);
+    }
+
     public function showProjectCreationPage() {
         return view('pages.project.new');
     }

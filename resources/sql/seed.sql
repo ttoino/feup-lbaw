@@ -543,6 +543,29 @@ CREATE TRIGGER add_coordinator_as_project_member
     EXECUTE FUNCTION add_coordinator_as_project_member();
 
 --------------------------------------------------------------------------------------------------------------------------------
+-- Database Functions and Other
+--------------------------------------------------------------------------------------------------------------------------------
+
+/* CREATE OR REPLACE FUNCTION search_project(search_query text)
+RETURNS SETOF project
+AS $BODY$ 
+    SELECT * FROM project
+    WHERE fts_search @@ plainto_tsquery('english', search_query)
+    ORDER BY ts_rank(fts_search, plainto_tsquery('english', search_query)) DESC;
+$BODY$ LANGUAGE sql;
+
+CREATE OR REPLACE FUNCTION search_task(search_query text, project int)
+RETURNS SETOF task
+AS $BODY$ 
+    SELECT t.* 
+    FROM task t
+    JOIN task_group tg ON tg.id = t.task_group
+    WHERE fts_search @@ plainto_tsquery('english', search_query)
+    AND tg.project = project
+    ORDER BY ts_rank(fts_search, plainto_tsquery('english', search_query)) DESC;
+$BODY$ LANGUAGE sql; */
+
+--------------------------------------------------------------------------------------------------------------------------------
 -- Populate
 --------------------------------------------------------------------------------------------------------------------------------
 
