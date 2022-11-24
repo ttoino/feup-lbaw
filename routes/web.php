@@ -77,23 +77,25 @@ Route::prefix('admin')->name('admin')->controller('AdminController')->group(func
     Route::get('projects', 'listProjects')->name('.projects');
 });
 
-/*
-// Search 
-Route::get('search', function (Request $request){
-return view('layouts/search', ['q' => $request->q, 'limit' => $request->limit]);
-});
-*/
-
 Route::get('dump', 'DebugController@dump');
 
 // Authentication
-Route::controller('Auth\LoginController')->group(function () {
-    Route::get('login', 'showLoginForm')->name('login');
-    Route::post('login', 'login');
-    Route::get('logout', 'logout')->name('logout');
+Route::name('')->group(function () {
+    Route::controller('Auth\LoginController')->group(function () {
+        Route::get('login', 'showLoginForm')->name('login');
+        Route::post('login', 'login');
+        Route::get('logout', 'logout')->name('logout');
+    });
+    Route::controller('Auth\RegisterController')->group(function () {
+        Route::get('register', 'showRegistrationForm')->name('register');
+        Route::post('register', 'register');
+    });
 });
 
-Route::controller('Auth\RegisterController')->group(function () {
-    Route::get('register', 'showRegistrationForm')->name('register');
-    Route::post('register', 'register');
+Route::prefix('/api')->name('api.')->group(function () {
+    Route::prefix('/task')->name('task')->controller('TaskController')->group(function () {
+        Route::prefix('/{id}')->group(function () {
+            Route::put('/complete', 'complete')->name('complete');
+        });
+    });
 });

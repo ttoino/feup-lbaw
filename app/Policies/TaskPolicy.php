@@ -99,7 +99,7 @@ class TaskPolicy
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function complete(User $user, Task $task) {
-        return $task->project->users->contains($user);
+    public function completeTask(User $user, Task $task) {
+        return !$user->is_admin && $task->project->users->contains($user);
     }
 }

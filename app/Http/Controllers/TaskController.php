@@ -10,9 +10,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Collection;
 
 class TaskController extends Controller {
+
     /**
      * Display a listing of the resource.
      *
@@ -79,8 +79,7 @@ class TaskController extends Controller {
     public function complete(int $id) {
         $task = Task::findOrFail($id);
 
-        // TODO: this should be uncommented when developing the final version
-        // $this->authorize('complete', $task);
+        $this->authorize('completeTask', $task);
 
         $task->state = 'completed';
         $task->save();

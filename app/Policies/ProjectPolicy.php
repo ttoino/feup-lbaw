@@ -17,9 +17,7 @@ class ProjectPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user)
-    {
-        //
+    public function viewAny(User $user) {
     }
 
     /**
@@ -29,9 +27,8 @@ class ProjectPolicy
      * @param  \App\Models\Project  $project
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Project $project)
-    {
-        return $project->users->contains($user);
+    public function view(User $user, Project $project) {
+        return $user->is_admin || $project->users->contains($user);
     }
 
     /**

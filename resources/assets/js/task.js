@@ -1,5 +1,9 @@
 'use strict';
 
+// TODO: change after prototype
+const toastDiv = document.querySelector('#liveToast');
+const toast = new window.bootstrap.Toast(toastDiv);
+
 const attachCompletionHandler = 
     (
         /** @type {HTMLLIElement} */ task
@@ -16,9 +20,11 @@ const attachCompletionHandler =
                 method: "PUT"
             });
 
-            if (!res.ok) {
-                // TODO: handle error
-                console.log("ASLDGFASEG0RHI");
+            if (!res.ok) {      
+
+                toastDiv.querySelector('.toast-body').textContent = `You are not authorized to complete task with id ${taskId}`;
+
+                toast.show();       
                 return;
             }
 
