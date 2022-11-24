@@ -9,7 +9,7 @@
 
             <form method="GET" action="{{ route('project.search') }}"
                 class="input-group ms-auto" role="search" style="max-width: 360px">
-                <input class="form-control" name="q" type="search" placeholder="Search" aria-label="Search">
+                <input class="form-control" name="q" type="search" placeholder="Search" aria-label="Search" value="{{ Request::query('q', '') }}">
                 <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
             </form>
 

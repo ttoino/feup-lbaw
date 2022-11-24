@@ -38,7 +38,7 @@ class ProjectController extends Controller {
 
         $projects = $this->searchProjects($searchTerm);
 
-        return new JsonResponse($projects);
+        return view('pages.search.projects', ['projects' => $projects]);
     }
 
     public function searchProjects(string $searchTerm) {
@@ -89,16 +89,19 @@ class ProjectController extends Controller {
 
     public function showAddUserPage($id) {
         $project = Project::find($id);
+        
         $users_all = User::where('is_admin', false)->get();
+        
         $users_p = $project->users()->orderBy('id')->get();
+        
         $users = $users_all->diff($users_p);
+        
         return view('pages.project.add', ['project' => $project, 'users' => $users]);
     }
 
     public function addUser(Request $request, $id) {
         $requestData = $request->all();
         $user = $requestData['id'];
-
 
         DB::insert('INSERT INTO project_member (user_profile, project) values (?, ?)', [$user, $id]);
 
@@ -113,9 +116,6 @@ class ProjectController extends Controller {
     public function create(array $data) {
 
         $project = new Project();
-
-        // no need to use policies here because this is an auth protected route
-        // $this->authorize('create', $project);
 
         $project->name = $data['name'];
         $project->archived = FALSE;
