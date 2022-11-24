@@ -62,6 +62,11 @@ Route::prefix('project')->name('project')->controller('ProjectController')->grou
         Route::prefix('task-group/')->name('.task-group.')->controller('TaskGroupController')->group(function () {
             Route::post('new', 'createTaskGroup');
         });
+
+        Route::prefix('add')->name('.user.')->controller('ProjectController')->group(function () {
+            Route::get('', 'showAddUserPage')->name('add');;
+            Route::post('', 'addUser');
+        });
     });
 });
 

@@ -41,5 +41,15 @@
         ] as $item)
             @include('partials.project.drawer.item', $item)
         @endforeach
+
+        <a href="{{ route('project.user.add', ['id' => $project->id]) }}"
+            @class([
+                'nav-link',
+                'nav-item',
+                'active' => Request::route()->getName() === 'project.user.add',
+            ])>
+            Add User
+        </a>
+
     </nav>
 </aside>

@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\User;
 use App\Models\Project;
 
 class ProjectController extends Controller {
@@ -81,6 +82,24 @@ class ProjectController extends Controller {
         // $this->authorize('list', Project::class);
         $projects = Auth::user()->projects()->paginate(10);
         return view('pages.project.list', ['projects' => $projects]);
+    }
+
+    public function showAddUserPage($id) {
+        $project = Project::find($id);
+        $users_all = User::where('is_admin', false)->get();
+        $users_p = $project->users()->orderBy('id')->get();
+        $users = $users_all->diff($users_p);
+        return view('pages.project.add', ['project' => $project, 'users' => $users]);
+    }
+
+    public function addUser(Request $request, $id) {
+        $requestData = $request->all();
+        $user = $requestData['id'];
+
+
+        DB::insert('INSERT INTO project_member (user_profile, project) values (?, ?)', [$user, $id]);
+
+        return redirect()->route('project', ['id' => $id]);
     }
 
     /**
