@@ -55,6 +55,7 @@ Route::prefix('project')->name('project')->controller('ProjectController')->grou
 
             Route::prefix('{taskId}/')->where(['taskId', '[0-9]+'])->group(function () {
                 Route::get('', 'show')->name('info');
+                Route::post('', 'edit');
             });
         });
 

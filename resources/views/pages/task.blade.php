@@ -21,6 +21,22 @@
             @endforeach
         </ul>
 
+        <div>Position: {{$task->position}}</div>
+
+        <form id="iprof" method="POST" action>
+            @csrf
+
+            <select name="task_group" required>
+                @foreach ($task->project->taskGroups as $g)
+                    <option value={{$g->id}} @if ($g->id == $task->taskGroup->id) selected @endif>{{$g->name}}</option>
+                @endforeach
+            </select>
+            
+            <button type="submit" class="btn btn-primary">
+              Change
+            </button>
+        </form>
+
         @if (!$task->assignees->isEmpty())
             <h3>Assignees</h3>
 
