@@ -17,14 +17,17 @@ class ProjectController extends Controller {
         $this->middleware('auth');
     }
 
-    public function showProjectByID($id) {
+    public function showProjectByID(Request $request, $id) {
         $project = Project::find($id);
 
         $this->authorize('view', $project);
 
-        $other_projects = Auth::user()->projects->except($id);
-
-        return view('pages.project.board', ['project' => $project, 'other_projects' => $other_projects]);
+        return $request->wantsJson()
+            ? new JsonResponse($project->toArray(), 200)
+            : view('pages.project.board', [
+                'project' => $project, 
+                'other_projects' => Auth::user()->projects->except($id)
+            ]);
     }
 
     public function search(Request $request) {
