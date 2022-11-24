@@ -25,6 +25,7 @@ Route::get('{name}', 'StaticController@show')
 Route::prefix('user/')->name('user.')->controller('UserController')->group(function () {
     Route::prefix('{id}/')->group(function () {
         Route::get('', 'show')->name('profile');
+        Route::delete('', 'delete');
 
         Route::prefix('/edit')->group(function () {
             Route::get('', 'showProfileEditPage')->name('edit');

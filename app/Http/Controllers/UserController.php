@@ -125,12 +125,12 @@ class UserController extends Controller {
     }
 
     public function delete(Request $request, $id){
-        $user2 = User::find($id);
+        $user = User::find($id);
   
-        $this->authorize('delete', $user2);
-        $user2->delete();
+        //$this->authorize('delete', $user);
+        $user->delete();
   
-        return $user2;
+        return redirect()->route('home');;
     }
   
 }    

@@ -6,7 +6,7 @@
 <article class="profile" data-user-id="{{ $user->id }}">
   <header>
     <h1>{{ $user->name }}</h1>
-    @if (Auth::user()->id == $user->id)
+    @if ((Auth::user()->id == $user->id) || Auth::user()->is_admin)
     <div class=container11>
       <div class=profile_image>
         <img src="https://picsum.photos/500" width=500 height=500 alt="Profile Picture">
