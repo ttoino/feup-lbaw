@@ -11,19 +11,21 @@
 |
 */
 // Home
-Route::get('/', fn() => Auth::check()
-    ? app()->make(\App\Http\Controllers\ProjectController::class)->listUserProjects()
-    : view('pages.home'))->name('home');
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StaticController;
+
+Route::get('', 'HomeController@show')->name('home');
 
 // Static
 Route::get('{name}', 'StaticController@show')
-    ->whereIn('name', ['about', 'contacts', 'faq', 'services']);
+    ->whereIn('name', StaticController::STATIC_PAGES);
 
 // User
 Route::prefix('user/')->name('user.')->controller('UserController')->group(function () {
     Route::prefix('{id}/')->group(function () {
         Route::get('', 'show')->name('profile');
-        
+
         Route::prefix('/edit')->group(function () {
             Route::get('', 'showProfileEditPage')->name('edit');
             Route::post('', 'edit');
@@ -32,7 +34,9 @@ Route::prefix('user/')->name('user.')->controller('UserController')->group(funct
 });
 
 // Project 
-Route::prefix('project/')->name('project.')->controller('ProjectController')->group(function () {
+Route::prefix('project')->name('project.')->controller('ProjectController')->group(function () {
+    Route::get('', 'listUserProjects')->name('list');
+
     Route::get('new', 'showProjectCreationPage')->name('new');
     Route::post('new', 'createProject');
 
@@ -52,32 +56,15 @@ Route::prefix('project/')->name('project.')->controller('ProjectController')->gr
         Route::prefix('task-group/')->name('task-group.')->controller('TaskGroupController')->group(function () {
             Route::post('new', 'createTaskGroup');
         });
-    }
-    );
+    });
 });
 
-// Profile
-//Route::get('profile/{id}', 'UserController@show');
-//Route::get('edit_profile{id}', 'UserController@showEdit');
-//Route::post('edit_profile{id}', 'UserController@editProfile');
-
-/*
-Route::prefix('profile/')->name('profile.')->controller('UserController')->group(function () {
-    Route::get('show', 'show')->name('show');
-    Route::get('edit', 'showEdit')->name('edit');
-});*/
-
-/*
-Route::get('project/{id}/info', function ($id){
-return view('layouts/project_info', ['id' => $id]);
+// Admin
+Route::prefix('admin')->name('admin.')->controller('AdminController')->group(function () {
+    Route::redirect('', 'users');
+    Route::get('users', 'listUsers')->name('users');
+    Route::get('projects', 'listProjects')->name('projects');
 });
-Route::get('project/{id}/forum', function ($id){
-return view('layouts/project_forum', ['id' => $id]);
-});
-Route::get('project/{id}/forum/{threadId}', function ($id, $thread_id){
-    return response('Thread' . $thread_id); // placeholder
-})->where(['id', '[0-9]+'], ['thread', '[0-9]+']);
-*/
 
 /*
 // Search 
@@ -99,4 +86,3 @@ Route::controller('Auth\RegisterController')->group(function () {
     Route::get('register', 'showRegistrationForm')->name('register');
     Route::post('register', 'register');
 });
-

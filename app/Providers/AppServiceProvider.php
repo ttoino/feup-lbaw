@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
 
@@ -21,6 +22,8 @@ class AppServiceProvider extends ServiceProvider {
      * @return void
      */
     public function boot() {
+        Paginator::useBootstrapFive();
+
         if (env('FORCE_HTTPS', false)) {
             error_log('configuring https');
             $app_url = config("app.url");

@@ -23,7 +23,7 @@ class ProjectController extends Controller {
 
         $other_projects = Auth::user()->projects->except($id);
 
-        return view('pages.project', ['project' => $project, 'other_projects' => $other_projects]);
+        return view('pages.project.board', ['project' => $project, 'other_projects' => $other_projects]);
     }
 
     public function showProjectCreationPage() {
@@ -31,7 +31,6 @@ class ProjectController extends Controller {
     }
 
     public function createProject(Request $request) {
-
         $requestData = $request->all();
 
         $this->projectCreationValidator($requestData)->validate();
@@ -63,8 +62,8 @@ class ProjectController extends Controller {
      */
     public function listUserProjects() {
         // $this->authorize('list', Project::class);
-        $projects = Auth::user()->projects;
-        return view('pages.home', ['projects' => $projects]);
+        $projects = Auth::user()->projects()->paginate(10);
+        return view('pages.project.list', ['projects' => $projects]);
     }
 
     /**
