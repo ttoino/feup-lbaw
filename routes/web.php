@@ -77,7 +77,7 @@ Route::prefix('project')->name('project')->controller('ProjectController')->grou
 Route::get('/search', 'ProjectController@search')->name('project.search');
 
 // Admin
-Route::prefix('admin')->name('admin')->controller('AdminController')->group(function () {
+Route::prefix('admin')->middleware('isAdmin')->name('admin')->controller('AdminController')->group(function () {
     Route::redirect('', '/admin/users')->name('');
     Route::get('users', 'listUsers')->name('.users');
     Route::get('projects', 'listProjects')->name('.projects');
