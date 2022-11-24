@@ -19,3 +19,4 @@ global.fetch = (path, options) => globalFetch(path, {
 require("./task");
 require("./forms");
 require("./project");
+require("./user");

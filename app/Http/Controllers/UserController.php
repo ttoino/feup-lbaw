@@ -62,8 +62,6 @@ class UserController extends Controller {
     public function createUser(array $data) {
       $user = new User();
 
-      //$this->authorize('create', $user);
-
       $user->name = $data['name'];
       $user->email = $data['email'];
       $user->password = $data['password'];
@@ -124,16 +122,12 @@ class UserController extends Controller {
       return view('pages.profile.edit', ['user' => $user]);
     }
 
-    public function delete(Request $request, $id){
-        $user = User::find($id);
-        $projects = Project::where('coordinator', $id)->get();
-        if (!($projects->isEmpty())){
-            return redirect()->route('user.profile', ['id' => $id]);
-        }
-        //$this->authorize('delete', $user);
+    public function delete($id){
+        $user = User::findOrFail($id);
+  
+        $this->authorize('delete', $user);
         $user->delete();
   
-        return redirect()->route('home');
-    }
-  
-}    
+        return new JsonResponse($user->toArray(), 200);
+    } 
+}

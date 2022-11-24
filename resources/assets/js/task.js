@@ -1,5 +1,7 @@
 'use strict';
 
+const { showToast } = require('./toast');
+
 // TODO: change after prototype
 const toastDiv = document.querySelector('#liveToast');
 const toast = new window.bootstrap.Toast(toastDiv);
@@ -21,10 +23,7 @@ const attachCompletionHandler =
             });
 
             if (!res.ok) {      
-
-                toastDiv.querySelector('.toast-body').textContent = `You are not authorized to complete task with id ${taskId}`;
-
-                toast.show();       
+                showToast(`You are not authorized to complete task with id ${taskId}`);
                 return;
             }
 

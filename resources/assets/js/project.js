@@ -1,5 +1,7 @@
 'use strict';
 
+const { showToast } = require('./toast');
+
 const attachDeletionHandler = 
     (
         /** @type {HTMLLIElement} */ project
@@ -18,8 +20,7 @@ const attachDeletionHandler =
 
             if (!res.ok) {
 
-                console.log('boas');
-
+                showToast(`You are not authorized to delete project with id ${projectId}`);
                 return;
             }
 
