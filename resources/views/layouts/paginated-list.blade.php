@@ -8,9 +8,7 @@
     @else
         @yield('list-title')
 
-        <ul class="list-group">
-            @each($itemView, $paginator, 'item')
-        </ul>
+        @include('partials.list')
 
         {{ $paginator->links() }}
     @endempty

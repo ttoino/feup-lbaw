@@ -60,5 +60,23 @@ class Task extends Model {
         );
     }
 
+    public function tags() {
+        return $this->belongsToMany(
+            Tag::class,
+            'task_tag',
+            'task',
+            'tag'
+        );
+    }
+
+    public function assignees() {
+        return $this->belongsToMany(
+            User::class,
+            'task_assignee',
+            'task',
+            'user_profile'
+        );
+    }
+
     protected $table = 'task';
 }

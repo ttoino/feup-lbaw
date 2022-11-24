@@ -41,5 +41,9 @@ class Tag extends Model {
         );
     }
 
+    public function rgbColor() {
+        return ($this->color >> 16) . ', ' . (($this->color >> 8) & 255) . ', ' . ($this->color & 255);
+    }
+
     protected $table = 'tag';
 }
