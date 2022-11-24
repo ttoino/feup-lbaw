@@ -126,11 +126,14 @@ class UserController extends Controller {
 
     public function delete(Request $request, $id){
         $user = User::find($id);
-  
+        $projects = Project::where('coordinator', $id)->get();
+        if (!($projects->isEmpty())){
+            return redirect()->route('user.profile', ['id' => $id]);
+        }
         //$this->authorize('delete', $user);
         $user->delete();
   
-        return redirect()->route('home');;
+        return redirect()->route('home');
     }
   
 }    
