@@ -65,10 +65,10 @@ Route::prefix('project')->name('project.')->controller('ProjectController')->gro
 Route::get('/search', 'ProjectController@search')->name('project.search');
 
 // Admin
-Route::prefix('admin')->name('admin.')->controller('AdminController')->group(function () {
-    Route::redirect('', 'users');
-    Route::get('users', 'listUsers')->name('users');
-    Route::get('projects', 'listProjects')->name('projects');
+Route::prefix('admin')->name('admin')->controller('AdminController')->group(function () {
+    Route::redirect('', '/admin/users')->name('');
+    Route::get('users', 'listUsers')->name('.users');
+    Route::get('projects', 'listProjects')->name('.projects');
 });
 
 /*

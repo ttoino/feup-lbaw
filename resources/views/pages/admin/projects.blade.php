@@ -9,5 +9,5 @@
 @endsection
 
 @section('list-title')
-    <h2>All projects</h2>
+    @include('partials.admin.nav')
 @endsection
