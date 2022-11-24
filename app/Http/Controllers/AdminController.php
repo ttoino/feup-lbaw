@@ -8,13 +8,13 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller {
     public function listUsers() {
-        $users = User::paginate(10);
+        $users = User::withCount('reports')->paginate(10);
 
         return view('pages.admin.users', ['users' => $users]);
     }
 
     public function listProjects() {
-        $projects = Project::paginate(10);
+        $projects = Project::withCount('reports')->paginate(10);
 
         return view('pages.admin.projects', ['projects' => $projects]);
     }

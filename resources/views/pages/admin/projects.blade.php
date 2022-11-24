@@ -1,7 +1,7 @@
 @extends('layouts.paginated-list')
 @php
     $paginator = $projects;
-    $itemView = 'partials.list-item.project-admin';
+    $itemView = 'partials.list-item.project';
 @endphp
 
 @section('empty-list')

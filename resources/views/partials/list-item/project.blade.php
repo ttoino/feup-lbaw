@@ -9,8 +9,12 @@
             {{ $item->coordinator()->first()->name }}</span>
     </div>
 
-    @section('right-side')
+    @if (Auth::user()?->is_admin)
+        <span class="text-danger">
+            {{ $item->reports_count }} Reports
+        </span>
+    @else
         <button class="btn btn-outline" style="z-index: 5"><i
                 class="bi bi-heart"></i></button>
-    @show
+    @endif
 </li>

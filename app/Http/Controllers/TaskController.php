@@ -50,7 +50,7 @@ class TaskController extends Controller {
         $task->name = $data['name'];
         $task->description = $data['description'] ?? '';
         $task->task_group = $data['task_group'];
-        $task->position = $data['position'];
+        $task->position = (Task::where('task_group', $task->task_group)->max('position') ?? 0) + 1;
         $task->save();
 
         return $task;
@@ -66,7 +66,6 @@ class TaskController extends Controller {
         return Validator::make($data, [
             'name' => 'required|string|min:4|max:255',
             'description' => 'string|min:6|max:512',
-            'position' => 'required|integer|min:0',
             'task_group' => 'required|integer'
         ]);
     }

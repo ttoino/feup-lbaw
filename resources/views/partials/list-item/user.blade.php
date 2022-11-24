@@ -14,5 +14,9 @@
         @endif
     </div>
 
-    @yield('right-side')
+    @if (Auth::user()?->is_admin)
+        <span class="text-danger">
+            {{ $item->reports_count }} Reports
+        </span>
+    @endif
 </li>

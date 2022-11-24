@@ -44,7 +44,7 @@ class Project extends Model {
 
     public function taskGroups() {
         return $this->hasMany(
-            TaskGroup::class, 
+            TaskGroup::class,
             'project'
         )->orderBy('position');
     }
@@ -56,6 +56,10 @@ class Project extends Model {
             'project',
             'task_group'
         );
+    }
+
+    public function reports() {
+        return $this->hasMany(Report::class, 'project');
     }
 
     protected $table = 'project';

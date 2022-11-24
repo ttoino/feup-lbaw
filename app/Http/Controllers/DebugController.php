@@ -21,7 +21,7 @@ class DebugController extends Controller {
         echo 'notifications: ';
         print_r(Notification::all()->toArray());
         echo 'projects: ';
-        print_r(Project::with('tasks', 'taskGroups', 'users')->get()->toArray());
+        print_r(Project::with('tasks', 'taskGroups', 'users', 'reports')->get()->toArray());
         echo 'invitations: ';
         print_r(ProjectInvitation::with('creator', 'project')->get()->toArray());
         echo 'timeline: ';
@@ -41,7 +41,7 @@ class DebugController extends Controller {
         echo 'comments: ';
         print_r(ThreadComment::with('thread')->get()->toArray());
         echo 'users: ';
-        print_r(User::with('projects')->get()->toArray());
+        print_r(User::with('projects', 'reports')->get()->toArray());
         echo '</pre>';
     }
 }

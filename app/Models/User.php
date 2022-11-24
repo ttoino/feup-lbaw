@@ -43,5 +43,9 @@ class User extends Authenticatable {
         )->withPivot('is_favorite');
     }
 
+    public function reports() {
+        return $this->hasMany(Report::class, 'user_profile');
+    }
+
     protected $table = 'user_profile';
 }

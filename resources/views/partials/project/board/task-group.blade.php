@@ -29,8 +29,6 @@
                 <button class="btn btn-primary" type="submit"><i
                         class="bi bi-plus"></i></button>
             </div>
-            <input type="hidden" class="form-control" id="position"
-                name="position" value="{{ ($group->tasks()->orderBy('position', 'DESC')->first()?->position ?? 0) + 1 }}">
             <input type="hidden" class="form-control" id="task_group"
                 name="task_group" value="{{ $group->id }}">
         </form>
