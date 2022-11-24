@@ -1,7 +1,7 @@
 <li class="list-group-item list-group-item-action position-relative d-flex flex-row align-items-center"
     data-project-id="{{ $item->id }}">
     <div class="vstack flex-fill">
-        <a href="{{ route('project.home', ['id' => $item->id]) }}"
+        <a href="{{ route('project', ['id' => $item->id]) }}"
             class="stretched-link fw-bold">
             {{ $item->name }}
         </a>

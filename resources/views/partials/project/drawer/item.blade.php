@@ -1,7 +1,8 @@
-<a href="{{ url($path) }}" @class([
-    'nav-link',
-    'nav-item',
-    'active' => Request::path() === $path,
-])>
+<a href="{{ route($route, ['id' => $project->id]) }}"
+    @class([
+        'nav-link',
+        'nav-item',
+        'active' => Request::route()->getName() === $route,
+    ])>
     {{ $label }}
 </a>

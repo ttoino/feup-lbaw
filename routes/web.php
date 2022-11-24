@@ -34,16 +34,21 @@ Route::prefix('user/')->name('user.')->controller('UserController')->group(funct
 });
 
 // Project 
-Route::prefix('project')->name('project.')->controller('ProjectController')->group(function () {
-    Route::get('', 'listUserProjects')->name('list');
+Route::prefix('project')->name('project')->controller('ProjectController')->group(function () {
+    Route::get('', 'listUserProjects')->name('.list');
 
-    Route::get('new', 'showProjectCreationPage')->name('new');
+    Route::get('new', 'showProjectCreationPage')->name('.new');
     Route::post('new', 'createProject');
 
     Route::prefix('{id}/')->group(function () {
-        Route::get('', 'showProjectByID')->name('home');
+        Route::redirect('', "/project/{id}/board")->name('');
 
-        Route::prefix('task/')->name('task.')->controller('TaskController')->group(function () {
+        Route::get('info', 'showProjectByID')->name('.info');
+        Route::get('board', 'showProjectByID')->name('.board');
+        Route::get('timeline', 'showProjectByID')->name('.timeline');
+        Route::get('forum', 'showProjectByID')->name('.forum');
+
+        Route::prefix('task/')->name('.task.')->controller('TaskController')->group(function () {
             Route::post('new', 'createTask');
 
             Route::get('', 'search')->name('search');
@@ -53,7 +58,7 @@ Route::prefix('project')->name('project.')->controller('ProjectController')->gro
             });
         });
 
-        Route::prefix('task-group/')->name('task-group.')->controller('TaskGroupController')->group(function () {
+        Route::prefix('task-group/')->name('.task-group.')->controller('TaskGroupController')->group(function () {
             Route::post('new', 'createTaskGroup');
         });
     });

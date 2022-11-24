@@ -5,7 +5,7 @@
             <ul class="hstack list-unstyled gap-1">
                 @foreach ($task->tags as $tag)
                     <li class="rounded-pill p-1"
-                        style="background: rgb({{ $tag->rgbColor() }}); min-width: 48px">
+                        style="background: rgb({{ $tag->rgbColor() }}); flex: 48px 0 1">
                     </li>
                 @endforeach
             </ul>

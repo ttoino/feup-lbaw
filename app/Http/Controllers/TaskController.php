@@ -12,15 +12,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 
-class TaskController extends Controller
-{
+class TaskController extends Controller {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index() {
         //
     }
 
@@ -42,7 +40,7 @@ class TaskController extends Controller
 
         return $request->wantsJson()
             ? new JsonResponse([$task], 201)
-            : redirect()->route('project.home', ['id' => $projectId]);
+            : redirect()->route('project', ['id' => $projectId]);
     }
 
     public function create(array $data) {
@@ -119,8 +117,7 @@ class TaskController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         //
     }
 
@@ -135,7 +132,7 @@ class TaskController extends Controller
         if ($project_id !== $task->project->id) {
             abort(400, 'Task with id ' . $task->id . ' does not belong to project with id ' . $project_id);
         }
-        
+
         $this->authorize('view', $task);
 
         $other_projects = Auth::user()->projects->except($project_id);
@@ -150,8 +147,7 @@ class TaskController extends Controller
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function edit(Task $task)
-    {
+    public function edit(Task $task) {
         //
     }
 

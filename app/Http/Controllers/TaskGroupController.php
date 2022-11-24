@@ -9,8 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
-class TaskGroupController extends Controller
-{
+class TaskGroupController extends Controller {
 
 
     /**
@@ -31,7 +30,7 @@ class TaskGroupController extends Controller
 
         return $request->wantsJson()
             ? new JsonResponse([$taskGroup], 201)
-            : redirect()->route('project.home', ['id' => $projectId]);
+            : redirect()->route('project', ['id' => $projectId]);
     }
 
     public function create(array $data) {

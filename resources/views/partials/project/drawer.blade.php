@@ -21,7 +21,7 @@
                 @foreach ($other_projects as $p)
                     <li>
                         <a class="dropdown-item"
-                            href="{{ route('project.home', ['id' => $p->id]) }}">{{ $p->name }}</a>
+                            href="{{ route('project', ['id' => $p->id]) }}">{{ $p->name }}</a>
                     </li>
                 @endforeach
 
@@ -34,11 +34,10 @@
             </ul>
         </div>
         @foreach ([
-            // TODO: change this to routes once they are in place
-            ['label' => 'Info', 'path' => "project/$project->id/info"],
-            ['label' => 'Board', 'path' => "project/$project->id"],
-            ['label' => 'Timeline', 'path' => "project/$project->id/timeline"],
-            ['label' => 'Forum', 'path' => "project/$project->id/forum"]
+            ['label' => 'Info', 'route' => 'project.info'],
+            ['label' => 'Board', 'route' => 'project.board'],
+            ['label' => 'Timeline', 'route' => 'project.timeline'],
+            ['label' => 'Forum', 'route' => 'project.forum'],
         ] as $item)
             @include('partials.project.drawer.item', $item)
         @endforeach
