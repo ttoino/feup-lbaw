@@ -30,7 +30,7 @@ class TaskPolicy
      */
     public function view(User $user, Task $task)
     {
-        return $task->project->users->contains($user);
+        return $user->is_admin || $task->project->users->contains($user);
     }
 
     /**
