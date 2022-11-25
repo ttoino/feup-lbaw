@@ -308,23 +308,21 @@ CREATE INDEX task_fts_idx ON task USING GIN (fts_search);
 -- introduce auxiliary field to support FTS
 ALTER TABLE project ADD COLUMN fts_search TSVECTOR;
 -- automatically keep ts_vectors up to date so that FTS is up to date
-CREATE OR REPLACE FUNCTION project_fts_update() RETURNS TRIGGER AS $$
+CREATE FUNCTION project_fts_update() RETURNS TRIGGER AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
         NEW.fts_search = (
-            setweight(to_tsvector('english', NEW.name), 'A') || 
-            setweight(to_tsvector('english', (
-                SELECT name FROM user_profile WHERE id = NEW.coordinator
-            )), 'B')
+            setweight(to_tsvector('english', NEW.name), 'A') ||
+            setweight(to_tsvector('english', COALESCE(NEW.description, '')), 'B') ||
+            setweight(to_tsvector('english', (SELECT name FROM user_profile WHERE id = NEW.coordinator)), 'C')
         );
     END IF;
     IF TG_OP = 'UPDATE' THEN
         IF (NEW.name <> OLD.name OR NEW.coordinator <> OLD.coordinator) THEN
             NEW.fts_search = (
                 setweight(to_tsvector('english', NEW.name), 'A') ||
-                setweight(to_tsvector('english', (
-                    SELECT name FROM user_profile WHERE id = NEW.coordinator
-                )), 'B')
+                setweight(to_tsvector('english', COALESCE(NEW.description, '')), 'B') ||
+                setweight(to_tsvector('english', (SELECT name FROM user_profile WHERE id = NEW.coordinator)), 'C')
             );  
         END IF;
     END IF;

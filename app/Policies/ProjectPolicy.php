@@ -81,7 +81,7 @@ class ProjectPolicy
         return $user->id === $project->coordinator;
     }
 
-    public function addUser(User $user, User $model, Project $project) {
+    public function addUser(User $user, Project $project, User $model) {
         return $user->id === $project->coordinator && !$project->users->contains($model);
     }
 

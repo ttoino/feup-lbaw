@@ -98,17 +98,14 @@ class ProjectController extends Controller {
 
     public function addUser(Request $request, int $id) {
 
-        try {
-            $user = User::where('email', $request->input('email'))->first();
-            $project = Project::findOrFail($id);
+        $user = User::where('email', $request->input('email'))->first();
+        $project = Project::findOrFail($id);
 
-            $this->authorize('addUser', [$user, $project]);
+        $this->authorize('addUser', [$project, $user]);
 
-            $project->users()->save($user);
+        $project->users()->save($user);
 
-        } finally {
-            return redirect()->route('project', ['id' => $id]);
-        }
+        return redirect()->route('project', ['id' => $id]);
     }
 
     /**

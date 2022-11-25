@@ -34,7 +34,7 @@ Route::prefix('/user')->name('user.')->controller('UserController')->group(funct
 });
 
 // Project 
-Route::prefix('/project')->name('project')->controller('ProjectController')->group(function () {
+Route::prefix('/project')->middleware('auth')->name('project')->controller('ProjectController')->group(function () {
     Route::get('', 'listUserProjects')->name('.list');
 
     Route::get('/new', 'showProjectCreationPage')->name('.new');
@@ -75,7 +75,7 @@ Route::prefix('/project')->name('project')->controller('ProjectController')->gro
 });
 
 // Admin
-Route::prefix('/admin')->middleware('isAdmin')->name('admin')->controller('AdminController')->group(function () {
+Route::prefix('/admin')->middleware(['auth', 'isAdmin'])->name('admin')->controller('AdminController')->group(function () {
     Route::redirect('', '/admin/users')->name('');
     Route::get('/users', 'listUsers')->name('.users');
     Route::get('/projects', 'listProjects')->name('.projects');

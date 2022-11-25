@@ -8,7 +8,7 @@
     <div class="form-floating">
         <input aria-describedby="name-feedback" placeholder=""
             class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" id="name" type="text" name="name"
-            value="{{ old('name') }}" required autofocus>
+            value="{{ old('name') }}" minlength=6 maxlength=255 required autofocus>
         <label for="name" class="form-label">Name</label>
         <div class="invalid-feedback" id="name-feedback">
             @error('name')
