@@ -15,13 +15,24 @@
                 {{ $project->name }}
             </a>
             <ul class="dropdown-menu w-100 shadow-sm">
-                @foreach ($other_projects as $p)
-                    <li>
-                        <a class="dropdown-item" href="{{ route('project', ['id' => $p->id]) }}">{{ $p->name }}</a>
-                    </li>
-                @endforeach
+                @if ($other_projects->count())
+                    @foreach ($other_projects as $p)
+                        <li>
+                            <a class="dropdown-item" href="{{ route('project', ['id' => $p->id]) }}">{{ $p->name }}</a>
+                        </li>
+                    @endforeach
 
-                <hr class="dropdown-divider">
+                    <hr class="dropdown-divider">
+
+                    @if ($other_projects->hasMorePages())
+                        <li>
+                            <a href="{{ route('project.list') }}" class="dropdown-item">
+                                All projects
+                            </a>
+                        </li>
+                    @endif
+                @endif
+
                 <li>
                     <a class="dropdown-item" href="{{ route('project.new') }}">
                         <i class="bi bi-plus"></i> Create project

@@ -40,7 +40,7 @@ Route::prefix('/project')->name('project')->controller('ProjectController')->gro
     Route::get('/new', 'showProjectCreationPage')->name('.new');
     Route::post('/new', 'createProject');
 
-    Route::prefix('/{id}')->group(function () {
+    Route::prefix('/{id}')->middleware('withOtherProjects')->group(function () {
         Route::redirect('', "/project/{id}/board")->name('');
 
         Route::get('/info', 'showProjectByID')->name('.info');

@@ -133,7 +133,6 @@ class TaskController extends Controller {
 
         $this->authorize('view', $task);
 
-        $other_projects = Auth::user()->projects->except($project_id);
         $project = Project::findOrFail($project_id);
 
         return view('pages.task', ['task' => $task], ['project' => $project, 'other_projects' => $other_projects]);
@@ -142,25 +141,26 @@ class TaskController extends Controller {
     public function edit(Request $request, int $project_id, int $id) {
 
         $requestData = $request->all();
-  
+
         // TODO: implement policies
-  
+
         $task = $this->editTask($id, $requestData);
-        
+
         return $request->wantsJson()
-          ? new JsonResponse($task->toArray(), 201)
-          : redirect()->route('project.task.info', ['id' => $project_id, 'taskId' => $task->id]);
-      }
-  
-      public function editTask(int $id, array $data) {
+            ? new JsonResponse($task->toArray(), 201)
+            : redirect()->route('project.task.info', ['id' => $project_id, 'taskId' => $task->id]);
+    }
+
+    public function editTask(int $id, array $data) {
         $task = Task::findOrFail($id);
-  
-        if ($data['task_group'] !== null) $task->task_group = $data['task_group'];
-        
+
+        if ($data['task_group'] !== null)
+            $task->task_group = $data['task_group'];
+
         $task->save();
-  
+
         return $task;
-      }
+    }
 
     /**
      * Update the specified resource in storage.

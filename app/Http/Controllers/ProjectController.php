@@ -24,10 +24,7 @@ class ProjectController extends Controller {
 
         return $request->wantsJson()
             ? new JsonResponse($project->toArray(), 200)
-            : view('pages.project.board', [
-                'project' => $project, 
-                'other_projects' => Auth::user()->projects->except($id)
-            ]);
+            : view('pages.project.board', ['project' => $project]);
     }
 
     public function search(Request $request) {
@@ -36,7 +33,7 @@ class ProjectController extends Controller {
 
         // $this->authorize('search');
 
-        $projects = $this->searchProjects($searchTerm);
+        $projects = $this->searchProjects($searchTerm)->appends($request->query());
 
         return view('pages.search.projects', ['projects' => $projects]);
     }
@@ -89,23 +86,21 @@ class ProjectController extends Controller {
 
     public function showAddUserPage($id) {
         $project = Project::find($id);
-        
-        $users_all = User::where('is_admin', false)->get();
-        
-        $users_p = $project->users()->orderBy('id')->get();
-        
-        $users = $users_all->diff($users_p);
-        
-        return view('pages.project.add', ['project' => $project, 'users' => $users]);
+
+        return view('pages.project.add', ['project' => $project]);
     }
 
     public function addUser(Request $request, $id) {
         $requestData = $request->all();
-        $user = $requestData['id'];
 
-        DB::insert('INSERT INTO project_member (user_profile, project) values (?, ?)', [$user, $id]);
+        try {
+            $user = User::where('email', $requestData['email'])->first();
+            $project = Project::find($id);
+            $project->users()->save($user);
 
-        return redirect()->route('project', ['id' => $id]);
+        } finally {
+            return redirect()->route('project', ['id' => $id]);
+        }
     }
 
     /**
