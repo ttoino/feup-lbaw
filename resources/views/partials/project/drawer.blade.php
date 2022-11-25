@@ -44,8 +44,7 @@
 
         <form method="GET" action="{{ route('project.task.search', ['id' => $project->id]) }}"
             class="input-group my-2" role="search">
-            <input class="form-control" name="q" type="search"
-                placeholder="Search tasks" aria-label="Search"
+            <input class="form-control" name="q" type="search" placeholder="Search tasks" aria-label="Search"
                 value="{{ Request::route()->getName() === 'project.task.search' ? Request::query('q', '') : '' }}">
             <button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
         </form>
@@ -53,6 +52,35 @@
         @foreach ([['label' => 'Info', 'route' => 'project.info'], ['label' => 'Board', 'route' => 'project.board'], ['label' => 'Timeline', 'route' => 'project.timeline'], ['label' => 'Forum', 'route' => 'project.forum']] as $item)
             @include('partials.project.drawer.item', $item)
         @endforeach
+
+        @if (Auth::user()->projects->contains($project))
+            <button type="button" data-bs-toggle="modal" data-bs-target="#taskCreationModal"
+                @class(['nav-link', 'nav-item', 'btn', 'btn-primary'])>
+                <i @class(['bi', 'bi-plus'])></i> Create Task
+            </button>
+        @endif
+        <div class="modal" id="taskCreationModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Create task</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="@yield('method', 'POST')"
+                            action="{{ route('project.task.new', ['id' => $project->id]) }}"
+                            class="m-auto hstack gap-4 needs-validation p-3" id="task-creation-form" novalidate>
+                            @csrf
+                            @include('partials.project.task.new')
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" form="task-creation-form" class="btn btn-primary">Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         @if (Auth::user()->id == $project->coordinator)
             <a href="{{ route('project.user.add', ['id' => $project->id]) }}" @class([

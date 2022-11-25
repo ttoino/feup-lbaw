@@ -65,7 +65,7 @@ class TaskController extends Controller {
     protected function taskCreationValidator(array $data) {
         return Validator::make($data, [
             'name' => 'required|string|min:4|max:255',
-            'description' => 'string|min:6|max:512',
+            'description' => 'nullable|string|min:6|max:512',
             'task_group' => 'required|integer'
         ]);
     }
