@@ -40,6 +40,16 @@
                 </li>
             </ul>
         </div>
+
+        <form method="GET" action="{{ route('project.task.search', ['id' => $project->id]) }}"
+            class="input-group" role="search">
+            <input class="form-control" name="q" type="search"
+                placeholder="Search tasks" aria-label="Search"
+                value="{{ Request::route()->getName() === 'project.task.search' ? Request::query('q', '') : '' }}">
+            <button class="btn btn-outline-primary" type="submit"><i
+                    class="bi bi-search"></i></button>
+        </form>
+
         @foreach ([
             ['label' => 'Info', 'route' => 'project.info'],
             ['label' => 'Board', 'route' => 'project.board'],

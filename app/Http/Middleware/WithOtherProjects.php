@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Project;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +17,7 @@ class WithOtherProjects {
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next) {
+        View::share('project', Project::findOrFail($request->route('id')));
         View::share('other_projects', Auth::user()?->projects()->whereKeyNot($request->route('id'))->simplePaginate(5));
 
         return $next($request);
