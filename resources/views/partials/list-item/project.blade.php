@@ -16,4 +16,7 @@
     @else
         <button class="btn btn-outline" style="z-index: 5"><i class="bi bi-heart"></i></button>
     @endif
+    @if (Auth::user()?->id === $item->coordinator)
+        <button class="btn btn-outline-danger" style="z-index: 5"><i class="bi bi-trash3"></i></button>
+    @endif
 </li>

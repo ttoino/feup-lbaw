@@ -40,6 +40,9 @@ Route::prefix('/project')->name('project')->controller('ProjectController')->gro
     Route::get('/new', 'showProjectCreationPage')->name('.new');
     Route::post('/new', 'createProject')->name('.new-action');
 
+    // Project Search
+    Route::get('/search', 'search')->name('.search');
+
     Route::prefix('/{id}')->middleware('withOtherProjects')->group(function () {
         Route::redirect('', "/project/{id}/board")->name('');
 
@@ -51,7 +54,7 @@ Route::prefix('/project')->name('project')->controller('ProjectController')->gro
         Route::prefix('/task')->name('.task')->controller('TaskController')->group(function () {
             Route::post('/new', 'createTask')->name('.new');
 
-            Route::get('', 'search')->name('.search');
+            Route::get('search', 'search')->name('.search');
 
             Route::prefix('/{taskId}')->where(['taskId', '[0-9]+'])->group(function () {
                 Route::get('', 'show')->name('.info');
@@ -70,11 +73,6 @@ Route::prefix('/project')->name('project')->controller('ProjectController')->gro
         });
     });
 });
-
-// Project Search
-// due to naming collisions this was taken out of the Project router
-// TODO: see if this is fixable (better name/route, etc...)
-Route::get('/search', 'ProjectController@search')->name('project.search');
 
 // Admin
 Route::prefix('/admin')->middleware('isAdmin')->name('admin')->controller('AdminController')->group(function () {
