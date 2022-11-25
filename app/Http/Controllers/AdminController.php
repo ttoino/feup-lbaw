@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 
 class AdminController extends Controller {
     public function listUsers() {
@@ -32,5 +33,18 @@ class AdminController extends Controller {
         ]);
 
         return redirect()->route('admin.users');
+    }
+
+    public function userCreationValidator(array $data) {
+        return Validator::make($data, [
+            'name' => 'required|string|min:6|max:255',
+            'email' => 'required|string|email|unique:user_profile',
+            'password' => [
+              'required', 
+              'confirmed', 
+              Password::min(8)
+                ->letters()
+            ]
+          ]);
     }
 }

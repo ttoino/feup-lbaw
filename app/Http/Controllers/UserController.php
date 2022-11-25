@@ -72,13 +72,12 @@ class UserController extends Controller {
     public function userCreationValidator(array $data) {
       return Validator::make($data, [
         'name' => 'required|string|min:6|max:255',
-        'email' => 'required|string|email',
+        'email' => 'required|string|email|unique:user_profile',
         'password' => [
           'required', 
           'confirmed', 
           Password::min(8)
             ->letters()
-            ->uncompromised(3)
         ]
       ]);
     }

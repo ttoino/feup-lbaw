@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
 class RegisterController extends Controller {
@@ -45,10 +46,15 @@ class RegisterController extends Controller {
      */
     protected function validator(array $data) {
         return Validator::make($data, [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:user_profile',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
+            'name' => 'required|string|min:6|max:255',
+            'email' => 'required|string|email|unique:user_profile',
+            'password' => [
+              'required', 
+              'confirmed', 
+              Password::min(8)
+                ->letters()
+            ]
+          ]);
     }
 
     /**
