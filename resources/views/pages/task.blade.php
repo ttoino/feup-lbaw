@@ -21,19 +21,20 @@
             @endforeach
         </ul>
 
-        <div>Position: {{$task->position}}</div>
+        <div>Position: {{ $task->position }}</div>
 
         <form id="iprof" method="POST" action>
             @csrf
 
             <select name="task_group" required>
                 @foreach ($task->project->taskGroups as $g)
-                    <option value={{$g->id}} @if ($g->id == $task->taskGroup->id) selected @endif>{{$g->name}}</option>
+                    <option value={{ $g->id }} @if ($g->id == $task->taskGroup->id) selected @endif>{{ $g->name }}
+                    </option>
                 @endforeach
             </select>
-            
+
             <button type="submit" class="btn btn-primary">
-              Change
+                Change
             </button>
         </form>
 

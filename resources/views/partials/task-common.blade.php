@@ -2,15 +2,13 @@
     @if (!$task->tags->isEmpty())
         <ul class="hstack list-unstyled gap-1">
             @foreach ($task->tags as $tag)
-                <li class="rounded-pill p-1"
-                    style="background: rgb({{ $tag->rgbColor() }}); flex: 48px 0 1">
+                <li class="rounded-pill p-1" style="background: rgb({{ $tag->rgbColor() }}); flex: 48px 0 1">
                 </li>
             @endforeach
         </ul>
     @endif
 
-    <a class="stretched-link"
-        href="{{ route('project.task.info', ['id' => $task->project, 'taskId' => $task->id]) }}">
+    <a class="stretched-link" href="{{ route('project.task.info', ['id' => $task->project, 'taskId' => $task->id]) }}">
         {{ $task->name }}
     </a>
 
@@ -18,8 +16,7 @@
         <ul class="hstack list-unstyled gap-n1">
             @foreach ($task->assignees as $assignee)
                 <li>
-                    <img src="https://picsum.photos/40"
-                        alt="{{ $assignee->name }}" width="24" height="24"
+                    <img src="https://picsum.photos/40" alt="{{ $assignee->name }}" width="24" height="24"
                         class="rounded-circle">
                 </li>
             @endforeach

@@ -11,9 +11,8 @@
 
     <div class="form-floating">
         <input aria-describedby="name-feedback" placeholder=""
-            class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}"
-            id="name" type="text" name="name" value="{{ old('name') }}"
-            required autofocus>
+            class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" id="name" type="text" name="name"
+            value="{{ old('name') }}" required autofocus>
         <label for="name" class="form-label">Name</label>
         <div class="invalid-feedback" id="name-feedback">
             @error('name')
@@ -26,9 +25,8 @@
 
     <div class="form-floating">
         <textarea placeholder="" style="height: 240px"
-            class="form-control {{ $errors->has('description') ? 'is-invalid' : '' }}"
-            aria-describedby="description-feedback" id="description" name="description"
-            required></textarea>
+            class="form-control {{ $errors->has('description') ? 'is-invalid' : '' }}" aria-describedby="description-feedback"
+            id="description" name="description" required></textarea>
         <label for="description" class="form-label">Description</label>
         <div class="invalid-feedback" id="description-feedback">
             @error('description')

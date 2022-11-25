@@ -7,9 +7,8 @@
 
     <div class="form-floating">
         <input aria-describedby="email-feedback" placeholder=""
-            class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}"
-            id="email" type="email" name="email" value="{{ old('email') }}"
-            required autofocus>
+            class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" id="email" type="email" name="email"
+            value="{{ old('email') }}" required autofocus>
         <label for="email" class="form-label">E-mail</label>
         <div class="invalid-feedback" id="email-feedback">
             @error('email')
@@ -21,10 +20,8 @@
     </div>
 
     <div class="form-floating">
-        <input placeholder=""
-            class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}"
-            aria-describedby="password-feedback" id="password" type="password"
-            name="password" required>
+        <input placeholder="" class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}"
+            aria-describedby="password-feedback" id="password" type="password" name="password" required>
         <label for="password" class="form-label">Password</label>
         <div class="invalid-feedback" id="password-feedback">
             @error('password')
@@ -36,8 +33,8 @@
     </div>
 
     <div class="form-check">
-        <input type="checkbox" class="form-check-input" name="remember"
-            id="remember" {{ old('remember') ? 'checked' : '' }}>
+        <input type="checkbox" class="form-check-input" name="remember" id="remember"
+            {{ old('remember') ? 'checked' : '' }}>
         <label class="form-check-label" for="remember">Remember Me</label>
     </div>
 

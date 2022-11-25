@@ -93,7 +93,7 @@ class TaskController extends Controller {
 
         $project = Project::findOrFail($projectId);
 
-        $this->authorize('search', Task::class);
+        $this->authorize('search', [Task::class, $project]);
 
         $tasks = $this->searchTasks($searchTerm, $project);
 

@@ -18,7 +18,8 @@
                 @if ($other_projects->count())
                     @foreach ($other_projects as $p)
                         <li>
-                            <a class="dropdown-item" href="{{ route('project', ['id' => $p->id]) }}">{{ $p->name }}</a>
+                            <a class="dropdown-item"
+                                href="{{ route('project', ['id' => $p->id]) }}">{{ $p->name }}</a>
                         </li>
                     @endforeach
 
@@ -41,33 +42,25 @@
             </ul>
         </div>
 
-        <form method="GET" action="{{ route('project.task.search', ['id' => $project->id]) }}"
-            class="input-group" role="search">
-            <input class="form-control" name="q" type="search"
-                placeholder="Search tasks" aria-label="Search"
+        <form method="GET" action="{{ route('project.task.search', ['id' => $project->id]) }}" class="input-group"
+            role="search">
+            <input class="form-control" name="q" type="search" placeholder="Search tasks" aria-label="Search"
                 value="{{ Request::route()->getName() === 'project.task.search' ? Request::query('q', '') : '' }}">
-            <button class="btn btn-outline-primary" type="submit"><i
-                    class="bi bi-search"></i></button>
+            <button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
         </form>
 
-        @foreach ([
-            ['label' => 'Info', 'route' => 'project.info'],
-            ['label' => 'Board', 'route' => 'project.board'],
-            ['label' => 'Timeline', 'route' => 'project.timeline'],
-            ['label' => 'Forum', 'route' => 'project.forum'],
-        ] as $item)
+        @foreach ([['label' => 'Info', 'route' => 'project.info'], ['label' => 'Board', 'route' => 'project.board'], ['label' => 'Timeline', 'route' => 'project.timeline'], ['label' => 'Forum', 'route' => 'project.forum']] as $item)
             @include('partials.project.drawer.item', $item)
         @endforeach
-        
+
         @if (Auth::user()->id == $project->coordinator)
-        <a href="{{ route('project.user.add', ['id' => $project->id]) }}"
-            @class([
+            <a href="{{ route('project.user.add', ['id' => $project->id]) }}" @class([
                 'nav-link',
                 'nav-item',
                 'active' => Request::route()->getName() === 'project.user.add',
             ])>
-            <i @class(['bi', 'bi-plus'])></i> Add User
-        </a>
+                <i @class(['bi', 'bi-plus'])></i> Add User
+            </a>
         @endif
 
     </nav>

@@ -7,8 +7,7 @@
 @section('empty-list')
     <div class="vstack align-items-center justify-content-center">
         <p class="display-6">You don't have any projects yet!</p>
-        <a href="{{ route('project.new') }}" class="btn btn-lg btn-primary"><i
-                class="bi bi-plus"></i> Create your first</a>
+        <a href="{{ route('project.new') }}" class="btn btn-lg btn-primary"><i class="bi bi-plus"></i> Create your first</a>
     </div>
 @endsection
 
