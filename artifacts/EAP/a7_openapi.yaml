@@ -835,7 +835,7 @@ paths:
       description: "Delete a specific users profile information. Access: OWN, ADM"
 
       tags:
-        - "M03"
+        - "M01"
 
       parameters:
         - in: path
