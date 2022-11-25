@@ -81,6 +81,10 @@ Route::prefix('/admin')->middleware('isAdmin')->name('admin')->controller('Admin
     Route::redirect('', '/admin/users')->name('');
     Route::get('/users', 'listUsers')->name('.users');
     Route::get('/projects', 'listProjects')->name('.projects');
+    Route::prefix('/create')->name('.create.')->group(function () {
+        Route::get('/user', 'showCreateUser')->name('user');
+        Route::post('/user', 'createUser');
+    });
 });
 
 Route::get('/dump', 'DebugController@dump');
