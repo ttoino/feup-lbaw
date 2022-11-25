@@ -122,12 +122,14 @@ class UserController extends Controller {
       return view('pages.profile.edit', ['user' => $user]);
     }
 
-    public function delete($id){
+    public function delete(Request $request, int $id){
         $user = User::findOrFail($id);
   
         $this->authorize('delete', $user);
         $user->delete();
   
-        return new JsonResponse($user->toArray(), 200);
+        return $request->wantsJson()
+          ? new JsonResponse($user->toArray(), 200)
+          : redirect()->route('home');
     } 
 }

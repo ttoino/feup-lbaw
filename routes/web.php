@@ -112,7 +112,7 @@ Route::prefix('/api')->name('api')->group(function () {
 
     Route::prefix('/user')->name('.user')->controller('UserController')->group(function () {
         Route::prefix('/{id}')->group(function () {
-            Route::delete('', 'delete')->name('.delete')->middleware('isAdmin');
+            Route::delete('', 'delete')->name('.delete');
         });
     });
 

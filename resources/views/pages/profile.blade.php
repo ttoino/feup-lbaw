@@ -16,8 +16,12 @@
             <i class="bi bi-pencil"></i> Edit profile
         </a>
 
-        <button class="btn btn-outline-danger">
-            <i class="bi bi-trash3"></i> Delete account
-        </button>
+        <form method="POST" action="{{ route('api.user.delete', ['id' => $user->id]) }}">
+            @csrf
+            @method('DELETE')
+            <button class="btn btn-outline-danger" type="submit">
+                <i class="bi bi-trash3"></i> Delete account
+            </button>
+        </form>
     @endif
 @endsection
