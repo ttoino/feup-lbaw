@@ -93,10 +93,12 @@ class TaskController extends Controller {
         $searchTerm = $request->query('q') ?? '';
 
         $project = Project::findOrFail($projectId);
-        
+
+        $user = Auth::user();
+
         // TODO: find out why the policy does not work, maybe wrong naming conventions ?
         // $this->authorize('search');
-        if (!$project->users->contains(Auth::user())) {
+        if (!$user->is_admin && !$project->users->contains($user)) {
             abort(403);
         }
 

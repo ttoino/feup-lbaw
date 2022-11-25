@@ -5,7 +5,9 @@
 @endphp
 
 @section('empty-list')
-    <p>No tasks match the search term!</p>
+    <div class="vstack align-items-center justify-content-center">
+        <p class="display-5">No tasks match the search term!</p>
+    </div>
 @endsection
 
 @section('list-title')
