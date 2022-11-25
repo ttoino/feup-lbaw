@@ -46,10 +46,10 @@ Route::prefix('/project')->name('project')->controller('ProjectController')->gro
     Route::prefix('/{id}')->middleware('withOtherProjects')->group(function () {
         Route::redirect('', "/project/{id}/board")->name('');
 
-        Route::get('/info', 'showProjectByID')->name('.info');
+        Route::view('/info', 'pages.project.tbd')->name('.info');
         Route::get('/board', 'showProjectByID')->name('.board');
-        Route::get('/timeline', 'showProjectByID')->name('.timeline');
-        Route::get('/forum', 'showProjectByID')->name('.forum');
+        Route::view('/timeline', 'pages.project.tbd')->name('.timeline');
+        Route::view('/forum', 'pages.project.tbd')->name('.forum');
 
         Route::prefix('/task')->name('.task')->controller('TaskController')->group(function () {
             Route::post('/new', 'createTask')->name('.new');
