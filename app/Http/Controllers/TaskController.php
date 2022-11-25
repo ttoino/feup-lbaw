@@ -135,7 +135,7 @@ class TaskController extends Controller {
 
         $project = Project::findOrFail($project_id);
 
-        return view('pages.task', ['task' => $task], ['project' => $project, 'other_projects' => $other_projects]);
+        return view('pages.task', ['task' => $task, 'project' => $project]);
     }
 
     public function edit(Request $request, int $project_id, int $id) {
