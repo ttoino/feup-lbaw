@@ -41,7 +41,7 @@ class TaskGroupPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function create(User $user, Project $project) {
-        return $user->is_admin || $user->projects->contains($project);
+        return $user->projects->contains($project);
     }
 
     /**
