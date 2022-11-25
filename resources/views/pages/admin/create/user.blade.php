@@ -5,6 +5,8 @@
 @section('form')
     @csrf
 
+    <h2 class="text-center h1">Create a new user</h2>
+
     <div class="form-floating">
         <input aria-describedby="name-feedback" placeholder=""
             class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}"

@@ -2,23 +2,22 @@
 
 @section('title', $user->name)
 
-@section('content')
-    <article class="profile" data-user-id="{{ $user->id }}">
-        <header>
-            <h1>{{ $user->name }}</h1>
+@push('main-classes', 'flex-column align-items-center justify-content-center p-2 gap-3')
 
-            @if (Auth::user()->id == $user->id || Auth::user()->is_admin)
-                <div>
-                    <div class="profile_image">
-                        <img src="https://picsum.photos/500" width=500 height=500 alt="Profile Picture">
-                    </div>
-                    <div>
-                        <li>Name: {{ $user->name }}</li>
-                        <li>Email: {{ $user->email }}</li>
-                        <a href="{{ route('user.edit', ['id' => $user->id]) }}" class="btn btn-primary">Edit Profile</a>
-                    </div>
-                </div>
-            @endif
-        </header>
-    </article>
+@section('content')
+    <img src="https://picsum.photos/240" width=240 height=240 alt="Profile Picture" class="rounded-circle">
+
+    <h2 class="m-0">{{ $user->name }}</h2>
+
+    <p class="m-0"><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></p>
+
+    @if (Auth::user()->id == $user->id || Auth::user()->is_admin)
+        <a href="{{ route('user.edit', ['id' => $user->id]) }}" class="btn btn-primary">
+            <i class="bi bi-pencil"></i> Edit profile
+        </a>
+
+        <button class="btn btn-outline-danger">
+            <i class="bi bi-trash3"></i> Delete account
+        </button>
+    @endif
 @endsection
