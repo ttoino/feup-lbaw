@@ -11,8 +11,6 @@ use Illuminate\Validation\Rules\Password;
 use App\Models\User;
 use App\Models\Project;
 
-
-
 class UserController extends Controller {
 
     /**
@@ -22,7 +20,9 @@ class UserController extends Controller {
      */
     public function show(int $id) {
         $user = User::findOrFail($id);
-        //$this->authorize('show', $user);
+        
+        $this->authorize('view', $user);
+        
         return view('pages.profile', ['user' => $user]);
     }
 
@@ -31,7 +31,7 @@ class UserController extends Controller {
      *
      * @return Response
      */
-    public function list() {
+    public function list($id) {
         if (!Auth::check())
             return redirect('/login');
         //$this->authorize('list', User::class);
@@ -49,8 +49,6 @@ class UserController extends Controller {
       $requestData = $request->all();
 
       $this->userCreationValidator($requestData)->validate();
-
-      //$this->authorize('create', $user);
 
       $user = $this->createProfile($requestData);
 
@@ -90,19 +88,18 @@ class UserController extends Controller {
       $requestData = $request->all();
 
       $this->userEditionValidator($requestData)->validate();
+      $user = User::findOrFail($id);
 
-      // TODO: implement policies
+      $this->authorize('update', $user);      
 
-      $user = $this->editUser($id, $requestData);
+      $user = $this->editUser($user, $requestData);
       
       return $request->wantsJson()
         ? new JsonResponse($user->toArray(), 201)
         : redirect()->route('user.profile', ['id' => $user->id]);
     }
 
-    public function editUser(int $id, array $data) {
-      $user = User::findOrFail($id);
-
+    public function editUser(User $user, array $data) {
       if ($data['name'] !== null) $user->name = $data['name'];
       
       $user->save();
@@ -119,6 +116,8 @@ class UserController extends Controller {
     public function showProfileEditPage($id) {
       $user = User::findOrFail($id);
       
+      $this->authorize('showProfileEditPage', $user);
+
       return view('pages.profile.edit', ['user' => $user]);
     }
 

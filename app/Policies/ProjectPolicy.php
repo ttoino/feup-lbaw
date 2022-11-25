@@ -18,6 +18,7 @@ class ProjectPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function viewAny(User $user) {
+        return !$user->is_admin;
     }
 
     /**
@@ -37,9 +38,8 @@ class ProjectPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function create(User $user)
-    {
-        //
+    public function create(User $user) {
+        return !$user->is_admin;
     }
 
     /**
@@ -75,6 +75,14 @@ class ProjectPolicy
     public function restore(User $user, Project $project)
     {
         //
+    }
+
+    public function showAddUserPage(User $user, Project $project) {
+        return $user->id === $project->coordinator;
+    }
+
+    public function addUser(User $user, User $model, Project $project) {
+        return $user->id === $project->coordinator && !$project->users->contains($model);
     }
 
     /**

@@ -2,10 +2,6 @@
 
 const { showToast } = require('./toast');
 
-// TODO: change after prototype
-const toastDiv = document.querySelector('#liveToast');
-const toast = new window.bootstrap.Toast(toastDiv);
-
 const attachCompletionHandler = 
     (
         /** @type {HTMLLIElement} */ task

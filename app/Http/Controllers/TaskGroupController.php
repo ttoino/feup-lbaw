@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Task;
+use App\Models\Project;
 use App\Models\TaskGroup;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
 class TaskGroupController extends Controller {
-
 
     /**
      * Show the form for creating a new resource.
@@ -20,17 +19,17 @@ class TaskGroupController extends Controller {
     public function createTaskGroup(Request $request) {
         $requestData = $request->all();
 
-        //$this->taskCreationValidator($requestData)->validate();
+        $this->taskGroupCreationValidator($requestData)->validate();
+        
+        $project = Project::findOrFail($requestData['project']);
 
-        //$this->authorize('create', $task);
+        $this->authorize('create', [TaskGroup::class, $project]);
 
         $taskGroup = $this->create($requestData);
 
-        $projectId = TaskGroup::findOrFail($taskGroup->id)->project;
-
         return $request->wantsJson()
             ? new JsonResponse([$taskGroup], 201)
-            : redirect()->route('project', ['id' => $projectId]);
+            : redirect()->route('project', ['id' => $project->id]);
     }
 
     public function create(array $data) {
@@ -52,17 +51,14 @@ class TaskGroupController extends Controller {
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function taskCreationValidator(array $data) {
+    protected function taskGroupCreationValidator(array $data) {
         return Validator::make($data, [
             'name' => 'required|string|min:4|max:255',
             'description' => 'string|min:6|max:512',
             'position' => 'required|integer|min:0',
-            'task_group' => 'required|integer'
+            'project' => 'required|integer'
         ]);
     }
-
-
-
 
     public function delete(Request $request, $id) {
         $taskGroup = TaskGroup::findOrFail($id);

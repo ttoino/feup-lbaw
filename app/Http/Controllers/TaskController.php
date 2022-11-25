@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Models\TaskGroup;
 use App\Models\Project;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -33,15 +32,15 @@ class TaskController extends Controller {
 
         $this->taskCreationValidator($requestData)->validate();
 
-        //$this->authorize('create', $task);
+        $task_group = TaskGroup::findOrFail($requestData['task_group']); 
+
+        $this->authorize('create', [Task::class, $task_group]);
 
         $task = $this->create($requestData);
 
-        $projectId = TaskGroup::findOrFail($task->task_group)->project;
-
         return $request->wantsJson()
             ? new JsonResponse([$task], 201)
-            : redirect()->route('project', ['id' => $projectId]);
+            : redirect()->route('project', ['id' => $task_group->project]);
     }
 
     public function create(array $data) {
@@ -94,13 +93,7 @@ class TaskController extends Controller {
 
         $project = Project::findOrFail($projectId);
 
-        $user = Auth::user();
-
-        // TODO: find out why the policy does not work, maybe wrong naming conventions ?
-        // $this->authorize('search');
-        if (!$user->is_admin && !$project->users->contains($user)) {
-            abort(403);
-        }
+        $this->authorize('search', Task::class);
 
         $tasks = $this->searchTasks($searchTerm, $project);
 
@@ -147,18 +140,18 @@ class TaskController extends Controller {
 
         $requestData = $request->all();
 
-        // TODO: implement policies
+        $task = Task::findOrFail($id);
 
-        $task = $this->editTask($id, $requestData);
+        $this->authorize('edit', $task);
+
+        $task = $this->editTask($task, $requestData);
 
         return $request->wantsJson()
             ? new JsonResponse($task->toArray(), 201)
             : redirect()->route('project.task.info', ['id' => $project_id, 'taskId' => $task->id]);
     }
 
-    public function editTask(int $id, array $data) {
-        $task = Task::findOrFail($id);
-
+    public function editTask(Task $task, array $data) {
         if ($data['task_group'] !== null)
             $task->task_group = $data['task_group'];
 

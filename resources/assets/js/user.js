@@ -16,7 +16,10 @@ const attachDeletionHandler =
         userDeletionButton?.addEventListener("click", async () => {
 
             const res = await fetch(`/api/user/${userId}`, {
-                method: "DELETE"
+                method: "DELETE",
+                headers: {
+                    Accept: "application/json"
+                }
             });
 
             if (!res.ok) {

@@ -27,9 +27,8 @@ class UserPolicy
      * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, User $model)
-    {
-        //
+    public function view(User $user, User $model) {
+        return $user->is_admin || $user->id === $model->id || $user->projects->intersect($model->projects)->count() > 0;
     }
 
     /**
@@ -38,8 +37,7 @@ class UserPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function create(User $user)
-    {
+    public function create(User $user) {
         //
     }
 
@@ -50,9 +48,12 @@ class UserPolicy
      * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, User $model)
-    {
-        //
+    public function update(User $user, User $model) {
+        return $user->is_admin || $user->id === $model->id;
+    }
+    
+    public function showProfileEditPage(User $user, User $model) {
+        return $user->is_admin || $user->id === $model->id;
     }
 
     /**

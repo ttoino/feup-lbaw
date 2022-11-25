@@ -31,14 +31,12 @@ class ProjectController extends Controller {
 
         $searchTerm = $request->query('q') ?? '';
 
-        // $this->authorize('search');
-
         $projects = $this->searchProjects($searchTerm)->appends($request->query());
 
         return view('pages.search.projects', ['projects' => $projects]);
     }
 
-    public function searchProjects(string $searchTerm) {   
+    public function searchProjects(string $searchTerm) {
         return Auth::user()->projects()
             ->whereRaw('(fts_search @@ plainto_tsquery(\'english\', ?) OR project.name = ?)', [$searchTerm, $searchTerm])
             ->orderByRaw('ts_rank(fts_search, plainto_tsquery(\'english\', ?)) DESC', [$searchTerm])
@@ -51,8 +49,10 @@ class ProjectController extends Controller {
 
     public function createProject(Request $request) {
         $requestData = $request->all();
-
+        
         $this->projectCreationValidator($requestData)->validate();
+
+        $this->authorize('create', Project::class);
 
         $project = $this->create($requestData);
 
@@ -80,23 +80,28 @@ class ProjectController extends Controller {
      * @return Response
      */
     public function listUserProjects() {
-        // $this->authorize('list', Project::class);
+        $this->authorize('viewAny', Project::class);
+
         $projects = Auth::user()->projects()->paginate(10);
         return view('pages.project.list', ['projects' => $projects]);
     }
 
-    public function showAddUserPage($id) {
+    public function showAddUserPage(int $id) {
         $project = Project::findOrFail($id);
+
+        $this->authorize('showAddUserPage', $project);
 
         return view('pages.project.add', ['project' => $project]);
     }
 
-    public function addUser(Request $request, $id) {
-        $requestData = $request->all();
+    public function addUser(Request $request, int $id) {
 
         try {
-            $user = User::where('email', $requestData['email'])->first();
+            $user = User::where('email', $request->input('email'))->first();
             $project = Project::findOrFail($id);
+
+            $this->authorize('addUser', [$user, $project]);
+
             $project->users()->save($user);
 
         } finally {

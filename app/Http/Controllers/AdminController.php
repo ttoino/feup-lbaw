@@ -25,14 +25,12 @@ class AdminController extends Controller {
     }
 
     public function createUser(Request $request){
-        $requestData = $request->all();
         User::create([
-            'name' => $requestData['name'],
-            'email' => $requestData['email'],
-            'password' => bcrypt($requestData['password']),
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
         ]);
 
         return redirect()->route('admin.users');
-
     }
 }
