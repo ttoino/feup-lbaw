@@ -38,7 +38,7 @@ Route::prefix('/project')->name('project')->controller('ProjectController')->gro
     Route::get('', 'listUserProjects')->name('.list');
 
     Route::get('/new', 'showProjectCreationPage')->name('.new');
-    Route::post('/new', 'createProject');
+    Route::post('/new', 'createProject')->name('.new-action');
 
     Route::prefix('/{id}')->middleware('withOtherProjects')->group(function () {
         Route::redirect('', "/project/{id}/board")->name('');
@@ -49,22 +49,23 @@ Route::prefix('/project')->name('project')->controller('ProjectController')->gro
         Route::get('/forum', 'showProjectByID')->name('.forum');
 
         Route::prefix('/task')->name('.task')->controller('TaskController')->group(function () {
-            Route::post('/new', 'createTask');
+            Route::post('/new', 'createTask')->name('.new');
 
             Route::get('', 'search')->name('.search');
 
             Route::prefix('/{taskId}')->where(['taskId', '[0-9]+'])->group(function () {
                 Route::get('', 'show')->name('.info');
-                Route::post('', 'edit');
+                Route::post('', 'edit')->name('.edit');
             });
         });
 
         Route::prefix('/task-group')->name('.task-group')->controller('TaskGroupController')->group(function () {
-            Route::post('new', 'createTaskGroup');
+            Route::post('new', 'createTaskGroup')->name('.new');
         });
 
         Route::prefix('/add')->name('.user')->controller('ProjectController')->group(function () {
-            Route::get('', 'showAddUserPage')->name('.add'); // FIXME: this is a separate page to demonstrate functionality in the prototype and will be changed later
+            // FIXME: this is a separate page to demonstrate functionality in the prototype and will be changed later
+            Route::get('', 'showAddUserPage')->name('.add');
             Route::post('', 'addUser');
         });
     });
