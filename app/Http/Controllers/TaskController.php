@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Models\TaskGroup;
 use App\Models\Project;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -91,20 +92,22 @@ class TaskController extends Controller {
 
         $searchTerm = $request->query('q') ?? '';
 
+        $project = Project::findOrFail($projectId);
+        
+        // TODO: find out why the policy does not work, maybe wrong naming conventions ?
         // $this->authorize('search');
+        if (!$project->users->contains(Auth::user())) {
+            abort(403);
+        }
 
-        $tasks = $this->searchTasks($searchTerm, $projectId);
+        $tasks = $this->searchTasks($searchTerm, $project);
 
-        // TODO: figure this out later
-        return new JsonResponse($tasks);
+        return view('pages.search.tasks', ['tasks' => $tasks]);
     }
 
-    public function searchTasks(string $searchTerm, int $projectId) {
-        return DB::table('task')
-            ->join('task_group', 'task.task_group', '=', 'task_group.id')
-            ->select('task.*')
+    public function searchTasks(string $searchTerm, Project $project) {
+        return $project->tasks()
             ->whereRaw('(task.fts_search @@ plainto_tsquery(\'english\', ?) OR task.name = ?)', [$searchTerm, $searchTerm])
-            ->whereRaw('task_group.project = ?', [$projectId])
             ->orderByRaw('ts_rank(task.fts_search, plainto_tsquery(\'english\', ?)) DESC', [$searchTerm])
             ->paginate(10);
     }
@@ -125,7 +128,7 @@ class TaskController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show(int $project_id, $id) {
-        $task = Task::find($id);
+        $task = Task::findOrFail($id);
 
         if ($project_id !== $task->project->id) {
             abort(400, 'Task with id ' . $task->id . ' does not belong to project with id ' . $project_id);
@@ -180,7 +183,7 @@ class TaskController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function delete(Request $request, $id) {
-        $task = Task::find($id);
+        $task = Task::findOrFail($id);
 
         //$this->authorize('delete', $task);
         $task->delete();

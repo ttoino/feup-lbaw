@@ -35,7 +35,7 @@ class UserController extends Controller {
         if (!Auth::check())
             return redirect('/login');
         //$this->authorize('list', User::class);
-        $users = Project::find($id)->users()->orderBy('id')->get();
+        $users = Project::findOrFail($id)->users()->orderBy('id')->get();
         return view('', ['users' => $users]);
     }
 

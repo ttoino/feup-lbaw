@@ -65,7 +65,7 @@ class TaskGroupController extends Controller {
 
 
     public function delete(Request $request, $id) {
-        $taskGroup = TaskGroup::find($id);
+        $taskGroup = TaskGroup::findOrFail($id);
 
         //$this->authorize('delete', $task);
         $taskGroup->delete();

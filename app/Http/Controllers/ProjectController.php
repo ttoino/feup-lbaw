@@ -18,7 +18,7 @@ class ProjectController extends Controller {
     }
 
     public function showProjectByID(Request $request, $id) {
-        $project = Project::find($id);
+        $project = Project::findOrFail($id);
 
         $this->authorize('view', $project);
 
@@ -38,8 +38,9 @@ class ProjectController extends Controller {
         return view('pages.search.projects', ['projects' => $projects]);
     }
 
-    public function searchProjects(string $searchTerm) {
-        return Project::whereRaw('(fts_search @@ plainto_tsquery(\'english\', ?) OR project.name = ?)', [$searchTerm, $searchTerm])
+    public function searchProjects(string $searchTerm) {   
+        return Auth::user()->projects()
+            ->whereRaw('(fts_search @@ plainto_tsquery(\'english\', ?) OR project.name = ?)', [$searchTerm, $searchTerm])
             ->orderByRaw('ts_rank(fts_search, plainto_tsquery(\'english\', ?)) DESC', [$searchTerm])
             ->paginate(10);
     }
@@ -85,7 +86,7 @@ class ProjectController extends Controller {
     }
 
     public function showAddUserPage($id) {
-        $project = Project::find($id);
+        $project = Project::findOrFail($id);
 
         return view('pages.project.add', ['project' => $project]);
     }
@@ -95,7 +96,7 @@ class ProjectController extends Controller {
 
         try {
             $user = User::where('email', $requestData['email'])->first();
-            $project = Project::find($id);
+            $project = Project::findOrFail($id);
             $project->users()->save($user);
 
         } finally {
@@ -122,7 +123,7 @@ class ProjectController extends Controller {
     }
 
     public function delete($id) {
-        $project = Project::find($id);
+        $project = Project::findOrFail($id);
 
         $this->authorize('delete', $project);
         $project->delete();

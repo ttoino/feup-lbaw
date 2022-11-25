@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Task;
 use App\Models\User;
+use App\Models\Project;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class TaskPolicy
@@ -101,5 +102,9 @@ class TaskPolicy
      */
     public function completeTask(User $user, Task $task) {
         return !$user->is_admin && $task->project->users->contains($user);
+    }
+
+    public function search(User $user, Project $project) {
+        return $user->projects->contains($project);
     }
 }
