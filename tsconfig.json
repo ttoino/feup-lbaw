@@ -5,7 +5,7 @@
         "lib": ["dom", "es6", "es2017", "esnext.asynciterable"],
         "sourceMap": false,
         "outDir": "public/js",
-        "rootDir": "resources/assets/js",
+        "rootDir": "resources/assets/ts",
         "strict": true,
         "types": [],
         "esModuleInterop": true,

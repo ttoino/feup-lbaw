@@ -3,8 +3,7 @@ import { showToast } from "./toast";
 const attachDeletionHandler = (project: HTMLLIElement) => {
     const projectId = project.dataset.projectId;
 
-    /** @type {HTMLButtonElement} */
-    const projectDeletionButton = project.querySelector(
+    const projectDeletionButton: HTMLButtonElement | null = project.querySelector(
         "button.btn-outline-danger"
     );
 

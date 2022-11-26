@@ -156,7 +156,17 @@ class TaskController extends Controller {
     public function editTask(Task $task, array $data) {
         if ($data['task_group'] !== null)
             $task->task_group = $data['task_group'];
+            
+        if ($data['position'] !== null)
+            $task->position = $data['position'];
+            
+        if ($data['description'] !== null)
+            $task->description = $data['description'];
 
+        if ($data['name'] !== null)
+            $task->name = $data['name'];
+
+        $task->edit_data = date('Y-m-d');
         $task->save();
 
         return $task;
@@ -166,7 +176,8 @@ class TaskController extends Controller {
         return Validator::make($data, [
             'name' => 'string|min:4|max:255',
             'description' => 'string|min:6|max:512',
-            'task_group' => 'integer'
+            'task_group' => 'integer', 
+            'position' => 'integer|min:0',
         ]);
     }
 

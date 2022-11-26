@@ -69,3 +69,8 @@ a {
     opacity: 50%;
     pointer-events: none;
 }
+
+.assignee {
+    position: relative;
+    z-index: 50;
+}

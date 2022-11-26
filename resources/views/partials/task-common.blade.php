@@ -16,8 +16,10 @@
         <ul class="hstack list-unstyled gap-n1">
             @foreach ($task->assignees as $assignee)
                 <li>
-                    <img src="https://picsum.photos/40" alt="{{ $assignee->name }}" width="24" height="24"
-                        class="rounded-circle">
+                    <a href="{{ route('user.profile', ['id' => $assignee->id]) }}" @class(['assignee'])>
+                        <img src="https://picsum.photos/40" alt="{{ $assignee->name }}" width="24" height="24"
+                            class="rounded-circle">
+                    </a>
                 </li>
             @endforeach
         </ul>
