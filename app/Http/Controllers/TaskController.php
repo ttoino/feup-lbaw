@@ -149,24 +149,28 @@ class TaskController extends Controller {
         $task = $this->editTask($task, $requestData);
 
         return $request->wantsJson()
-            ? new JsonResponse($task->toArray(), 201)
+            ? new JsonResponse($task->toArray(), 200)
             : redirect()->route('project.task.info', ['id' => $project_id, 'taskId' => $task->id]);
     }
 
     public function editTask(Task $task, array $data) {
-        if ($data['task_group'] !== null)
+
+        if (($data['task_group'] ??= null) !== null) {
             $task->task_group = $data['task_group'];
+        }
             
-        if ($data['position'] !== null)
+        if (($data['position'] ??= null) !== null)
             $task->position = $data['position'];
             
-        if ($data['description'] !== null)
+        if (($data['description'] ??= null) !== null)
             $task->description = $data['description'];
 
-        if ($data['name'] !== null)
+        if (($data['name'] ??= null) !== null)
             $task->name = $data['name'];
 
-        $task->edit_data = date('Y-m-d');
+        if ($task->isDirty())
+            $task->edit_date = date('Y-m-d');
+        
         $task->save();
 
         return $task;
@@ -179,6 +183,21 @@ class TaskController extends Controller {
             'task_group' => 'integer', 
             'position' => 'integer|min:0',
         ]);
+    }
+
+    public function repositionTask(Request $request, int $id) {
+
+        $requestData = $request->all();
+
+        $this->editTaskValidator($requestData)->validate();
+
+        $task = Task::findOrFail($id);
+
+        $this->authorize('edit', $task);
+
+        $task = $this->editTask($task, $requestData);
+
+        return new JsonResponse($task->toArray(), 200);
     }
 
     /**

@@ -39,7 +39,7 @@ class TaskGroupController extends Controller {
         $taskGroup->name = $data['name'];
         $taskGroup->description = $data['description'] ?? '';
         $taskGroup->project = $data['project'];
-        $taskGroup->position = $data['position'];
+        $taskGroup->position = (TaskGroup::where('project', $taskGroup->project)->max('position') ?? 0) + 1;
         $taskGroup->save();
 
         return $taskGroup;
@@ -55,9 +55,38 @@ class TaskGroupController extends Controller {
         return Validator::make($data, [
             'name' => 'required|string|min:4|max:255',
             'description' => 'string|min:6|max:512',
-            'position' => 'required|integer|min:0',
             'project' => 'required|integer'
         ]);
+    }
+
+    public function repositionTaskGroup(Request $request, int $taskGroupId) {
+
+        $requestData = $request->all();
+
+        $this->taskGroupRepositionValidator($requestData)->validate();
+
+        $taskGroup = TaskGroup::findOrFail($taskGroupId);
+
+        $this->authorize('reposition', $taskGroup);
+
+        $taskGroup = $this->reposition($taskGroup, $requestData);
+
+        return new JsonResponse($taskGroup, 200);
+    }
+
+    protected function taskGroupRepositionValidator(array $data) {
+        return Validator::make($data, [
+            'position' => 'integer|min:0',
+        ]);
+    }
+
+    public function reposition(TaskGroup $taskGroup, array $data) {
+
+        if (($data['position'] ??= null) !== null)
+            $taskGroup->position = $data['position'];
+
+        $taskGroup->save();
+        return $taskGroup;
     }
 
     public function delete(Request $request, $id) {

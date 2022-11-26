@@ -8,7 +8,11 @@
     'mh-100',
     'bg-light',
     'flex-shrink-0',
-]) style="width: 270px">
+]) style="width: 270px"
+@isset($group)
+    data-task-group-id="{{ $group->id }}"
+@endisset
+>
 
     @isset($group)
         <div class="hstack">
@@ -22,7 +26,7 @@
             @each ('partials.project.board.task', $group->tasks, 'task')
         </ul>
 
-        <form method="POST" action="{{ url("/project/$group->project/task/new") }}">
+        <form method="@yield('method', 'POST')" action="{{ route('project.task.new', ['id' => $project->id]) }}">
             @csrf
             <div class="input-group">
                 <input aria-label="Create Task Name" aria-describedby="task-name"
@@ -35,8 +39,8 @@
                 name="task_group" value="{{ $group->id }}">
         </form>
     @else
-        <form method="POST"
-            action="{{ url("/project/$project->id/task-group/new") }}">
+        <form method="@yield('method', 'POST')"
+            action="{{ route('project.task-group.new', ['id' => $project->id]) }}">
             @csrf
             <div class="input-group">
                 <input aria-label="Create Group Name" aria-describedby="group-name"
@@ -45,8 +49,6 @@
                 <button class="btn btn-primary" type="submit"><i
                         class="bi bi-plus"></i></button>
             </div>
-            <input type="hidden" class="form-control" id="position"
-                name="position" value="{{ count($project->taskGroups) + 1 }}">
             <input type="hidden" class="form-control" id="project" name="project"
                 value="{{ $project->id }}">
         </form>

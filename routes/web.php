@@ -117,6 +117,13 @@ Route::prefix('/api')->name('api')->group(function () {
     Route::prefix('/task')->name('.task')->controller('TaskController')->group(function () {
         Route::prefix('/{id}')->group(function () {
             Route::put('/complete', 'complete')->name('.complete');
+            Route::post('/reposition', 'repositionTask')->name('.reposition');
+        });
+    });
+    
+    Route::prefix('/task-group')->name('.task-group')->controller('TaskGroupController')->group(function () {
+        Route::prefix('/{id}')->group(function () {
+            Route::post('/reposition', 'repositionTaskGroup')->name('.reposition');
         });
     });
 });

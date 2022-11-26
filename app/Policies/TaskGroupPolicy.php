@@ -91,4 +91,8 @@ class TaskGroupPolicy
     {
         //
     }
+
+    public function reposition(User $user, TaskGroup $taskGroup) {
+        return $taskGroup->project()->get()->first()->users->contains($user);
+    }
 }
