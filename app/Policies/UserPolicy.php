@@ -65,7 +65,13 @@ class UserPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function delete(User $user, User $model) {
-        return ($user->id === $model->id || ($user->is_admin && !$model->is_admin)) && Project::where('coordinator', $model->id)->count() === 0;
+
+        $userProjects = Project::where('coordinator', $model->id);
+
+        $projectsHaveOtherMembers = $userProjects->get()->reduce(fn (bool $carry, Project $project) => $carry | $project->users->count() > 1, false);
+
+        return ($user->id === $model->id || ($user->is_admin && !$model->is_admin)) &&
+               ($userProjects->count() === 0 || !$projectsHaveOtherMembers);
     }
 
     /**

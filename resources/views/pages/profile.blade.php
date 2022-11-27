@@ -20,23 +20,15 @@
             <i class="bi bi-trash3"></i> Delete account
         </button>
 
-        <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal-label" aria-hidden="true">
+        <div class="modal fade" id="delete-modal" tabindex="-1" aria-labelledby="delete-modal-label" aria-hidden="true" data-user-id="{{ $user->id }}">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content modal-body gap-3 align-items-center">
                     <h3 class="modal-title fs-5" id="delete-modal-label">
-                        Are you sure you want to delete {{$user->name}}?
+                        Are you sure you want to delete {{$user->name}}'s account?
                     </h3>
                     <div class="hstack gap-2 align-self-center">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-
-                        {{-- TODO: make this an API call instead of a form since it triggers a reload --}}
-                        <form method="POST" action="{{ route('api.user.delete', ['user' => $user]) }}" class="d-contents">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-danger" type="submit">
-                                Delete
-                            </button>
-                        </form>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Delete</button>
                     </div>
                 </div>
             </div>
