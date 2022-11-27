@@ -26,7 +26,7 @@
             @each ('partials.project.board.task', $group->tasks, 'task')
         </ul>
 
-        <form method="@yield('method', 'POST')" action="{{ route('project.task.new', ['id' => $project->id]) }}">
+        <form method="@yield('method', 'POST')" action="{{ route('project.task.new', ['project' => $project]) }}">
             @csrf
             <div class="input-group">
                 <input aria-label="Create Task Name" aria-describedby="task-name"
@@ -40,7 +40,7 @@
         </form>
     @else
         <form method="@yield('method', 'POST')"
-            action="{{ route('project.task-group.new', ['id' => $project->id]) }}">
+            action="{{ route('project.task-group.new', ['project' => $project]) }}">
             @csrf
             <div class="input-group">
                 <input aria-label="Create Group Name" aria-describedby="group-name"

@@ -19,7 +19,7 @@
                     @foreach ($other_projects as $p)
                         <li>
                             <a class="dropdown-item"
-                                href="{{ route('project', ['id' => $p->id]) }}">{{ $p->name }}</a>
+                                href="{{ route('project', ['project' => $p]) }}">{{ $p->name }}</a>
                         </li>
                     @endforeach
 
@@ -42,7 +42,7 @@
             </ul>
         </div>
 
-        <form method="GET" action="{{ route('project.task.search', ['id' => $project->id]) }}"
+        <form method="GET" action="{{ route('project.task.search', ['project' => $project]) }}"
             class="input-group my-2" role="search">
             <input class="form-control" name="q" type="search" placeholder="Search tasks" aria-label="Search"
                 value="{{ Request::route()->getName() === 'project.task.search' ? Request::query('q', '') : '' }}">
@@ -54,10 +54,10 @@
         @endforeach
 
         @if (Auth::user()->projects->contains($project))
-            <button type="button" data-bs-toggle="modal" data-bs-target="#taskCreationModal"
-                @class(['nav-link', 'nav-item', 'btn', 'btn-primary'])>
+            <a type="button" data-bs-toggle="modal" data-bs-target="#taskCreationModal"
+                @class(['nav-link', 'nav-item'])>
                 <i @class(['bi', 'bi-plus'])></i> Create Task
-            </button>
+            </a>
         @endif
         <div class="modal" id="taskCreationModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
@@ -68,7 +68,7 @@
                     </div>
                     <div class="modal-body">
                         <form method="@yield('method', 'POST')"
-                            action="{{ route('project.task.new', ['id' => $project->id]) }}"
+                            action="{{ route('project.task.new', ['project' => $project]) }}"
                             class="m-auto hstack gap-4 needs-validation p-3" id="task-creation-form" novalidate>
                             @csrf
                             @include('partials.project.task.new')

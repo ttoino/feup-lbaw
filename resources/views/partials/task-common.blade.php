@@ -8,7 +8,7 @@
         </ul>
     @endif
 
-    <a class="stretched-link" href="{{ route('project.task.info', ['id' => $task->project, 'taskId' => $task->id]) }}">
+    <a class="stretched-link" href="{{ route('project.task.info', ['project' => $project, 'task' => $task]) }}">
         {{ $task->name }}
     </a>
 
@@ -16,7 +16,7 @@
         <ul class="hstack list-unstyled gap-n1">
             @foreach ($task->assignees as $assignee)
                 <li>
-                    <a href="{{ route('user.profile', ['id' => $assignee->id]) }}" @class(['assignee'])>
+                    <a href="{{ route('user.profile', ['user' => $assignee]) }}" @class(['assignee'])>
                         <img src="https://picsum.photos/40" alt="{{ $assignee->name }}" width="24" height="24"
                             class="rounded-circle">
                     </a>

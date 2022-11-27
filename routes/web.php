@@ -23,7 +23,7 @@ Route::get('{name}', 'StaticController@show')
 
 // User
 Route::prefix('/user')->name('user.')->controller('UserController')->group(function () {
-    Route::prefix('/{id}')->group(function () {
+    Route::prefix('/{user}')->group(function () {
         Route::get('', 'show')->name('profile');
 
         Route::prefix('/edit')->group(function () {
@@ -43,11 +43,12 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
     // Project Search
     Route::get('/search', 'search')->name('.search');
 
-    Route::prefix('/{id}')->middleware('withOtherProjects')->group(function () {
-        Route::redirect('', "/project/{id}/board")->name('');
+    Route::prefix('/{project}')->middleware('withOtherProjects')->group(function () {
+        
+        Route::redirect('', "/project/{project}/board")->name('');
 
         Route::view('/info', 'pages.project.tbd')->name('.info');
-        Route::get('/board', 'showProjectByID')->name('.board');
+        Route::get('/board', 'showProject')->name('.board');
         Route::view('/timeline', 'pages.project.tbd')->name('.timeline');
         Route::view('/forum', 'pages.project.tbd')->name('.forum');
 
@@ -56,7 +57,7 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
 
             Route::get('search', 'search')->name('.search');
 
-            Route::prefix('/{taskId}')->where(['taskId', '[0-9]+'])->group(function () {
+            Route::prefix('/{task}')->where(['taskId', '[0-9]+'])->group(function () {
                 Route::get('', 'show')->name('.info');
                 Route::post('', 'edit')->name('.edit');
             });
@@ -103,26 +104,26 @@ Route::name('')->group(function () {
 Route::prefix('/api')->name('api')->group(function () {
 
     Route::prefix('/project')->name('.project')->controller('ProjectController')->group(function() {
-        Route::prefix('/{id}')->group(function () {
+        Route::prefix('/{project}')->group(function () {
             Route::delete('', 'delete')->name('.delete');
         });
     });
 
     Route::prefix('/user')->name('.user')->controller('UserController')->group(function () {
-        Route::prefix('/{id}')->group(function () {
+        Route::prefix('/{user}')->group(function () {
             Route::delete('', 'delete')->name('.delete');
         });
     });
 
     Route::prefix('/task')->name('.task')->controller('TaskController')->group(function () {
-        Route::prefix('/{id}')->group(function () {
+        Route::prefix('/{task}')->group(function () {
             Route::put('/complete', 'complete')->name('.complete');
             Route::post('/reposition', 'repositionTask')->name('.reposition');
         });
     });
     
     Route::prefix('/task-group')->name('.task-group')->controller('TaskGroupController')->group(function () {
-        Route::prefix('/{id}')->group(function () {
+        Route::prefix('/{taskGroup}')->group(function () {
             Route::post('/reposition', 'repositionTaskGroup')->name('.reposition');
         });
     });

@@ -13,12 +13,7 @@ use App\Models\Project;
 
 class ProjectController extends Controller {
 
-    public function __construct() {
-        $this->middleware('auth');
-    }
-
-    public function showProjectByID(Request $request, $id) {
-        $project = Project::findOrFail($id);
+    public function showProject(Request $request, Project $project) {
 
         $this->authorize('view', $project);
 
@@ -88,24 +83,22 @@ class ProjectController extends Controller {
         return view('pages.project.list', ['projects' => $projects]);
     }
 
-    public function showAddUserPage(int $id) {
-        $project = Project::findOrFail($id);
+    public function showAddUserPage(Project $project) {
 
         $this->authorize('showAddUserPage', $project);
 
         return view('pages.project.add', ['project' => $project]);
     }
 
-    public function addUser(Request $request, int $id) {
+    public function addUser(Request $request, Project $project) {
 
         $user = User::where('email', $request->input('email'))->first();
-        $project = Project::findOrFail($id);
 
         $this->authorize('addUser', [$project, $user]);
 
         $project->users()->save($user);
 
-        return redirect()->route('project', ['id' => $id]);
+        return redirect()->route('project', ['project' => $project]);
     }
 
     /**
@@ -126,8 +119,7 @@ class ProjectController extends Controller {
         return $project;
     }
 
-    public function delete($id) {
-        $project = Project::findOrFail($id);
+    public function delete(Project $project) {
 
         $this->authorize('delete', $project);
         $project->delete();

@@ -59,13 +59,11 @@ class TaskGroupController extends Controller {
         ]);
     }
 
-    public function repositionTaskGroup(Request $request, int $taskGroupId) {
+    public function repositionTaskGroup(Request $request, TaskGroup $taskGroup) {
 
         $requestData = $request->all();
 
         $this->taskGroupRepositionValidator($requestData)->validate();
-
-        $taskGroup = TaskGroup::findOrFail($taskGroupId);
 
         $this->authorize('reposition', $taskGroup);
 
@@ -89,8 +87,7 @@ class TaskGroupController extends Controller {
         return $taskGroup;
     }
 
-    public function delete(Request $request, $id) {
-        $taskGroup = TaskGroup::findOrFail($id);
+    public function delete(Request $request, TaskGroup $taskGroup) {
 
         //$this->authorize('delete', $task);
         $taskGroup->delete();

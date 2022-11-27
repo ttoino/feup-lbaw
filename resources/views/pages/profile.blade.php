@@ -12,7 +12,7 @@
     <p class="m-0"><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></p>
 
     @if (Auth::user()->id == $user->id || Auth::user()->is_admin)
-        <a href="{{ route('user.edit', ['id' => $user->id]) }}" class="btn btn-primary">
+        <a href="{{ route('user.edit', ['user' => $user]) }}" class="btn btn-primary">
             <i class="bi bi-pencil"></i> Edit profile
         </a>
         
@@ -29,7 +29,8 @@
                     <div class="hstack gap-2 align-self-center">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 
-                        <form method="POST" action="{{ route('api.user.delete', ['id' => $user->id]) }}" class="d-contents">
+                        {{-- TODO: make this an API call instead of a form since it triggers a reload --}}
+                        <form method="POST" action="{{ route('api.user.delete', ['user' => $user]) }}" class="d-contents">
                             @csrf
                             @method('DELETE')
                             <button class="btn btn-danger" type="submit">

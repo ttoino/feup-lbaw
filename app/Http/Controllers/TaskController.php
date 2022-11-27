@@ -27,7 +27,7 @@ class TaskController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function createTask(Request $request) {
+    public function createTask(Request $request, Project $project) {
         $requestData = $request->all();
 
         $this->taskCreationValidator($requestData)->validate();
@@ -40,7 +40,7 @@ class TaskController extends Controller {
 
         return $request->wantsJson()
             ? new JsonResponse([$task], 201)
-            : redirect()->route('project', ['id' => $task_group->project]);
+            : redirect()->route('project', ['project' => $project]);
     }
 
     public function create(array $data) {
@@ -76,8 +76,7 @@ class TaskController extends Controller {
      * @param int $id the task id
      * @return \Illuminate\Http\JsonResponse the JSON response to the API
      */
-    public function complete(int $id) {
-        $task = Task::findOrFail($id);
+    public function complete(Task $task) {
 
         $this->authorize('completeTask', $task);
 
@@ -87,11 +86,9 @@ class TaskController extends Controller {
         return new JsonResponse($task->toArray());
     }
 
-    public function search(Request $request, int $projectId) {
+    public function search(Request $request, Project $project) {
 
         $searchTerm = $request->query('q') ?? '';
-
-        $project = Project::findOrFail($projectId);
 
         $this->authorize('search', [Task::class, $project]);
 
@@ -122,27 +119,22 @@ class TaskController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function show(int $project_id, $id) {
-        $task = Task::findOrFail($id);
+    public function show(Request $request, Project $project, Task $task) {
 
-        if ($project_id !== $task->project->id) {
-            abort(400, 'Task with id ' . $task->id . ' does not belong to project with id ' . $project_id);
+        if ($project->id !== $task->project->id) {
+            abort(400, 'Task with id ' . $task->id . ' does not belong to project with id ' . $project->id);
         }
 
         $this->authorize('view', $task);
 
-        $project = Project::findOrFail($project_id);
-
         return view('pages.task', ['task' => $task, 'project' => $project]);
     }
 
-    public function edit(Request $request, int $project_id, int $id) {
+    public function edit(Request $request, Project $project, Task $task) {
 
         $requestData = $request->all();
 
         $this->editTaskValidator($requestData)->validate();
-
-        $task = Task::findOrFail($id);
 
         $this->authorize('edit', $task);
 
@@ -150,7 +142,7 @@ class TaskController extends Controller {
 
         return $request->wantsJson()
             ? new JsonResponse($task->toArray(), 200)
-            : redirect()->route('project.task.info', ['id' => $project_id, 'taskId' => $task->id]);
+            : redirect()->route('project.task.info', ['project' => $project, 'task' => $task]);
     }
 
     public function editTask(Task $task, array $data) {
@@ -185,13 +177,11 @@ class TaskController extends Controller {
         ]);
     }
 
-    public function repositionTask(Request $request, int $id) {
+    public function repositionTask(Request $request, Task $task) {
 
         $requestData = $request->all();
 
         $this->editTaskValidator($requestData)->validate();
-
-        $task = Task::findOrFail($id);
 
         $this->authorize('edit', $task);
 
