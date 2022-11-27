@@ -18315,3 +18315,7 @@ a {
   position: relative;
   z-index: 50;
 }
+
+.draggable-mirror {
+  cursor: grabbing;
+}

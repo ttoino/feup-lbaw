@@ -11,7 +11,7 @@
         "esModuleInterop": true,
         "moduleResolution": "node",
         "resolveJsonModule": true,
-        "baseUrl": ".",
+        "baseUrl": "resources/assets/ts",
         "allowSyntheticDefaultImports": true,
         "noUnusedLocals": true,
         "noUnusedParameters": true,

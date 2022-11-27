@@ -2,14 +2,14 @@ import { Sortable } from "@shopify/draggable";
 
 import { repositionTask } from "./task";
 import { repositionTaskGroup } from "./taskGroup";
-
 import { showToast } from "./toast";
 
 const setupTaskGroupDnD = () => {
-    const taskGroupsContainer = document.querySelectorAll<HTMLElement>("section");
+    const taskGroupsContainer =
+        document.querySelectorAll<HTMLElement>("section");
     const sortableTaskGroups = new Sortable(taskGroupsContainer, {
         draggable: "section > div",
-        handle: ".grip",
+        handle: "div > .grip",
         mirror: {
             appendTo: "body",
             constrainDimensions: true,
@@ -21,7 +21,6 @@ const setupTaskGroupDnD = () => {
     });
 
     sortableTaskGroups.on("sortable:stop", async (e) => {
-
         const taskGroupId = e.dragEvent.source.dataset.taskGroupId;
 
         if (!taskGroupId) return;
@@ -33,7 +32,9 @@ const setupTaskGroupDnD = () => {
         const res = await repositionTaskGroup(taskGroupId, newPosition);
 
         if (!res.ok) {
-            showToast(`Cannot reposition task group with id ${taskGroupId} to position ${newPosition}`);
+            showToast(
+                `Cannot reposition task group with id ${taskGroupId} to position ${newPosition}`
+            );
         }
     });
 };
@@ -45,6 +46,7 @@ const setupTaskDnD = () => {
 
     const sortableTasks = new Sortable(taskGroups, {
         draggable: "li[data-task-id]",
+        handle: ".grip",
         mirror: {
             appendTo: "body",
             constrainDimensions: true,
@@ -56,7 +58,6 @@ const setupTaskDnD = () => {
     });
 
     sortableTasks.on("sortable:stop", async (e) => {
-
         const taskId = e.dragEvent.source.dataset.taskId;
 
         if (!taskId) return;
@@ -70,13 +71,15 @@ const setupTaskDnD = () => {
             "task-group",
             taskGroup,
             "position",
-            newPosition,
+            newPosition
         );
 
         const res = await repositionTask(taskId, taskGroup, newPosition);
 
         if (!res.ok) {
-            showToast(`Cannot reposition task with id ${taskId} to position ${newPosition} on group ${taskGroup}`);
+            showToast(
+                `Cannot reposition task with id ${taskId} to position ${newPosition} on group ${taskGroup}`
+            );
         }
     });
 };
