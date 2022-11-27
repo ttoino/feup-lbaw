@@ -83,7 +83,7 @@
         </div>
 
         @if (Auth::user()->id == $project->coordinator)
-            <a href="{{ route('project.user.add', ['id' => $project->id]) }}" @class([
+            <a href="{{ route('project.user.add', ['project' => $project]) }}" @class([
                 'nav-link',
                 'nav-item',
                 'active' => Request::route()->getName() === 'project.user.add',

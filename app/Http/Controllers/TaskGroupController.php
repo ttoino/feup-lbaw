@@ -29,7 +29,7 @@ class TaskGroupController extends Controller {
 
         return $request->wantsJson()
             ? new JsonResponse([$taskGroup], 201)
-            : redirect()->route('project', ['id' => $project->id]);
+            : redirect()->route('project', ['project' => $project]);
     }
 
     public function create(array $data) {

@@ -17,8 +17,8 @@ class WithOtherProjects {
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next) {
-        View::share('project', Project::findOrFail($request->route('project')->id));
-        View::share('other_projects', Auth::user()?->projects()->whereKeyNot($request->route('project')->id)->simplePaginate(5));
+        View::share('project', $request->route('project'));
+        View::share('other_projects', Auth::user()?->projects()->whereKeyNot($request->route('project'))->simplePaginate(5));
 
         return $next($request);
     }
