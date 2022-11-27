@@ -3,7 +3,7 @@
     <img src="https://picsum.photos/40" alt="Profile picture" width="40" height="40" class="rounded-circle">
 
     <div class="vstack flex-fill align-self-center">
-        <a href="{{ route('user.profile', ['id' => $item->id]) }}" @class([
+        <a href="{{ route('user.profile', ['user' => $item]) }}" @class([
             'stretched-link',
             'fw-bold',
             'underline' => Auth::user()?->id === $item->id,

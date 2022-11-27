@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -27,7 +26,7 @@ class ProjectController extends Controller {
 
         return $request->wantsJson()
             ? new JsonResponse($project->toArray(), 200)
-            : view('pages.project.tbd', ['project' => $project]);
+            : view('pages.project.info', ['project' => $project]);
     }
 
     public function search(Request $request) {
