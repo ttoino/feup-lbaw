@@ -47,7 +47,7 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
         
         Route::redirect('', "/project/{project}/board")->name('');
 
-        Route::view('/info', 'pages.project.tbd')->name('.info');
+        Route::get('/info', 'showProjectInfo')->name('.info');
         Route::get('/board', 'showProject')->name('.board');
         Route::view('/timeline', 'pages.project.tbd')->name('.timeline');
         Route::view('/forum', 'pages.project.tbd')->name('.forum');

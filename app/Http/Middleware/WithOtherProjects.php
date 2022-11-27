@@ -17,8 +17,14 @@ class WithOtherProjects {
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next) {
-        View::share('project', $request->route('project'));
-        View::share('other_projects', Auth::user()?->projects()->whereKeyNot($request->route('project'))->simplePaginate(5));
+
+        // we had an issue where rendering views directly was causing errors to be thrown because of Laravel's implicit binding system
+        // this should now be 'useless' but keep it as a fail-safe
+        $routeProject = $request->route('project');
+        $project = is_string($routeProject) ? Project::findOrFail($request->route('project')) : $routeProject;
+
+        View::share('project', $project);
+        View::share('other_projects', Auth::user()?->projects()->whereKeyNot($project->id)->simplePaginate(5));
 
         return $next($request);
     }

@@ -22,6 +22,14 @@ class ProjectController extends Controller {
             : view('pages.project.board', ['project' => $project]);
     }
 
+    public function showProjectInfo(Request $request, Project $project) {
+        $this->authorize('view', $project);
+
+        return $request->wantsJson()
+            ? new JsonResponse($project->toArray(), 200)
+            : view('pages.project.tbd', ['project' => $project]);
+    }
+
     public function search(Request $request) {
 
         $this->authorize('viewAny', Project::class);
