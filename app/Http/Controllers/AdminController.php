@@ -47,4 +47,18 @@ class AdminController extends Controller {
             ]
           ]);
     }
+
+    public function showUserReports(Request $request, $id){
+        $user = User::findOrFail($id);
+        $reports = $user->reports()->paginate(10);
+
+        return view('pages.admin.reports.user', ['user' => $user, 'reports' => $reports]);
+    }
+
+    public function showProjectReports(Request $request, $id){
+        $project = Project::findOrFail($id);
+        $reports = $project->reports()->paginate(10);
+
+        return view('pages.admin.reports.project', ['projects' => $project, 'reports' => $reports]);
+    }
 }

@@ -57,7 +57,7 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
 
             Route::get('search', 'search')->name('.search');
 
-            Route::prefix('/{task}')->where(['taskId', '[0-9]+'])->group(function () {
+            Route::prefix('/{task}')->where(['task', '[0-9]+'])->group(function () {
                 Route::get('', 'show')->name('.info');
                 Route::post('', 'edit')->name('.edit');
             });
@@ -83,6 +83,10 @@ Route::prefix('/admin')->middleware(['auth', 'isAdmin'])->name('admin')->control
     Route::prefix('/create')->name('.create.')->group(function () {
         Route::get('/user', 'showCreateUser')->name('user');
         Route::post('/user', 'createUser');
+    });
+    Route::prefix('/reports')->name('.reports.')->group(function () {
+        Route::get('/user/{user}', 'showUserReports')->where(['user', '[0-9]+'])->name('user');
+        Route::get('/project/{project}', 'showProjectReports')->where(['project', '[0-9]+'])->name('project');
     });
 });
 
