@@ -94,7 +94,7 @@ class TaskController extends Controller {
 
         $tasks = $this->searchTasks($searchTerm, $project);
 
-        return view('pages.search.tasks', ['tasks' => $tasks]);
+        return view('pages.search.tasks', ['tasks' => $tasks->withQueryString()]);
     }
 
     public function searchTasks(string $searchTerm, Project $project) {

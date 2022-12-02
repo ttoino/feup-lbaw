@@ -37,7 +37,7 @@ class ProjectController extends Controller {
 
         $projects = $this->searchProjects($searchTerm)->appends($request->query());
 
-        return view('pages.search.projects', ['projects' => $projects]);
+        return view('pages.search.projects', ['projects' => $projects->withQueryString()]);
     }
 
     public function searchProjects(string $searchTerm) {
