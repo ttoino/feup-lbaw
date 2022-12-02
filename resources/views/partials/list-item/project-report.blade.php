@@ -7,7 +7,4 @@
         <span>Reason:
             {{ $item->reason }}</span>
     </div>
-    @if (Auth::user()?->is_admin)
-        <button class="btn btn-outline-danger" style="z-index: 5"><i class="bi bi-trash3"></i></button>
-    @endif
 </li>
