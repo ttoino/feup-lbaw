@@ -18319,3 +18319,47 @@ a {
 .draggable-mirror {
   cursor: grabbing;
 }
+
+
+
+header.static_page{
+  margin-left: 1em;
+  
+}
+
+section.static_page{
+  margin-left: 8em;
+  margin-right: 8em;
+  font-size: 20px;
+
+}
+
+section#about_page{
+  display: flex;
+}
+
+section.static_page img{
+  width: 50em;
+  margin-left: 1em;
+  display: block;
+  border-color: #e99b43;
+  border-style: solid;
+  opacity: 85%;
+}
+
+section.static_page#faq_page div.question{
+  text-align: left;
+  margin-left: 3em;
+  margin-right: auto;
+  font-size: 20px;
+  width: 20em;
+}
+
+section.static_page#faq_page div.answer{
+  margin-left: 3em;
+  margin-right: 3em;
+}
+
+section.static_page#faq_page a{
+  text-decoration: underline;
+}
