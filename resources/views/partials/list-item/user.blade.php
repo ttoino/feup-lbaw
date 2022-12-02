@@ -17,9 +17,11 @@
     </div>
 
     @if (Auth::user()?->is_admin)
-        <span class="text-danger">
-            {{ $item->reports->count() }} Reports
-        </span>
+        @if ($item->reports_count > 0)
+            <span class="text-danger" style="z-index: 5">
+                <a href={{route('admin.reports.user', ['user' => $item])}} >{{ $item->reports_count }} Reports</a>
+            </span>
+        @endif    
         <button class="btn btn-outline-danger" style="z-index: 5"><i class="bi bi-trash3"></i></button>
     @endif
 </li>

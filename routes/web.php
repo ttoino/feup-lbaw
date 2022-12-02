@@ -85,8 +85,8 @@ Route::prefix('/admin')->middleware(['auth', 'isAdmin'])->name('admin')->control
         Route::post('/user', 'createUser');
     });
     Route::prefix('/reports')->name('.reports.')->group(function () {
-        Route::get('/user/{user}', 'showUserReports')->where(['user', '[0-9]+'])->name('user');
-        Route::get('/project/{project}', 'showProjectReports')->where(['project', '[0-9]+'])->name('project');
+        Route::get('/user/{user}', 'showUserReports')->name('user');
+        Route::get('/project/{project}', 'showProjectReports')->name('project');
     });
 });
 
