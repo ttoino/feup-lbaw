@@ -1,8 +1,8 @@
 import { Sortable } from "@shopify/draggable";
+import { tryRequest } from "./api";
 
-import { repositionTask } from "./task";
-import { repositionTaskGroup } from "./taskGroup";
-import { showToast } from "./toast";
+import { repositionTask } from "./api/task";
+import { repositionTaskGroup } from "./api/taskGroup";
 
 const setupTaskGroupDnD = () => {
     const taskGroupsContainer =
@@ -29,13 +29,13 @@ const setupTaskGroupDnD = () => {
 
         console.log("task group", taskGroupId, "position", newPosition, e);
 
-        const res = await repositionTaskGroup(taskGroupId, newPosition);
-
-        if (!res.ok) {
-            showToast(
-                `Cannot reposition task group with id ${taskGroupId} to position ${newPosition}`
-            );
-        }
+        await tryRequest(
+            repositionTaskGroup,
+            "Could not change task group position!",
+            undefined,
+            taskGroupId,
+            newPosition
+        );
     });
 };
 
@@ -74,13 +74,14 @@ const setupTaskDnD = () => {
             newPosition
         );
 
-        const res = await repositionTask(taskId, taskGroup, newPosition);
-
-        if (!res.ok) {
-            showToast(
-                `Cannot reposition task with id ${taskId} to position ${newPosition} on group ${taskGroup}`
-            );
-        }
+        await tryRequest(
+            repositionTask,
+            "Could not change the task position!",
+            undefined,
+            taskId,
+            taskGroup,
+            newPosition
+        );
     });
 };
 

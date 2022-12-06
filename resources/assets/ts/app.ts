@@ -6,19 +6,6 @@
 
 import "bootstrap";
 
-const globalFetch = window.fetch;
-const token =
-    document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')
-        ?.content ?? "";
-window.fetch = (input, init) =>
-    globalFetch(input, {
-        ...init,
-        headers: {
-            ...init?.headers,
-            "X-CSRF-TOKEN": token,
-        },
-    });
-
 import "./task";
 import "./forms";
 import "./project";
