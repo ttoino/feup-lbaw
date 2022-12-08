@@ -1,5 +1,5 @@
 import { tryRequest } from "./api";
-import { deleteProject } from "./api/project";
+import { deleteProject, toggleFavorite } from "./api/project";
 
 const attachDeletionHandler = (project: HTMLLIElement) => {
     const projectId = project.dataset.projectId;
@@ -13,7 +13,7 @@ const attachDeletionHandler = (project: HTMLLIElement) => {
         if (
             await tryRequest(
                 deleteProject,
-                "Could not delete user",
+                "Could not delete project",
                 undefined,
                 projectId
             )
@@ -22,8 +22,40 @@ const attachDeletionHandler = (project: HTMLLIElement) => {
     });
 };
 
+const attachFavoriteToggleHandler = (project: HTMLLIElement) => {
+    const projectId = project.dataset.projectId;
+
+    if (!projectId) return;
+
+    const projectFavoriteToggleButton: HTMLButtonElement | null =
+        project.querySelector("button.btn-outline.favorite-toggle");
+
+    projectFavoriteToggleButton?.addEventListener("click", async () => {
+
+        const { isFavorite } = await tryRequest(
+            toggleFavorite,
+            `Could not toggle favorite status of project with id ${projectId}`,
+            undefined,
+            projectId
+        );
+
+        const icon = projectFavoriteToggleButton.querySelector("i");
+
+        if (!icon) return;
+
+        if (isFavorite)
+            icon.classList.replace("bi-heart", "bi-heart-fill");
+        else
+            icon.classList.replace("bi-heart-fill", "bi-heart");
+
+    });
+};
+
 const projects = document.querySelectorAll<HTMLLIElement>(
     "li[data-project-id]"
 );
 
-projects.forEach(attachDeletionHandler);
+projects.forEach((project) => {
+    attachDeletionHandler(project);
+    attachFavoriteToggleHandler(project);
+});

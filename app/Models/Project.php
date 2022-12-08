@@ -39,7 +39,7 @@ class Project extends Model {
             'project_member',
             'project',
             'user_profile'
-        );
+        )->withPivot('is_favorite');
     }
 
     public function taskGroups() {

@@ -16,7 +16,17 @@
         @endif    
         <button class="btn btn-outline-danger" style="z-index: 5"><i class="bi bi-trash3"></i></button>
     @else
-        <button class="btn btn-outline" style="z-index: 5"><i class="bi bi-heart"></i></button>
+        <button class="btn btn-outline favorite-toggle" style="z-index: 5">
+            @php
+                $isFavorite = $item->users()->get()->first(fn ($user) => $user->id === Auth::user()->id)->pivot->is_favorite;
+            @endphp
+
+            <i @class([
+                'bi',
+                'bi-heart' => !$isFavorite,
+                'bi-heart-fill' => $isFavorite,
+            ])></i>
+        </button>
     @endif
     @if (Auth::user()?->id === $item->coordinator)
         <button class="btn btn-outline-danger" style="z-index: 5"><i class="bi bi-trash3"></i></button>

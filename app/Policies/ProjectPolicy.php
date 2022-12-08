@@ -77,6 +77,10 @@ class ProjectPolicy
         //
     }
 
+    public function toggleFavorite(User $user, Project $project) {
+        return !$user->is_admin && $project->users->contains($user);
+    }
+
     public function showAddUserPage(User $user, Project $project) {
         return $user->id === $project->coordinator;
     }

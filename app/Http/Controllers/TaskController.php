@@ -98,10 +98,14 @@ class TaskController extends Controller {
     }
 
     public function searchTasks(string $searchTerm, Project $project) {
-        return $project->tasks()
-            ->whereRaw('(task.fts_search @@ plainto_tsquery(\'english\', ?) OR task.name = ?)', [$searchTerm, $searchTerm])
-            ->orderByRaw('ts_rank(task.fts_search, plainto_tsquery(\'english\', ?)) DESC', [$searchTerm])
-            ->paginate(10);
+
+        $projectTasks = $project->tasks();
+
+        if (!empty($searchTerm))
+            $projectTasks = $projectTasks->whereRaw('(task.fts_search @@ plainto_tsquery(\'english\', ?) OR task.name = ?)', [$searchTerm, $searchTerm])
+            ->orderByRaw('ts_rank(task.fts_search, plainto_tsquery(\'english\', ?)) DESC', [$searchTerm]);
+        
+        return $projectTasks->paginate(10);
     }
 
     /**

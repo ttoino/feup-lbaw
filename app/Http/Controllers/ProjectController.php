@@ -41,10 +41,14 @@ class ProjectController extends Controller {
     }
 
     public function searchProjects(string $searchTerm) {
-        return Auth::user()->projects()
-            ->whereRaw('(fts_search @@ plainto_tsquery(\'english\', ?) OR project.name = ?)', [$searchTerm, $searchTerm])
-            ->orderByRaw('ts_rank(fts_search, plainto_tsquery(\'english\', ?)) DESC', [$searchTerm])
-            ->paginate(10);
+
+        $userProjects = Auth::user()->projects();
+
+        if (!empty($searchTerm))
+            $userProjects = $userProjects->whereRaw('(fts_search @@ plainto_tsquery(\'english\', ?) OR project.name = ?)', [$searchTerm, $searchTerm])
+            ->orderByRaw('ts_rank(fts_search, plainto_tsquery(\'english\', ?)) DESC', [$searchTerm]);
+
+        return $userProjects->paginate(10);
     }
 
     public function showProjectCreationPage() {
@@ -106,6 +110,19 @@ class ProjectController extends Controller {
         $project->users()->save($user);
 
         return redirect()->route('project', ['project' => $project]);
+    }
+
+    public function toggleFavorite(Request $request, Project $project) {
+
+        // handle auth
+        $this->authorize('toggleFavorite', $project);
+
+        $member = $project->users()->get()->first(fn (User $user) => $user->id === Auth::user()->id);
+
+        $member->pivot->is_favorite = !$member->pivot->is_favorite;
+        $member->pivot->save();
+
+        return new JsonResponse(['isFavorite' => $member->pivot->is_favorite], 200);
     }
 
     /**

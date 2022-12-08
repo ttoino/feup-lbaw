@@ -110,6 +110,10 @@ Route::prefix('/api')->name('api')->group(function () {
     Route::prefix('/project')->name('.project')->controller('ProjectController')->group(function() {
         Route::prefix('/{project}')->group(function () {
             Route::delete('', 'delete')->name('.delete');
+
+            Route::prefix('/favorite')->name('.favorite')->group(function () {
+                Route::post('/toggle', 'toggleFavorite')->name('.toggle');
+            });
         });
     });
 
