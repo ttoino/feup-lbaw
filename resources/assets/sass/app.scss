@@ -65,16 +65,7 @@ a {
     text-decoration: underline;
 }
 
-.draggable-source--is-dragging {
-    opacity: 50%;
-    pointer-events: none;
-}
-
 .assignee {
     position: relative;
     z-index: 50;
-}
-
-.draggable-mirror {
-    cursor: grabbing;
 }
