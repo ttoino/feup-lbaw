@@ -6,15 +6,15 @@
             @stack('navbar-left')
 
             <a class="navbar-brand" href="{{ route('home') }}">{{ config('app.name', 'Laravel') }}</a>
-
-            <form method="GET" action="{{ route('project.search') }}" class="input-group ms-auto" role="search"
-                style="max-width: 360px">
-                <input class="form-control" name="q" type="search" placeholder="Search projects" aria-label="Search"
-                    value="{{ Request::route()->getName() === 'project.search' ? Request::query('q', '') : '' }}">
-                <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
-            </form>
-
+            
             @auth
+                <form method="GET" action="{{ route('project.search') }}" class="input-group ms-auto" role="search"
+                    style="max-width: 360px">
+                    <input class="form-control" name="q" type="search" placeholder="Search projects" aria-label="Search"
+                        value="{{ Request::route()->getName() === 'project.search' ? Request::query('q', '') : '' }}">
+                    <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
+                </form>
+
                 <div class="dropdown ms-3">
                     <a href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <img width="40" height="40" alt="Profile picture" src="https://picsum.photos/40"

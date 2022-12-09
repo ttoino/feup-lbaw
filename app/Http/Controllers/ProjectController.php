@@ -29,6 +29,22 @@ class ProjectController extends Controller {
             : view('pages.project.info', ['project' => $project]);
     }
 
+    public function showProjectTimeline(Request $request, Project $project) {
+        $this->authorize('view', $project);
+
+        return $request->wantsJson()
+            ? new JsonResponse($project->toArray(), 200)
+            : view('pages.project.tbd', ['project' => $project]);
+    }
+
+    public function showProjectForum(Request $request, Project $project) {
+        $this->authorize('view', $project);
+
+        return $request->wantsJson()
+            ? new JsonResponse($project->toArray(), 200)
+            : view('pages.project.forum', ['project' => $project]);
+    }
+
     public function search(Request $request) {
 
         $this->authorize('viewAny', Project::class);

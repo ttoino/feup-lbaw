@@ -49,8 +49,8 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
 
         Route::get('/info', 'showProjectInfo')->name('.info');
         Route::get('/board', 'showProject')->name('.board');
-        Route::view('/timeline', 'pages.project.tbd')->name('.timeline');
-        Route::view('/forum', 'pages.project.tbd')->name('.forum');
+        Route::get('/timeline', 'showProjectTimeline')->name('.timeline');
+        Route::get('/forum', 'showProjectForum')->name('.forum');
 
         Route::prefix('/task')->name('.task')->controller('TaskController')->group(function () {
             Route::post('/new', 'createTask')->name('.new');

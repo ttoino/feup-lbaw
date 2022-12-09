@@ -58,6 +58,13 @@ class Project extends Model {
         );
     }
 
+    public function threads() {
+        return $this->hasMany(
+            Thread::class,
+            'project'
+        )->orderBy('creation_date');
+    }
+
     public function reports() {
         return $this->hasMany(Report::class, 'project');
     }
