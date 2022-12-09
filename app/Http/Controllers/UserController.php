@@ -92,7 +92,7 @@ class UserController extends Controller {
       
       return $request->wantsJson()
         ? new JsonResponse($user->toArray(), 201)
-        : redirect()->route('user.profile', ['id' => $user->id]);
+        : redirect()->route('user.profile', ['user' => $user]);
     }
 
     public function editUser(User $user, array $data) {
