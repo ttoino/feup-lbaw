@@ -2,6 +2,8 @@
 -- Indexes
 ------------------------------------------------------------
 
+SET search_path TO lbaw2265;
+
 -- IDX101
 CREATE INDEX notification_search_idx ON notification USING HASH (notified_user);
 

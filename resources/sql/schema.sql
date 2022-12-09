@@ -5,6 +5,8 @@
 DROP SCHEMA IF EXISTS lbaw2265 CASCADE;
 CREATE SCHEMA lbaw2265;
 
+SET search_path TO lbaw2265;
+
 DROP TABLE IF EXISTS
     user_profile,
     project,

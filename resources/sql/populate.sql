@@ -2,6 +2,8 @@
 -- Populate
 --------------------------------------------------------------------------------------------------------------------------------
 
+SET search_path TO lbaw2265;
+
 INSERT INTO user_profile(
   name, email, password, blocked, is_admin
 ) 
