@@ -48,8 +48,10 @@ const setupTaskDnD = () => {
 
         if (!taskId) return;
 
+        console.log(e);
+
         const taskGroup = e.to.dataset.taskGroupId ?? null;
-        const newPosition = (e.newIndex ?? 0 + 1).toString();
+        const newPosition = ((e.newIndex ?? 0) + 1).toString();
 
         console.log(
             "task",

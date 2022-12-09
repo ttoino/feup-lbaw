@@ -30,15 +30,15 @@ BEGIN
     IF OLD.task_group = NEW.task_group THEN
         UPDATE lbaw2265.task
             SET position = position + SIGN(OLD.position - NEW.position)
-            WHERE id <> OLD.id AND project = OLD.project AND task_group = OLD.task_group
+            WHERE id <> OLD.id AND task_group = OLD.task_group
             AND position BETWEEN SYMMETRIC OLD.position AND NEW.position;
     ELSE
         UPDATE lbaw2265.task
             SET position = position - 1
-            WHERE id <> OLD.id AND project = OLD.project AND task_group = OLD.task_group AND position > OLD.position;
+            WHERE id <> OLD.id AND task_group = OLD.task_group AND position > OLD.position;
         UPDATE lbaw2265.task
             SET position = position + 1
-            WHERE id <> OLD.id AND project = OLD.project AND task_group = NEW.task_group AND position >= NEW.position;
+            WHERE id <> OLD.id AND task_group = NEW.task_group AND position >= NEW.position;
     END IF;
     RETURN NEW;
 END
