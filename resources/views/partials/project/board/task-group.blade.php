@@ -9,10 +9,9 @@
     'bg-light',
     'flex-shrink-0',
 ]) style="width: 270px"
-@isset($group)
+    @isset($group)
     data-task-group-id="{{ $group->id }}"
-@endisset
->
+@endisset>
 
     @isset($group)
         <div class="hstack">
@@ -21,12 +20,13 @@
         </div>
 
         <ul class="list-unstyled vstack gap-2 p-2"
-            style="overflow-y: auto; margin: -.5rem"
+            style="overflow-y: auto; overflow-x: clip; margin: -.5rem"
             data-task-group-id="{{ $group->id }}">
             @each ('partials.project.board.task', $group->tasks, 'task')
         </ul>
 
-        <form method="@yield('method', 'POST')" action="{{ route('project.task.new', ['project' => $project]) }}">
+        <form method="@yield('method', 'POST')"
+            action="{{ route('project.task.new', ['project' => $project]) }}">
             @csrf
             <div class="input-group">
                 <input aria-label="Create Task Name" aria-describedby="task-name"
