@@ -60,7 +60,7 @@ RUN php artisan storage:link
 COPY --chown=www-data ./etc/php/php.ini /usr/local/etc/php/conf.d/php.ini
 
 EXPOSE 8000
-EXPOSE 35729
+EXPOSE 5173
 
 # Start command
-CMD npm run watch & php artisan serve --host=0.0.0.0 --port=$PORT
+CMD npm run dev & php artisan serve --host=0.0.0.0 --port=$PORT

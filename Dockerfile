@@ -44,10 +44,10 @@ COPY package.json package-lock.json ./
 RUN npm install
 
 COPY resources/ ./resources
-COPY webpack.mix.js tsconfig.json ./
+COPY vite.config.ts tsconfig.json ./
 COPY --from=base /var/www/vendor ./vendor
 
-RUN npm run production
+RUN npm run build
 
 ###
 

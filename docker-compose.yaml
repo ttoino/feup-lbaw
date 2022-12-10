@@ -11,7 +11,7 @@ services:
       - "PORT=8000"
     ports:
       - "8000:8000"
-      - "35729:35729"
+      - "5173:5173"
     volumes:
       - "./app:/var/www/app"
       - "./storage:/var/www/storage"

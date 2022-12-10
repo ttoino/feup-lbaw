@@ -7,7 +7,7 @@
         "outDir": "public/js",
         "rootDir": "resources/assets/ts",
         "strict": true,
-        "types": [],
+        "types": ["vite/client"],
         "esModuleInterop": true,
         "moduleResolution": "node",
         "resolveJsonModule": true,
