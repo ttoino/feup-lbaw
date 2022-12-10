@@ -17,7 +17,7 @@
             @foreach ($task->assignees as $assignee)
                 <li>
                     <a href="{{ route('user.profile', ['user' => $assignee]) }}" @class(['assignee'])>
-                        <img src="https://picsum.photos/40" alt="{{ $assignee->name }}" width="24" height="24"
+                        <img src="{{ asset($assignee->getProfilePicture()) }}" alt="{{ $assignee->name }}" width="24" height="24"
                             class="rounded-circle">
                     </a>
                 </li>

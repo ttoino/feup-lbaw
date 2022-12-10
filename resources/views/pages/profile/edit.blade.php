@@ -5,7 +5,20 @@
 @section('form')
     @csrf
 
-    <img src="https://picsum.photos/240" width=240 height=240 alt="Profile Picture" class="rounded-circle align-self-center">
+    <label class="image-input avatar big">
+        <img 
+            src="{{ asset($user->getProfilePicture()) }}"
+            width=240 height=240 
+            alt="{{ $user->name }}'s profile picture" 
+            class="rounded-circle align-self-center">
+        <input
+            class="visually-hidden"
+            type="file"
+            name="profile_picture"
+            accept="image/*"
+            value=""
+        >
+    </label>
 
     <div class="form-floating">
         <input aria-describedby="name-feedback" placeholder=""

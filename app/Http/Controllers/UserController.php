@@ -7,9 +7,11 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\Rules\File;
 
 use App\Models\User;
 use App\Models\Project;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller {
 
@@ -96,9 +98,22 @@ class UserController extends Controller {
     }
 
     public function editUser(User $user, array $data) {
-      if ($data['name'] !== null) $user->name = $data['name'];
-      
-      $user->save();
+      try {
+        if ($data['name'] !== null) $user->name = $data['name'];
+        
+        if (isset($data['profile_picture'])) {
+
+          $path = Storage::putFileAs(
+            'public/users', $data['profile_picture'], "$user->id"
+          );
+
+          if ($path === false) {
+            // TODO: handle file upload err
+          }
+        }
+
+        $user->save();
+      } finally {}
 
       return $user;
     }
@@ -106,6 +121,11 @@ class UserController extends Controller {
     protected function userEditionValidator(array $data) {
       return Validator::make($data, [
           'name' => 'string|min:6|max:255',
+          'profile_picture' => [
+            'required',
+            File::image()
+              ->max(5*1024)
+          ]
       ]);
     }
     

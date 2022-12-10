@@ -17,7 +17,7 @@
 
                 <div class="dropdown ms-3">
                     <a href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img width="40" height="40" alt="Profile picture" src="https://picsum.photos/40"
+                        <img width="40" height="40" alt="Profile picture" src="{{ asset(Auth::user()->getProfilePicture()) }}"
                             class="rounded-circle p-1">
                     </a>
                     <nav class="dropdown-menu dropdown-menu-end shadow-sm" style="min-width: 240px">

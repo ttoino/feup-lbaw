@@ -6,10 +6,11 @@
 /public/fonts/vendor/**
 /storage/*.key
 /vendor
-.env.backup
+.env.prod
 .phpunit.result.cache
 docker-compose.override.yml
 Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+.vscode

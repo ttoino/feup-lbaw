@@ -11,3 +11,5 @@ import "./forms";
 import "./project";
 import "./user";
 import "./board";
+
+import "./components/imageinput";

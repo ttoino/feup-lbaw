@@ -5,7 +5,13 @@
 @push('main-classes', 'flex-column align-items-center justify-content-center p-2 gap-3')
 
 @section('content')
-    <img src="https://picsum.photos/240" width=240 height=240 alt="Profile Picture" class="rounded-circle">
+
+    <img 
+        src="{{ asset($user->getProfilePicture()) }}" 
+        width=240 height=240 
+        alt="Profile Picture" 
+        class="rounded-circle"
+    >
 
     <h2 class="m-0">{{ $user->name }}</h2>
 
