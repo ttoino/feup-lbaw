@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
-
 use App\Models\User;
 use App\Models\Project;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class ProjectController extends Controller {
 
@@ -43,6 +44,17 @@ class ProjectController extends Controller {
         return $request->wantsJson()
             ? new JsonResponse($project->toArray(), 200)
             : view('pages.project.forum', ['project' => $project]);
+    }
+
+    public function leaveProject(Request $request, Project $project){
+        $user = Auth::user();
+
+        $this->authorize('leaveProject', $project);
+
+        $project->users()->detach($user);
+        return $request->wantsJson()
+            ? new JsonResponse($project->toArray(), 200)
+            : redirect()->route('project.list');
     }
 
     public function search(Request $request) {

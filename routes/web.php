@@ -52,6 +52,8 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
         Route::get('/timeline', 'showProjectTimeline')->name('.timeline');
         Route::get('/forum', 'showProjectForum')->name('.forum');
 
+        Route::post('/leave', 'leaveProject')->name('.leave');
+
         Route::prefix('/task')->name('.task')->controller('TaskController')->group(function () {
             Route::post('/new', 'createTask')->name('.new');
 

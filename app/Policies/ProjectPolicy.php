@@ -89,6 +89,10 @@ class ProjectPolicy
         return $user->id === $project->coordinator && !$project->users->contains($model);
     }
 
+    public function leaveProject(User $user, Project $project) {
+        return !$user->is_admin && $project->users->contains($user) && ($user->id !== $project->coordinator);
+    }
+
     /**
      * Determine whether the user can permanently delete the model.
      *

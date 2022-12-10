@@ -23,7 +23,10 @@
                 @endif
             </section>
             <section class="flex-fill d-flex flex-row gap-3" style="max-width: 50%">
-                <a href="" class="col btn btn-outline-danger">Leave project</a>
+                <form method="POST" action="{{route('project.leave', ['project' => $project])}}">
+                    @csrf
+                    <button class="submit col btn btn-outline-danger">Leave project</button>
+                </form>
                 @if (Request::user()->id === $project->coordinator)
                     <a href="" class="col btn btn-outline-secondary">Archive project</a>
                 @endif
