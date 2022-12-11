@@ -5,9 +5,10 @@ namespace App\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class User extends Authenticatable {
-    use Notifiable;
+    use Notifiable, HasFactory;
 
     const DEFAULT_IMAGE_PROVIDER_URL = 'https://picsum.photos/240';
 
@@ -41,13 +42,13 @@ class User extends Authenticatable {
         return $this->belongsToMany(
             Project::class,
             'project_member',
-            'user_profile',
-            'project'
+            'user_profile_id',
+            'project_id'
         )->withPivot('is_favorite');
     }
 
     public function reports() {
-        return $this->hasMany(Report::class, 'user_profile');
+        return $this->hasMany(Report::class, 'user_profile_id');
     }
 
     public function getProfilePicture() {

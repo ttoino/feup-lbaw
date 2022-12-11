@@ -3,8 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Project extends Model {
+    use HasFactory;
+
     const CREATED_AT = 'creation_date';
     const UPDATED_AT = 'last_modification_date';
 
@@ -30,22 +33,22 @@ class Project extends Model {
     ];
 
     public function coordinator() {
-        return $this->belongsTo(User::class, 'coordinator');
+        return $this->belongsTo(User::class, 'coordinator_id');
     }
 
     public function users() {
         return $this->belongsToMany(
             User::class,
             'project_member',
-            'project',
-            'user_profile'
+            'project_id',
+            'user_profile_id'
         )->withPivot('is_favorite');
     }
 
     public function taskGroups() {
         return $this->hasMany(
             TaskGroup::class,
-            'project'
+            'project_id'
         )->orderBy('position');
     }
 
@@ -53,20 +56,27 @@ class Project extends Model {
         return $this->hasManyThrough(
             Task::class,
             TaskGroup::class,
-            'project',
-            'task_group'
+            'project_id',
+            'task_group_id'
+        );
+    }
+
+    public function tags() {
+        return $this->hasMany(
+            Tag::class,
+            'project_id'
         );
     }
 
     public function threads() {
         return $this->hasMany(
             Thread::class,
-            'project'
+            'project_id'
         )->orderBy('creation_date');
     }
 
     public function reports() {
-        return $this->hasMany(Report::class, 'project');
+        return $this->hasMany(Report::class, 'project_id');
     }
 
     protected $table = 'project';

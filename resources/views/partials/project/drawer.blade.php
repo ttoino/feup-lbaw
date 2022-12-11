@@ -82,7 +82,7 @@
             </div>
         </div>
 
-        @if (Auth::user()->id == $project->coordinator)
+        @if (Auth::user()->id == $project->coordinator_id)
             <a href="{{ route('project.user.add', ['project' => $project]) }}" @class([
                 'nav-link',
                 'nav-item',

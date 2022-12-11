@@ -28,12 +28,12 @@ class ThreadComment extends Model {
     public function thread() {
         return $this->belongsTo(
             Thread::class,
-            'thread'
+            'thread_id'
         );
     }
 
     public function author() {
-        return $this->belongsTo(User::class, 'author');
+        return $this->belongsTo(User::class, 'author_id');
     }
 
     protected $table = 'thread_comment';

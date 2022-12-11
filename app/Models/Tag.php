@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Tag extends Model {
+    use HasFactory;
     public $timestamps = false;
 
     /**
@@ -28,7 +30,7 @@ class Tag extends Model {
     public function project() {
         return $this->belongsTo(
             Project::class,
-            'project'
+            'project_id'
         );
     }
 
@@ -36,8 +38,8 @@ class Tag extends Model {
         return $this->belongsToMany(
             Task::class,
             'task_tag',
-            'tag',
-            'task'
+            'tag_id',
+            'task_id'
         );
     }
 

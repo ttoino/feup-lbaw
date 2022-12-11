@@ -25,7 +25,7 @@ class ProjectTimelineAction extends Model {
     protected $hidden = [];
 
     public function project() {
-        return $this->belongsTo(Project::class, 'project');
+        return $this->belongsTo(Project::class, 'project_id');
     }
 
     protected $table = 'project_timeline_action';

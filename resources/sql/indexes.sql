@@ -5,13 +5,13 @@
 SET search_path TO lbaw2265;
 
 -- IDX101
-CREATE INDEX notification_search_idx ON notification USING HASH (notified_user);
+CREATE INDEX notification_search_idx ON notification USING HASH (notified_user_id);
 
 -- IDX102
-CREATE INDEX task_group_project ON task_group (project, position);
+CREATE INDEX task_group_project ON task_group (project_id, position);
 
 -- IDX103
-CREATE INDEX task_task_group ON task (task_group, position);
+CREATE INDEX task_task_group ON task (task_group_id, position);
 
 -- IDX201
 -- introduce auxiliary field to support FTS
@@ -19,10 +19,10 @@ ALTER TABLE task ADD COLUMN fts_search TSVECTOR;
 -- helper View to facilitate collecting tags and respective tasks
 DROP VIEW IF EXISTS fts_task_tag;
 CREATE VIEW fts_task_tag AS
-    SELECT tsk_tg.task AS task_id, string_agg(tg.title, ' ') AS task_tag_names
+    SELECT tsk_tg.task_id AS task_id, string_agg(tg.title, ' ') AS task_tag_names
     FROM task_tag tsk_tg
-    JOIN tag tg ON tg.id = tsk_tg.tag
-    GROUP BY tsk_tg.task;
+    JOIN tag tg ON tg.id = tsk_tg.tag_id
+    GROUP BY tsk_tg.task_id;
 -- automatically keep ts_vectors up to date so that FTS is up to date
 CREATE OR REPLACE FUNCTION task_fts_update() RETURNS TRIGGER AS $$
 BEGIN
@@ -50,7 +50,7 @@ CREATE OR REPLACE FUNCTION task_tag_fts_update() RETURNS TRIGGER AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
         CREATE TEMP TABLE curr_task AS
-            SELECT * FROM task WHERE id = NEW.task;
+            SELECT * FROM task WHERE id = NEW.task_id;
         UPDATE task SET fts_search=(
             setweight(to_tsvector('english', (SELECT name FROM curr_task)), 'A') || 
             setweight(to_tsvector('english', COALESCE((SELECT description FROM curr_task), '')), 'B') ||
@@ -59,12 +59,12 @@ BEGIN
     END IF;
     IF TG_OP = 'DELETE' THEN
         CREATE TEMP TABLE curr_task AS
-            SELECT * FROM task WHERE id = OLD.task;
+            SELECT * FROM task WHERE id = OLD.task_id;
         UPDATE task SET fts_search=(
             setweight(to_tsvector('english', (SELECT name FROM curr_task)), 'A') || 
             setweight(to_tsvector('english', COALESCE((SELECT description FROM curr_task), '')), 'B') ||
             setweight(to_tsvector('english', COALESCE((SELECT task_tag_names FROM fts_task_tag WHERE task_id = (SELECT id FROM curr_task)), '')), 'C')
-        ) WHERE id = (SELECT id FROM curr_task);  
+        ) WHERE id = (SELECT id FROM curr_task);
     END IF;
     -- cleanup
     DROP TABLE IF EXISTS curr_task;
@@ -96,7 +96,7 @@ BEGIN
         NEW.fts_search = (
             setweight(to_tsvector('english', NEW.name), 'A') ||
             setweight(to_tsvector('english', COALESCE(NEW.description, '')), 'B') ||
-            setweight(to_tsvector('english', (SELECT name FROM user_profile WHERE id = NEW.coordinator)), 'C')
+            setweight(to_tsvector('english', (SELECT name FROM user_profile WHERE id = NEW.coordinator_id)), 'C')
         );
     END IF;
     IF TG_OP = 'UPDATE' THEN
@@ -104,7 +104,7 @@ BEGIN
             NEW.fts_search = (
                 setweight(to_tsvector('english', NEW.name), 'A') ||
                 setweight(to_tsvector('english', COALESCE(NEW.description, '')), 'B') ||
-                setweight(to_tsvector('english', (SELECT name FROM user_profile WHERE id = NEW.coordinator)), 'C')
+                setweight(to_tsvector('english', (SELECT name FROM user_profile WHERE id = NEW.coordinator_id)), 'C')
             );  
         END IF;
     END IF;

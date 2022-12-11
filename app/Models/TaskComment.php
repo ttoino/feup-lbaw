@@ -32,7 +32,7 @@ class TaskComment extends Model {
     }
 
     public function author() {
-        return $this->belongsTo(User::class, 'author');
+        return $this->belongsTo(User::class, 'author_id');
     }
 
     protected $table = 'task_comment';

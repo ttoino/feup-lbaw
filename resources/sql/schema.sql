@@ -66,8 +66,8 @@ CREATE TABLE project (
     creation_date TODAY NOT NULL,
     last_modification_date TIMESTAMP,
     archived BOOLEAN NOT NULL DEFAULT false,
-    coordinator INTEGER NOT NULL,
-    FOREIGN KEY (coordinator) REFERENCES user_profile ON DELETE RESTRICT
+    coordinator_id INTEGER NOT NULL,
+    FOREIGN KEY (coordinator_id) REFERENCES user_profile ON DELETE RESTRICT
 );
 
 CREATE TABLE task_group (
@@ -76,26 +76,26 @@ CREATE TABLE task_group (
     description TEXT,
     creation_date TODAY NOT NULL,
     position INTEGER NOT NULL,
-    project INTEGER NOT NULL,
-    FOREIGN KEY (project) REFERENCES project ON DELETE CASCADE,
-    UNIQUE (position, project) DEFERRABLE INITIALLY DEFERRED
+    project_id INTEGER NOT NULL,
+    FOREIGN KEY (project_id) REFERENCES project ON DELETE CASCADE,
+    UNIQUE (position, project_id) DEFERRABLE INITIALLY DEFERRED
 );
 
 CREATE TABLE project_invitation (
     id SERIAL PRIMARY KEY,
     expiration_date TIMESTAMP NOT NULL,
-    creator INTEGER NOT NULL,
-    project INTEGER NOT NULL,
-    FOREIGN KEY (creator) REFERENCES user_profile ON DELETE CASCADE,
-    FOREIGN KEY (project) REFERENCES project ON DELETE CASCADE
+    creator_id INTEGER NOT NULL,
+    project_id INTEGER NOT NULL,
+    FOREIGN KEY (creator_id) REFERENCES user_profile ON DELETE CASCADE,
+    FOREIGN KEY (project_id) REFERENCES project ON DELETE CASCADE
 );
 
 CREATE TABLE project_timeline_action (
     id SERIAL PRIMARY KEY,
     timestamp TODAY NOT NULL,
     description TEXT NOT NULL,
-    project INTEGER NOT NULL,
-    FOREIGN KEY (project) REFERENCES project ON DELETE CASCADE
+    project_id INTEGER NOT NULL,
+    FOREIGN KEY (project_id) REFERENCES project ON DELETE CASCADE
 );
 
 CREATE TABLE task (
@@ -105,12 +105,12 @@ CREATE TABLE task (
     creation_date TODAY NOT NULL,
     edit_date TIMESTAMP CHECK (edit_date <= CURRENT_TIMESTAMP),
     state TASK_STATE NOT NULL DEFAULT 'created',
-    creator INTEGER,
+    creator_id INTEGER,
     position INTEGER NOT NULL,
-    task_group INTEGER NOT NULL,
-    FOREIGN KEY (creator) REFERENCES user_profile ON DELETE SET NULL,
-    FOREIGN KEY (task_group) REFERENCES task_group ON DELETE CASCADE,
-    UNIQUE (position, task_group) DEFERRABLE INITIALLY DEFERRED
+    task_group_id INTEGER NOT NULL,
+    FOREIGN KEY (creator_id) REFERENCES user_profile ON DELETE SET NULL,
+    FOREIGN KEY (task_group_id) REFERENCES task_group ON DELETE CASCADE,
+    UNIQUE (position, task_group_id) DEFERRABLE INITIALLY DEFERRED
 );
 
 CREATE TABLE task_comment (
@@ -118,10 +118,10 @@ CREATE TABLE task_comment (
     content TEXT NOT NULL,
     creation_date TODAY NOT NULL,
     edit_date TIMESTAMP CHECK (edit_date <= CURRENT_TIMESTAMP),
-    author INTEGER,
-    task INTEGER NOT NULL,
-    FOREIGN KEY (author) REFERENCES user_profile ON DELETE SET NULL,
-    FOREIGN KEY (task) REFERENCES task ON DELETE CASCADE
+    author_id INTEGER,
+    task_id INTEGER NOT NULL,
+    FOREIGN KEY (author_id) REFERENCES user_profile ON DELETE SET NULL,
+    FOREIGN KEY (task_id) REFERENCES task ON DELETE CASCADE
 );
 
 CREATE TABLE tag (
@@ -129,8 +129,8 @@ CREATE TABLE tag (
     title TEXT NOT NULL,
     description TEXT,
     color COLOR NOT NULL,
-    project INTEGER NOT NULL,
-    FOREIGN KEY (project) REFERENCES project ON DELETE CASCADE
+    project_id INTEGER NOT NULL,
+    FOREIGN KEY (project_id) REFERENCES project ON DELETE CASCADE
 );
 
 CREATE TABLE thread (
@@ -139,10 +139,10 @@ CREATE TABLE thread (
     content TEXT NOT NULL,
     creation_date TODAY NOT NULL,
     edit_date TIMESTAMP CHECK (edit_date <= CURRENT_TIMESTAMP),
-    author INTEGER,
-    project INTEGER NOT NULL,
-    FOREIGN KEY (author) REFERENCES user_profile ON DELETE SET NULL,
-    FOREIGN KEY (project) REFERENCES project ON DELETE CASCADE
+    author_id INTEGER,
+    project_id INTEGER NOT NULL,
+    FOREIGN KEY (author_id) REFERENCES user_profile ON DELETE SET NULL,
+    FOREIGN KEY (project_id) REFERENCES project ON DELETE CASCADE
 );
 
 CREATE TABLE thread_comment (
@@ -150,10 +150,10 @@ CREATE TABLE thread_comment (
     content TEXT NOT NULL,
     creation_date TODAY NOT NULL,
     edit_date TIMESTAMP CHECK (edit_date <= CURRENT_TIMESTAMP),
-    thread INTEGER NOT NULL,
-    author INTEGER,
-    FOREIGN KEY (thread) REFERENCES thread ON DELETE CASCADE,
-    FOREIGN KEY (author) REFERENCES user_profile ON DELETE SET NULL
+    thread_id INTEGER NOT NULL,
+    author_id INTEGER,
+    FOREIGN KEY (thread_id) REFERENCES thread ON DELETE CASCADE,
+    FOREIGN KEY (author_id) REFERENCES user_profile ON DELETE SET NULL
 );
 
 CREATE TABLE notification (
@@ -161,24 +161,24 @@ CREATE TABLE notification (
     type NOTIFICATION_TYPE NOT NULL,
     creation_date TODAY NOT NULL,
     dismissed BOOLEAN NOT NULL DEFAULT FALSE,
-    notified_user INTEGER NOT NULL,
-    invitation INTEGER,
-    thread INTEGER,
-    thread_comment INTEGER,
-    task INTEGER,
-    task_comment INTEGER,
-    project INTEGER,
-    FOREIGN KEY (notified_user) REFERENCES user_profile ON DELETE CASCADE,
-    FOREIGN KEY (invitation) REFERENCES project_invitation ON DELETE CASCADE,
-    FOREIGN KEY (thread) REFERENCES thread ON DELETE CASCADE,
-    FOREIGN KEY (thread_comment) REFERENCES thread_comment ON DELETE CASCADE,
-    FOREIGN KEY (task) REFERENCES task ON DELETE CASCADE,
-    FOREIGN KEY (task_comment) REFERENCES task_comment ON DELETE CASCADE,
-    FOREIGN KEY (project) REFERENCES project ON DELETE CASCADE,
+    notified_user_id INTEGER NOT NULL,
+    invitation_id INTEGER,
+    thread_id INTEGER,
+    thread_comment_id INTEGER,
+    task_id INTEGER,
+    task_comment_id INTEGER,
+    project_id INTEGER,
+    FOREIGN KEY (notified_user_id) REFERENCES user_profile ON DELETE CASCADE,
+    FOREIGN KEY (invitation_id) REFERENCES project_invitation ON DELETE CASCADE,
+    FOREIGN KEY (thread_id) REFERENCES thread ON DELETE CASCADE,
+    FOREIGN KEY (thread_comment_id) REFERENCES thread_comment ON DELETE CASCADE,
+    FOREIGN KEY (task_id) REFERENCES task ON DELETE CASCADE,
+    FOREIGN KEY (task_comment_id) REFERENCES task_comment ON DELETE CASCADE,
+    FOREIGN KEY (project_id) REFERENCES project ON DELETE CASCADE,
     CHECK (
-        (invitation IS NOT NULL)::INTEGER + (thread IS NOT NULL)::INTEGER +
-        (thread_comment IS NOT NULL)::INTEGER + (task IS NOT NULL)::INTEGER +
-        (task_comment IS NOT NULL)::INTEGER + (project IS NOT NULL)::INTEGER = 1
+        (invitation_id IS NOT NULL)::INTEGER + (thread_id IS NOT NULL)::INTEGER +
+        (thread_comment_id IS NOT NULL)::INTEGER + (task_id IS NOT NULL)::INTEGER +
+        (task_comment_id IS NOT NULL)::INTEGER + (project_id IS NOT NULL)::INTEGER = 1
     )
 );
 
@@ -186,36 +186,36 @@ CREATE TABLE report (
     id SERIAL PRIMARY KEY,
     creation_date TODAY NOT NULL,
     reason TEXT NOT NULL,
-    project INTEGER,
-    user_profile INTEGER,
-    creator INTEGER,
-    FOREIGN KEY (project) REFERENCES project ON DELETE CASCADE,
-    FOREIGN KEY (user_profile) REFERENCES user_profile ON DELETE CASCADE,
-    FOREIGN KEY (creator) REFERENCES user_profile ON DELETE SET NULL,
-    CHECK ((project IS NULL)::INTEGER + (user_profile IS NULL)::INTEGER = 1)
+    project_id INTEGER,
+    user_profile_id INTEGER,
+    creator_id INTEGER,
+    FOREIGN KEY (project_id) REFERENCES project ON DELETE CASCADE,
+    FOREIGN KEY (user_profile_id) REFERENCES user_profile ON DELETE CASCADE,
+    FOREIGN KEY (creator_id) REFERENCES user_profile ON DELETE SET NULL,
+    CHECK ((project_id IS NULL)::INTEGER + (user_profile_id IS NULL)::INTEGER = 1)
 );
 
 CREATE TABLE project_member (
-    user_profile INTEGER,
-    project INTEGER,
+    user_profile_id INTEGER,
+    project_id INTEGER,
     is_favorite BOOLEAN NOT NULL DEFAULT false,
-    PRIMARY KEY (user_profile, project),
-    FOREIGN KEY (user_profile) REFERENCES user_profile ON DELETE CASCADE,
-    FOREIGN KEY (project) REFERENCES project ON DELETE CASCADE
+    PRIMARY KEY (user_profile_id, project_id),
+    FOREIGN KEY (user_profile_id) REFERENCES user_profile ON DELETE CASCADE,
+    FOREIGN KEY (project_id) REFERENCES project ON DELETE CASCADE
 );
 
 CREATE TABLE task_assignee (
-    user_profile INTEGER,
-    task INTEGER,
-    PRIMARY KEY (user_profile, task),
-    FOREIGN KEY (user_profile) REFERENCES user_profile ON DELETE CASCADE,
-    FOREIGN KEY (task) REFERENCES task ON DELETE CASCADE
+    user_profile_id INTEGER,
+    task_id INTEGER,
+    PRIMARY KEY (user_profile_id, task_id),
+    FOREIGN KEY (user_profile_id) REFERENCES user_profile ON DELETE CASCADE,
+    FOREIGN KEY (task_id) REFERENCES task ON DELETE CASCADE
 );
 
 CREATE TABLE task_tag (
-    task INTEGER,
-    tag INTEGER,
-    PRIMARY KEY (task, tag),
-    FOREIGN KEY (task) REFERENCES task ON DELETE CASCADE,
-    FOREIGN KEY (tag) REFERENCES tag ON DELETE CASCADE
+    task_id INTEGER,
+    tag_id INTEGER,
+    PRIMARY KEY (task_id, tag_id),
+    FOREIGN KEY (task_id) REFERENCES task ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tag ON DELETE CASCADE
 );

@@ -3,8 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TaskGroup extends Model {
+    
+    use HasFactory;
+    
     public $timestamps = false;
 
     /**
@@ -26,13 +30,13 @@ class TaskGroup extends Model {
     protected $hidden = [];
 
     public function project() {
-        return $this->belongsTo(Project::class, 'project');
+        return $this->belongsTo(Project::class, 'project_id');
     }
 
     public function tasks() {
         return $this->hasMany(
             Task::class,
-            'task_group'
+            'task_group_id'
         )->orderBy('position');
     }
 

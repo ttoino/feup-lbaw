@@ -111,7 +111,7 @@ VALUES
 
 INSERT INTO project(
   name, creation_date, last_modification_date, 
-  archived, coordinator
+  archived, coordinator_id
 ) 
 VALUES 
   (
@@ -128,7 +128,7 @@ VALUES
   );
 
 INSERT INTO project_member(
-  user_profile, project, is_favorite
+  user_profile_id, project_id, is_favorite
 ) 
 VALUES 
   (3, 2, 'false'), 
@@ -148,7 +148,7 @@ VALUES
 
 INSERT INTO task_group(
   name, description, creation_date, 
-  position, project
+  position, project_id
 ) 
 VALUES 
   (
@@ -201,7 +201,7 @@ VALUES
   );
 
 INSERT INTO project_invitation(
-  expiration_date, creator, project
+  expiration_date, creator_id, project_id
 ) 
 VALUES 
   ('2021-09-27', 11, 1), 
@@ -219,8 +219,8 @@ VALUES
 
 INSERT INTO task(
   name, description, creation_date, 
-  edit_date, state, creator, position, 
-  task_group
+  edit_date, state, creator_id, position, 
+  task_group_id
 ) 
 VALUES 
   (
@@ -324,7 +324,7 @@ VALUES
 
 INSERT INTO task_comment(
   content, creation_date, edit_date, 
-  author, task
+  author_id, task_id
 ) 
 VALUES 
   (
@@ -356,7 +356,7 @@ VALUES
   );
 
 INSERT INTO tag(
-  title, description, color, project
+  title, description, color, project_id
 ) 
 VALUES 
   (
@@ -416,8 +416,8 @@ VALUES
   (14, 3);
 
 INSERT INTO report(
-  creation_date, reason, user_profile, 
-  creator
+  creation_date, reason, user_profile_id, 
+  creator_id
 ) 
 VALUES 
   (
@@ -437,7 +437,7 @@ VALUES
   ('2021-10-09', 'poor work', 10, 4);
 
 INSERT INTO report(
-  creation_date, reason, project, creator
+  creation_date, reason, project_id, creator_id
 ) 
 VALUES 
   (
@@ -456,7 +456,7 @@ VALUES
   ), 
   ('2021-10-09', 'poor work', 3, 4);
 
-INSERT INTO task_assignee(user_profile, task) 
+INSERT INTO task_assignee(user_profile_id, task_id) 
 VALUES 
   (3, 9), 
   (15, 12), 

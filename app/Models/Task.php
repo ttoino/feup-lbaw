@@ -4,9 +4,10 @@ namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Task extends Model {
-    use Notifiable;
+    use Notifiable, HasFactory;
     public $timestamps = false;
 
     /**
@@ -37,26 +38,26 @@ class Task extends Model {
             TaskGroup::class,
             'id',
             'id',
-            'task_group',
-            'project'
+            'task_group_id',
+            'project_id'
         );
     }
 
     public function taskGroup() {
         return $this->belongsTo(
             TaskGroup::class,
-            'task_group'
+            'task_group_id'
         );
     }
 
     public function creator() {
-        return $this->belongsTo(User::class, 'creator');
+        return $this->belongsTo(User::class, 'creator_id');
     }
 
     public function comments() {
         return $this->hasMany(
             TaskComment::class,
-            'task'
+            'task_id'
         );
     }
 
@@ -64,8 +65,8 @@ class Task extends Model {
         return $this->belongsToMany(
             Tag::class,
             'task_tag',
-            'task',
-            'tag'
+            'task_id',
+            'tag_id'
         );
     }
 
@@ -73,8 +74,8 @@ class Task extends Model {
         return $this->belongsToMany(
             User::class,
             'task_assignee',
-            'task',
-            'user_profile'
+            'task_id',
+            'user_profile_id'
         );
     }
 

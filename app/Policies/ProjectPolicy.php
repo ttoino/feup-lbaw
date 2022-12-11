@@ -62,7 +62,7 @@ class ProjectPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function delete(User $user, Project $project) {
-        return $user->is_admin || $project->coordinator === $user->id;
+        return $user->is_admin || $project->coordinator_id === $user->id;
     }
 
     /**
@@ -82,15 +82,15 @@ class ProjectPolicy
     }
 
     public function showAddUserPage(User $user, Project $project) {
-        return $user->id === $project->coordinator;
+        return $user->id === $project->coordinator_id;
     }
 
     public function addUser(User $user, Project $project, User $model) {
-        return $user->id === $project->coordinator && !$project->users->contains($model);
+        return $user->id === $project->coordinator_id && !$project->users->contains($model);
     }
 
     public function leaveProject(User $user, Project $project) {
-        return !$user->is_admin && $project->users->contains($user) && ($user->id !== $project->coordinator);
+        return !$user->is_admin && $project->users->contains($user) && ($user->id !== $project->coordinator_id);
     }
 
     /**

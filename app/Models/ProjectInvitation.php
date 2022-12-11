@@ -22,11 +22,11 @@ class ProjectInvitation extends Model {
     protected $hidden = [];
 
     public function project() {
-        return $this->belongsTo(Project::class, 'project');
+        return $this->belongsTo(Project::class, 'project_id');
     }
 
     public function creator() {
-        return $this->belongsTo(User::class, 'creator');
+        return $this->belongsTo(User::class, 'creator_id');
     }
 
     protected $table = 'project_invitation';

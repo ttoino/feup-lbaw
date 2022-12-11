@@ -26,15 +26,15 @@ class Report extends Model {
     protected $hidden = [];
 
     public function project() {
-        return $this->belongsTo(Project::class, 'project');
+        return $this->belongsTo(Project::class, 'project_id');
     }
 
     public function user() {
-        return $this->belongsTo(User::class, 'user_profile');
+        return $this->belongsTo(User::class, 'user_profile_id');
     }
 
     public function creator() {
-        return $this->belongsTo(User::class, 'creator');
+        return $this->belongsTo(User::class, 'creator_id');
     }
 
     protected $table = 'report';

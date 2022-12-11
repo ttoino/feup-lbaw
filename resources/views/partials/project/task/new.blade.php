@@ -28,7 +28,7 @@
         </div>
         <div class="m-auto vstack gap-4 p-3">
             <div class="form-floating">
-                <select class="form-select" aria-describedby="task-group-feedback" name="task_group" id="task_group"
+                <select class="form-select" aria-describedby="task-group-feedback" name="task_group_id" id="task_group"
                     required>
                     <option selected disabled value="">Select a group to place this task in...</option>
                     @foreach ($project->taskGroups as $taskGroup)

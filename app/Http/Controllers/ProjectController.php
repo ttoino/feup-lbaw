@@ -165,7 +165,7 @@ class ProjectController extends Controller {
         $project->name = $data['name'];
         $project->archived = FALSE;
         $project->description = $data['description'];
-        $project->coordinator = Auth::user()->id;
+        $project->coordinator_id = Auth::user()->id;
         $project->save();
 
         return $project;

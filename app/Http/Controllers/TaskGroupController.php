@@ -21,7 +21,7 @@ class TaskGroupController extends Controller {
 
         $this->taskGroupCreationValidator($requestData)->validate();
         
-        $project = Project::findOrFail($requestData['project']);
+        $project = Project::findOrFail($requestData['project_id']);
 
         $this->authorize('create', [TaskGroup::class, $project]);
 
@@ -38,8 +38,8 @@ class TaskGroupController extends Controller {
 
         $taskGroup->name = $data['name'];
         $taskGroup->description = $data['description'] ?? '';
-        $taskGroup->project = $data['project'];
-        $taskGroup->position = (TaskGroup::where('project', $taskGroup->project)->max('position') ?? 0) + 1;
+        $taskGroup->project_id = $data['project_id'];
+        $taskGroup->position = (TaskGroup::where('project_id', $taskGroup->project_id)->max('position') ?? 0) + 1;
         $taskGroup->save();
 
         return $taskGroup;
@@ -55,7 +55,7 @@ class TaskGroupController extends Controller {
         return Validator::make($data, [
             'name' => 'required|string|min:4|max:255',
             'description' => 'string|min:6|max:512',
-            'project' => 'required|integer'
+            'project_id' => 'required|integer'
         ]);
     }
 

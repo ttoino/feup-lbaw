@@ -44,7 +44,7 @@
                     </div>
                 </div>
 
-                @if (Request::user()->id === $project->coordinator)
+                @if (Request::user()->id === $project->coordinator_id)
                     <a href="" class="col btn btn-outline-secondary">Archive project</a>
                 @endif
             </section>

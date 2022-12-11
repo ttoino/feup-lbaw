@@ -32,7 +32,7 @@ class TaskController extends Controller {
 
         $this->taskCreationValidator($requestData)->validate();
 
-        $task_group = TaskGroup::findOrFail($requestData['task_group']); 
+        $task_group = TaskGroup::findOrFail($requestData['task_group_id']); 
 
         $this->authorize('create', [Task::class, $task_group]);
 
@@ -49,8 +49,8 @@ class TaskController extends Controller {
 
         $task->name = $data['name'];
         $task->description = $data['description'] ?? '';
-        $task->task_group = $data['task_group'];
-        $task->position = (Task::where('task_group', $task->task_group)->max('position') ?? 0) + 1;
+        $task->task_group_id = $data['task_group_id'];
+        $task->position = (Task::where('task_group_id', $task->task_group_id)->max('position') ?? 0) + 1;
         $task->save();
 
         return $task;
@@ -66,7 +66,7 @@ class TaskController extends Controller {
         return Validator::make($data, [
             'name' => 'required|string|min:4|max:255',
             'description' => 'nullable|string|min:6|max:512',
-            'task_group' => 'required|integer'
+            'task_group_id' => 'required|integer'
         ]);
     }
 
@@ -151,8 +151,8 @@ class TaskController extends Controller {
 
     public function editTask(Task $task, array $data) {
 
-        if (($data['task_group'] ??= null) !== null) {
-            $task->task_group = $data['task_group'];
+        if (($data['task_group_id'] ??= null) !== null) {
+            $task->task_group_id = $data['task_group_id'];
         }
             
         if (($data['position'] ??= null) !== null)
@@ -176,7 +176,7 @@ class TaskController extends Controller {
         return Validator::make($data, [
             'name' => 'string|min:4|max:255',
             'description' => 'string|min:6|max:512',
-            'task_group' => 'integer', 
+            'task_group_id' => 'integer', 
             'position' => 'integer|min:0',
         ]);
     }

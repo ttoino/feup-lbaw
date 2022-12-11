@@ -29,19 +29,19 @@ class Thread extends Model {
     public function project() {
         return $this->belongsTo(
             Project::class,
-            'project'
+            'project_id'
         );
     }
 
     public function comments() {
         return $this->hasMany(
             ThreadComment::class,
-            'thread'
+            'thread_id'
         );
     }
 
     public function author() {
-        return $this->belongsTo(User::class, 'author');
+        return $this->belongsTo(User::class, 'author_id');
     }
 
     protected $table = 'thread';
