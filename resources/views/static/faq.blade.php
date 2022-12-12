@@ -5,7 +5,7 @@
 
 <header class=static_page>
   
-  <h2><a href="/faq">Frequent Questions Answers</a></h2>
+  <h2><a href="/faq">Frequently Asked Questions</a></h2>
 </header>
 <section class=static_page id="faq_page">
     <div class=question><b>Why choose Atrellado?</b></div>
