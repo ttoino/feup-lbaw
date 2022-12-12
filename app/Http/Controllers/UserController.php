@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers; 
+namespace App\Http\Controllers;
 
+use App\Helpers\Files;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -20,9 +21,9 @@ class UserController extends Controller {
      * 
      * @param int $id the id of the user to show
      */
-    public function show(User $user) {        
+    public function show(User $user) {
         $this->authorize('view', $user);
-        
+
         return view('pages.profile', ['user' => $user]);
     }
 
@@ -45,105 +46,103 @@ class UserController extends Controller {
      * @return User The user registered.
      */
     public function create(Request $request) {
-        
-      $requestData = $request->all();
 
-      $this->userCreationValidator($requestData)->validate();
+        $requestData = $request->all();
 
-      $user = $this->createProfile($requestData);
+        $this->userCreationValidator($requestData)->validate();
 
-      return $request->wantsJson()
-        ? new JsonResponse($user->toArray(), 201)
-        : redirect()->route('user.profile', ['id' => $user->id]);
+        $user = $this->createProfile($requestData);
+
+        return $request->wantsJson()
+            ? new JsonResponse($user->toArray(), 201)
+            : redirect()->route('user.profile', ['id' => $user->id]);
     }
 
     public function createUser(array $data) {
-      $user = new User();
+        $user = new User();
 
-      $user->name = $data['name'];
-      $user->email = $data['email'];
-      $user->password = $data['password'];
-      $user->is_blocked = FALSE;
-      $user->save();
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+        $user->password = $data['password'];
+        $user->is_blocked = FALSE;
+        $user->save();
 
-      return $user;
+        return $user;
     }
 
     public function userCreationValidator(array $data) {
-      return Validator::make($data, [
-        'name' => 'required|string|min:6|max:255',
-        'email' => 'required|string|email|unique:user_profile',
-        'password' => [
-          'required', 
-          'confirmed', 
-          Password::min(8)
-            ->letters()
-        ]
-      ]);
+        return Validator::make($data, [
+            'name' => 'required|string|min:6|max:255',
+            'email' => 'required|string|email|unique:user_profile',
+            'password' => [
+                'required',
+                'confirmed',
+                Password::min(8)
+                    ->letters()
+            ]
+        ]);
     }
 
     public function edit(Request $request, User $user) {
 
-      $requestData = $request->all();
+        $requestData = $request->all();
 
-      $this->userEditionValidator($requestData)->validate();
+        $this->userEditionValidator($requestData)->validate();
 
-      $this->authorize('update', $user);      
+        $this->authorize('update', $user);
 
-      $user = $this->editUser($user, $requestData);
-      
-      return $request->wantsJson()
-        ? new JsonResponse($user->toArray(), 201)
-        : redirect()->route('user.profile', ['user' => $user]);
+        $user = $this->editUser($user, $requestData);
+
+        return $request->wantsJson()
+            ? new JsonResponse($user->toArray(), 201)
+            : redirect()->route('user.profile', ['user' => $user]);
     }
 
     public function editUser(User $user, array $data) {
-      try {
-        if ($data['name'] !== null) $user->name = $data['name'];
-        
+        if ($data['name'] !== null)
+            $user->name = $data['name'];
+
         if (isset($data['profile_picture'])) {
+            Files::convertToWebp($data['profile_picture'], 512, 1);
 
-          $path = Storage::putFileAs(
-            'public/users', $data['profile_picture'], "$user->id"
-          );
+            $path = Storage::putFileAs("public/users/", $data['profile_picture'], "$user->id.webp");
 
-          if ($path === false) {
-            // TODO: handle file upload err
-          }
+            if ($path === false) {
+                // TODO: handle file upload err
+            }
         }
 
         $user->save();
-      } finally {}
 
-      return $user;
+        return $user;
     }
 
     protected function userEditionValidator(array $data) {
-      return Validator::make($data, [
-          'name' => 'string|min:6|max:255',
-          'profile_picture' => [
-            'required',
-            File::image()
-              ->max(5*1024)
-          ]
-      ]);
+        return Validator::make($data, [
+            'name' => 'string|min:6|max:255',
+            'profile_picture' => [
+                'required',
+                File::image()
+                    ->max(5 * 1024)
+            ]
+        ]);
     }
-    
+
     public function showProfileEditPage($id) {
-      $user = User::findOrFail($id);
-      
-      $this->authorize('showProfileEditPage', $user);
+        $user = User::findOrFail($id);
 
-      return view('pages.profile.edit', ['user' => $user]);
+        $this->authorize('showProfileEditPage', $user);
+
+        return view('pages.profile.edit', ['user' => $user]);
     }
 
-    public function delete(Request $request, User $user){
-  
+    public function delete(Request $request, User $user) {
+
         $this->authorize('delete', $user);
         $user->delete();
-  
+
         return $request->wantsJson()
-          ? new JsonResponse($user->toArray(), 200)
-          : redirect()->route('home');
-    } 
+            ? new JsonResponse($user->toArray(), 200)
+            : redirect()->route('home');
+    }
 }

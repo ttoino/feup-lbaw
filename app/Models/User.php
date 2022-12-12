@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
+use App\Events\UserCreated;
+use App\Events\UserDeleted;
+use App\Events\UserUpdated;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Log;
 
 class User extends Authenticatable {
     use Notifiable, HasFactory;
-
-    const DEFAULT_IMAGE_PROVIDER_URL = 'https://picsum.photos/240';
 
     // Don't add create and update timestamps in database.
     public $timestamps = false;
@@ -38,6 +40,12 @@ class User extends Authenticatable {
         'remember_token'
     ];
 
+    protected $dispatchesEvents = [
+        'created' => UserCreated::class,
+        'updated' => UserUpdated::class,
+        'deleted' => UserDeleted::class
+    ];
+
     public function projects() {
         return $this->belongsToMany(
             Project::class,
@@ -52,9 +60,9 @@ class User extends Authenticatable {
     }
 
     public function getProfilePicture() {
-        return Storage::disk('public')->exists("users/$this->id") 
-            ? Storage::url("public/users/$this->id") 
-            : User::DEFAULT_IMAGE_PROVIDER_URL;
+        return Storage::disk('public')->exists("users/$this->id.webp")
+            ? Storage::url("public/users/$this->id.webp")
+            : Storage::url("public/users/default_$this->id.svg");
     }
 
     protected $table = 'user_profile';

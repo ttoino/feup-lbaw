@@ -19,6 +19,7 @@ RUN apt-get install -y --no-install-recommends \
     php8.1-xml \
     php8.1-pgsql \
     php8.1-curl \
+    php8.1-gd \
     nginx
 
 COPY --from=composer/composer:2-bin /composer /usr/bin/composer
