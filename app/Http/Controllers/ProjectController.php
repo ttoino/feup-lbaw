@@ -7,7 +7,6 @@ use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -43,7 +42,7 @@ class ProjectController extends Controller {
 
         return $request->wantsJson()
             ? new JsonResponse($project->toArray(), 200)
-            : view('pages.project.forum', ['project' => $project]);
+            : view('pages.project.forum.bare', ['project' => $project]);
     }
 
     public function leaveProject(Request $request, Project $project){

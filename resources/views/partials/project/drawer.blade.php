@@ -10,7 +10,7 @@
 <aside class="offcanvas-lg offcanvas-start border-end p-2 flex-shrink-0" style="width: 270px" id="drawer">
     <nav class="nav nav-pills flex-column">
         <div class="dropdown nav-item">
-            <a class="nav-link link-dark dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+            <a class="nav-link link-dark dropdown-toggle text-wrap" data-bs-toggle="dropdown" href="#" role="button"
                 aria-expanded="false">
                 {{ $project->name }}
             </a>

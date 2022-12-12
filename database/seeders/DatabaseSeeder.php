@@ -32,6 +32,8 @@ class DatabaseSeeder extends Seeder {
                 TagSeeder::class,
                 TaskGroupSeeder::class,
                 TaskSeeder::class,
+                ThreadSeeder::class,
+                ThreadCommentSeeder::class,
             ]);
         } else {
             DB::unprepared(file_get_contents("$path/populate.sql"));

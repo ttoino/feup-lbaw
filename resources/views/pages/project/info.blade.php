@@ -52,7 +52,7 @@
         <div class="col l-4">
             <section class="user-list">
                 <h2 class="h2">Project members</h2>
-                @include('partials.list', ['paginator' => $project->users, 'itemView' => 'partials.list-item.user'])
+                @include('partials.paginated-list', ['paginator' => $project->users->paginate(8), 'itemView' => 'partials.list-item.user'])
             </section>
         </div>
     </section>

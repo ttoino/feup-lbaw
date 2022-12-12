@@ -28,14 +28,9 @@ class TaskGroupSeeder extends Seeder {
         foreach ($projects as $project) {
             TaskGroup::factory()
                 ->count($faker->numberBetween(TaskGroupSeeder::MIN_TASK_GROUPS, TaskGroupSeeder::MAX_TASK_GROUPS))
-                ->state(new Sequence(
-                    fn ($sequence) => [ 
-                        'position' => $sequence->index + 1, 
-                    ]
-                ))
+                ->withPosition()
                 ->for($project)
                 ->create();
         }
-
     }
 }

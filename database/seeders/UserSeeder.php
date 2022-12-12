@@ -11,7 +11,7 @@ class UserSeeder extends Seeder {
 
     const ADMIN_COUNT = 5;
     const BLOCKED_COUNT = 25;
-    const NORMAL_COUNT = 60;
+    const NORMAL_COUNT = 600;
 
     /**
      * Run the database seeds.
@@ -22,9 +22,11 @@ class UserSeeder extends Seeder {
         User::factory()->admin()->state(new Sequence(
             fn ($sequence) => [ 'email' => "admin$sequence->index@example.com" ]
         ))->count(UserSeeder::ADMIN_COUNT)->create();
+        
         User::factory()->count(UserSeeder::NORMAL_COUNT)->state(new Sequence(
             fn ($sequence) => [ 'email' => "user$sequence->index@example.com" ]
         ))->create();
+
         User::factory()->blocked()->count(UserSeeder::BLOCKED_COUNT)->state(new Sequence(
             fn ($sequence) => [ 'email' => "blocked$sequence->index@example.com" ]
         ))->create();

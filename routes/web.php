@@ -65,6 +65,13 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
             });
         });
 
+        Route::prefix('/thread')->name('.thread')->controller('ThreadController')->group(function () {
+            Route::prefix('/{thread}')->group(function () {
+                Route::get('', 'show')->name('');
+
+            });
+        });
+
         Route::prefix('/task-group')->name('.task-group')->controller('TaskGroupController')->group(function () {
             Route::post('new', 'createTaskGroup')->name('.new');
         });

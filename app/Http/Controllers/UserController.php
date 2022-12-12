@@ -118,14 +118,13 @@ class UserController extends Controller {
     }
 
     protected function userEditionValidator(array $data) {
-        return Validator::make($data, [
-            'name' => 'string|min:6|max:255',
-            'profile_picture' => [
-                'required',
-                File::image()
-                    ->max(5 * 1024)
-            ]
-        ]);
+      return Validator::make($data, [
+          'name' => 'string|min:6|max:255',
+          'profile_picture' => [
+            File::image()
+              ->max(5*1024)
+          ]
+      ]);
     }
 
     public function showProfileEditPage($id) {

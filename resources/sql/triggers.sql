@@ -146,7 +146,7 @@ CREATE TRIGGER validate_task_comment_author_project_member
 CREATE OR REPLACE FUNCTION validate_thread_author_project_member() RETURNS TRIGGER AS
 $BODY$
 BEGIN
-    IF EXISTS (SELECT * FROM lbaw2265.project_member WHERE lbaw2265.project = NEW.project_id AND lbaw2265.user_profile_id = NEW.author_id) THEN
+    IF EXISTS (SELECT * FROM lbaw2265.project_member WHERE project_id = NEW.project_id AND user_profile_id = NEW.author_id) THEN
         RETURN NEW;
     ELSE
         RAISE EXCEPTION 'Thread author must be a member of the thread''s project!';

@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ThreadComment extends Model {
+    use HasFactory;
+
     const CREATED_AT = 'creation_date';
     const UPDATED_AT = 'edit_date';
 

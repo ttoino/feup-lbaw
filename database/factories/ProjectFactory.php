@@ -3,10 +3,9 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Database\Eloquent\Factories\Sequence;
 
 use App\Models\Project;
-use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Project>
@@ -27,7 +26,7 @@ class ProjectFactory extends Factory {
             'description' => $this->faker->optional(ProjectFactory::PROJECTS_WITH_DESCRIPTION_PERCENTAGE)->paragraph,
             'creation_date' => $this->faker->dateTimeThisYear('-5 month'),
             'last_modification_date' => function ($attributes) {
-                $this->faker->optional(ProjectFactory::EDITED_PROJECT_PERCENTAGE)->dateTimeBetween($attributes['creation_date'], 'now');
+                return $this->faker->optional(ProjectFactory::EDITED_PROJECT_PERCENTAGE)->dateTimeBetween($attributes['creation_date'], 'now');
             },
             'archived' => false,
         ];
@@ -39,6 +38,20 @@ class ProjectFactory extends Factory {
                 'archived' => true
             ];
         });
+    }
+
+    public function withCoordinators(Collection $coordinators) {
+        return $this->state(function ($attributes) use ($coordinators) {
+            return ['coordinator_id' => $coordinators->random()];
+        });
+    }
+
+    public function withMembers(Collection $members, float $memberRatio) {
+        return $this->hasAttached(
+            $members->random($memberRatio),
+            ['is_favorite' => $this->faker->boolean()],
+            'users'
+        );
     }
 
     protected $model = Project::class;
