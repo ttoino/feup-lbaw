@@ -20,7 +20,7 @@ class Project extends Model {
         'name',
         'archived',
         'description',
-        'coordinator'
+        'coordinator_id'
     ];
 
     /**

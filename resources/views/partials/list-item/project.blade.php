@@ -5,7 +5,7 @@
             {{ $item->name }}
         </a>
         <span>Coordinator:
-            {{ $item->coordinator()->first()->name }}</span>
+            {{ $item->coordinator->name }}</span>
     </div>
 
     @if (Auth::user()?->is_admin)
@@ -28,7 +28,7 @@
             ])></i>
         </button>
     @endif
-    @if (Auth::user()?->id === $item->coordinator)
+    @if (Auth::user() === $item->coordinator)
         <button class="btn btn-outline-danger" style="z-index: 5"><i class="bi bi-trash3"></i></button>
     @endif
 </li>

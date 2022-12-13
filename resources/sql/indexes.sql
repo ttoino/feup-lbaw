@@ -100,7 +100,7 @@ BEGIN
         );
     END IF;
     IF TG_OP = 'UPDATE' THEN
-        IF (NEW.name <> OLD.name OR NEW.coordinator <> OLD.coordinator) THEN
+        IF (NEW.name <> OLD.name OR NEW.coordinator_id <> OLD.coordinator_id) THEN
             NEW.fts_search = (
                 setweight(to_tsvector('english', NEW.name), 'A') ||
                 setweight(to_tsvector('english', COALESCE(NEW.description, '')), 'B') ||

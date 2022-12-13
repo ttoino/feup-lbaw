@@ -14,7 +14,7 @@ const attachListItemDeletionHandler = (user: HTMLLIElement) => {
     if (!userId) return;
 
     const userDeletionButton = user.querySelector<HTMLButtonElement>(
-        "button.btn-outline-danger"
+        "button.user-delete"
     );
 
     userDeletionButton?.addEventListener("click", deleteListener(userId));

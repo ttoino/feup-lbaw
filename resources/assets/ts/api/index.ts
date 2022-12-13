@@ -18,6 +18,7 @@ export const apiFetch = (
             ...options?.headers,
             "X-CSRF-TOKEN": token,
             "Content-Type": "application/json",
+            "Accept": "application/json"
         },
     });
 

@@ -22,6 +22,8 @@
                 <a href={{route('admin.reports.user', ['user' => $item])}} >{{ $item->reports_count }} Reports</a>
             </span>
         @endif    
-        <button class="btn btn-outline-danger" style="z-index: 5"><i class="bi bi-trash3"></i></button>
+        <button class="btn user-delete btn-outline-danger" style="z-index: 5"><i class="bi bi-trash3"></i></button>
+    @else
+        <button class="btn user-remove btn-outline-danger" style="z-index: 5"><i class="bi bi-x-lg"></i></button>    
     @endif
 </li>
