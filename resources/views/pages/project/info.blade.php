@@ -17,42 +17,69 @@
                     $creation_date = Carbon::parse($project->creation_date);
                     $last_modification_date = Carbon::parse($project->last_modification_date);
                 @endphp
-                <p><i class="bi bi-calendar mx-1"></i>Creation date: {{ $creation_date->diffForHumans(['aUnit' => true]) }}</p>
+                <p><i class="bi bi-calendar mx-1"></i>Creation date: {{ $creation_date->diffForHumans(['aUnit' => true]) }}
+                </p>
                 @if ($project->last_modification_date !== null)
                     <p>Last edited: {{ $last_modification_date->diffForHumans(['aUnit' => true]) }}</p>
                 @endif
             </section>
             <section class="flex-fill d-flex flex-row gap-3" style="max-width: 50%">
-                <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#leave-project-modal">
-                    Leave project
-                </button>
-        
-                <div class="modal fade" id="leave-project-modal" tabindex="-1" aria-labelledby="leave-project-modal-label" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content modal-body gap-3 align-items-center">
-                            <h3 class="modal-title fs-5" id="leave-project-modal-label">
-                                Are you sure you want to leave this project?
-                            </h3>
-                            <div class="hstack gap-2 align-self-center">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <form method="POST" action="{{route('project.leave', ['project' => $project])}}">
-                                    @csrf
-                                    <button class="submit col btn btn-outline-danger">Confirm</button>
-                                </form>
+                @if (Request::user()->id === $project->coordinator_id)
+                    <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-project-modal">
+                        Delete project
+                    </button>
+
+                    <div class="modal fade" id="delete-project-modal" tabindex="-1"
+                        aria-labelledby="delete-project-modal-label" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content modal-body gap-3 align-items-center">
+                                <h3 class="modal-title fs-5" id="delete-project-modal-label">
+                                    Are you sure you want to delete this project?
+                                </h3>
+                                <div class="hstack gap-2 align-self-center">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <form method="POST" action="{{ route('project.delete', ['project' => $project]) }}">
+                                        @csrf
+                                        <button class="submit col btn btn-outline-danger">Confirm</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                @if (Request::user()->id === $project->coordinator_id)
                     <a href="" class="col btn btn-outline-secondary">Archive project</a>
+                @else
+                    <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#leave-project-modal">
+                        Leave project
+                    </button>
+
+                    <div class="modal fade" id="leave-project-modal" tabindex="-1"
+                        aria-labelledby="leave-project-modal-label" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content modal-body gap-3 align-items-center">
+                                <h3 class="modal-title fs-5" id="leave-project-modal-label">
+                                    Are you sure you want to leave this project?
+                                </h3>
+                                <div class="hstack gap-2 align-self-center">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <form method="POST" action="{{ route('project.leave', ['project' => $project]) }}">
+                                        @csrf
+                                        <button class="submit col btn btn-outline-danger">Confirm</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 @endif
             </section>
         </div>
         <div class="col l-4">
             <section class="user-list">
                 <h2 class="h2">Project members</h2>
-                @include('partials.paginated-list', ['paginator' => $project->users->paginate(8), 'itemView' => 'partials.list-item.user'])
+                @include('partials.paginated-list', [
+                    'paginator' => $project->users->paginate(8),
+                    'itemView' => 'partials.list-item.user',
+                ])
             </section>
         </div>
     </section>

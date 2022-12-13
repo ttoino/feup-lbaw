@@ -170,11 +170,13 @@ class ProjectController extends Controller {
         return $project;
     }
 
-    public function delete(Project $project) {
+    public function delete(Request $request, Project $project) {
 
         $this->authorize('delete', $project);
         $project->delete();
 
-        return new JsonResponse($project->toArray(), 200);
+        return $request->wantsJson()
+            ? new JsonResponse($project->toArray(), 200)
+            : redirect()->route('project.list');
     }
 }

@@ -44,7 +44,7 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
     Route::get('/search', 'search')->name('.search');
 
     Route::prefix('/{project}')->middleware('withOtherProjects')->group(function () {
-        
+
         Route::redirect('', "/project/{project}/board")->name('');
 
         Route::get('/info', 'showProjectInfo')->name('.info');
@@ -53,6 +53,7 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
         Route::get('/forum', 'showProjectForum')->name('.forum');
 
         Route::post('/leave', 'leaveProject')->name('.leave');
+        Route::post('/delete', 'delete')->name('.delete');
 
         Route::prefix('/task')->name('.task')->controller('TaskController')->group(function () {
             Route::post('/new', 'createTask')->name('.new');
