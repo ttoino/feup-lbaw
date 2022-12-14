@@ -3,8 +3,6 @@
 @section('title', 'Register')
 
 @section('form')
-    @csrf
-
     <div class="form-floating">
         <input aria-describedby="name-feedback" placeholder=""
             class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" id="name" type="text" name="name"

@@ -3,8 +3,6 @@
 @section('title', 'Create new Project')
 
 @section('form')
-    @csrf
-
     <h2 class="text-center h1">Create your new idea!</h2>
 
     {{-- Should allow for pictures --}}

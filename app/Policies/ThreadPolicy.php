@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Thread;
 use App\Models\User;
+use App\Models\Project;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ThreadPolicy
@@ -32,15 +33,18 @@ class ThreadPolicy
         return $user->is_admin || $thread->author === $user || $thread->project->users->contains($user);
     }
 
+    public function viewCreationForm(User $user, Project $project) {
+        return $user->is_admin || $project->users->contains($user);
+    }
+
     /**
      * Determine whether the user can create models.
      *
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function create(User $user)
-    {
-        //
+    public function create(User $user, Project $project) {
+        return !$user->is_admin && $project->users->contains($user);
     }
 
     /**

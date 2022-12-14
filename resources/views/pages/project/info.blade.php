@@ -1,7 +1,6 @@
 @extends('layouts.project')
 
 @section('title', $project->name)
-@push('main-classes', 'overflow-auto')
 
 @section('project-content')
     <section style="overflow-x: auto;" class="flex-fill d-flex flex-row gap-3 p-5 align-items-start flex-fill">
@@ -17,10 +16,11 @@
                     $creation_date = Carbon::parse($project->creation_date);
                     $last_modification_date = Carbon::parse($project->last_modification_date);
                 @endphp
-                <p><i class="bi bi-calendar mx-1"></i>Creation date: {{ $creation_date->diffForHumans(['aUnit' => true]) }}
+                <p><i class="bi bi-calendar mx-1"></i>Created {{ $creation_date->diffForHumans(['aUnit' => true]) }}
                 </p>
                 @if ($project->last_modification_date !== null)
-                    <p>Last edited: {{ $last_modification_date->diffForHumans(['aUnit' => true]) }}</p>
+                    <span>-</span>
+                    <p>Last edited {{ $last_modification_date->diffForHumans(['aUnit' => true]) }}</p>
                 @endif
             </section>
             <section class="flex-fill d-flex flex-row gap-3" style="max-width: 50%">
@@ -47,7 +47,47 @@
                         </div>
                     </div>
 
-                    <a href="" class="col btn btn-outline-secondary">Archive project</a>
+                    <button class="btn btn-outline-secondary" data-bs-toggle="modal"
+                        data-bs-target="#archive-unarchive-project-modal">
+                        @if ($project->archived)
+                            Unarchive
+                        @else
+                            Archive
+                        @endif
+                        project
+                    </button>
+
+                    <div class="modal fade" id="archive-unarchive-project-modal" tabindex="-1"
+                        aria-labelledby="archive-unarchive-project-modal-label" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content modal-body gap-3 align-items-center">
+                                <h3 class="modal-title fs-5" id="archive-unarchive-project-modal-label">
+                                    Are you sure you want to
+                                    @if ($project->archived)
+                                        unarchive
+                                    @else
+                                        archive
+                                    @endif
+                                    this project?
+                                </h3>
+                                <div class="hstack gap-2 align-self-center">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
+                                    @php
+                                        if ($project->archived) {
+                                            $route = 'project.unarchive';
+                                        } else {
+                                            $route = 'project.archive';
+                                        }
+                                    @endphp
+                                    <form method="POST" action="{{ route($route, ['project' => $project]) }}">
+                                        @csrf
+                                        <button class="submit col btn btn-outline-danger">Confirm</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 @else
                     <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#leave-project-modal">
                         Leave project

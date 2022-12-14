@@ -3,8 +3,6 @@
 @section('title', $user->name)
 
 @section('form')
-    @csrf
-
     <label class="image-input avatar big">
         <img 
             src="{{ asset($user->getProfilePicture()) }}"

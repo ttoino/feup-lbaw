@@ -8,6 +8,9 @@
             {{ $item->coordinator->name }}</span>
     </div>
 
+    @if ($item->archived)
+        <span class="text-warning">Archived</span>
+    @endif
     @if (Auth::user()?->is_admin)
         @if ($item->reports_count > 0)
             <span class="text-danger" style="z-index: 5">

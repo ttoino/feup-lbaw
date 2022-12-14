@@ -141,6 +141,7 @@ class TaskController extends Controller {
         $this->editTaskValidator($requestData)->validate();
 
         $this->authorize('edit', $task);
+        $this->authorize('edit', $task->project);
 
         $task = $this->editTask($task, $requestData);
 
@@ -188,6 +189,7 @@ class TaskController extends Controller {
         $this->editTaskValidator($requestData)->validate();
 
         $this->authorize('edit', $task);
+        $this->authorize('edit', $task->project);
 
         $task = $this->editTask($task, $requestData);
 

@@ -37,8 +37,10 @@ Route::prefix('/user')->name('user.')->controller('UserController')->group(funct
 Route::prefix('/project')->middleware('auth')->name('project')->controller('ProjectController')->group(function () {
     Route::get('', 'listUserProjects')->name('.list');
 
-    Route::get('/new', 'showProjectCreationPage')->name('.new');
-    Route::post('/new', 'createProject')->name('.new-action');
+    Route::prefix('/new')->group(function () {
+        Route::get('', 'showProjectCreationPage')->name('.new');
+        Route::post('', 'createProject');
+    });
 
     // Project Search
     Route::get('/search', 'search')->name('.search');
@@ -54,6 +56,8 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
 
         Route::post('/leave', 'leaveProject')->name('.leave');
         Route::post('/delete', 'delete')->name('.delete');
+        Route::post('/archive', 'archive')->name('.archive');
+        Route::post('/unarchive', 'unarchive')->name('.unarchive');
 
         Route::prefix('/task')->name('.task')->controller('TaskController')->group(function () {
             Route::post('/new', 'createTask')->name('.new');
@@ -67,9 +71,14 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
         });
 
         Route::prefix('/thread')->name('.thread')->controller('ThreadController')->group(function () {
+
+            Route::prefix('/new')->group(function () {
+                Route::get('', 'create')->name('.new');
+                Route::post('', 'store')->name('new-action');
+            });
+
             Route::prefix('/{thread}')->group(function () {
                 Route::get('', 'show')->name('');
-
             });
         });
 
@@ -117,7 +126,7 @@ Route::name('')->group(function () {
 
 Route::prefix('/api')->name('api')->group(function () {
 
-    Route::prefix('/project')->name('.project')->controller('ProjectController')->group(function() {
+    Route::prefix('/project')->name('.project')->controller('ProjectController')->group(function () {
         Route::prefix('/{project}')->group(function () {
             Route::delete('', 'delete')->name('.delete');
 
@@ -139,7 +148,7 @@ Route::prefix('/api')->name('api')->group(function () {
             Route::post('/reposition', 'repositionTask')->name('.reposition');
         });
     });
-    
+
     Route::prefix('/task-group')->name('.task-group')->controller('TaskGroupController')->group(function () {
         Route::prefix('/{taskGroup}')->group(function () {
             Route::post('/reposition', 'repositionTaskGroup')->name('.reposition');

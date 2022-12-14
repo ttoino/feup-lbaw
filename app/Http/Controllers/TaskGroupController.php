@@ -66,6 +66,7 @@ class TaskGroupController extends Controller {
         $this->taskGroupRepositionValidator($requestData)->validate();
 
         $this->authorize('reposition', $taskGroup);
+        $this->authorize('edit', $taskGroup->project);
 
         $taskGroup = $this->reposition($taskGroup, $requestData);
 

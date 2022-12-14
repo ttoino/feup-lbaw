@@ -49,9 +49,8 @@ class ProjectPolicy
      * @param  \App\Models\Project  $project
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Project $project)
-    {
-        //
+    public function edit(User $user, Project $project) {
+        return !$project->archived && $project->users->contains($user);
     }
 
     /**

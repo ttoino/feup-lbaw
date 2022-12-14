@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Thread;
 use App\Models\Project;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class ThreadController extends Controller
@@ -23,9 +26,10 @@ class ThreadController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
+    public function create(Request $request, Project $project) {
+        $this->authorize('viewCreationForm', [Thread::class, $project]);
+    
+        return view('pages.project.forum.new', ['project' => $project]);
     }
 
     /**
@@ -34,9 +38,40 @@ class ThreadController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request, Project $project) {
+
+        $requestData = $request->all();
+
+        $this->threadCreationValidator($requestData)->validate();
+        
+        $this->authorize('edit', $project);
+        $this->authorize('create', [Thread::class, $project]);
+
+        $thread = $this->createThread($requestData, $project);
+
+        return $request->wantsJson()
+            ? new JsonResponse($thread->toArray(), 201)
+            : view('pages.project.forum.thread', ['project' => $project, 'thread' => $thread]);
+    }
+
+    public function createThread(array $data, Project $project) {
+
+        $thread = new Thread();
+
+        $thread->title = $data['title'];
+        $thread->content = $data['content'];
+        $thread->author_id = Auth::user()->id;
+        
+        $project->threads()->save($thread);
+        
+        return $thread;
+    }
+
+    public function threadCreationValidator(array $data) {
+        return Validator::make($data, [
+            'title' => 'required|string|min:6|max:50',
+            'content' => 'required|string|min:6|max:512',
+        ]);
     }
 
     /**

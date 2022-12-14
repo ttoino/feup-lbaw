@@ -170,6 +170,26 @@ class ProjectController extends Controller {
         return $project;
     }
 
+    public function archive(Request $request, Project $project) {
+
+        $project->archived = true;
+        $project->save();
+        
+        return $request->wantsJson()
+        ? new JsonResponse($project->toArray(), 200)
+        : redirect()->route('project.info', ['project' => $project]);
+    }
+    
+    public function unarchive(Request $request, Project $project) {
+        
+        $project->archived = false;
+        $project->save();
+
+        return $request->wantsJson()
+            ? new JsonResponse($project->toArray(), 200)
+            : redirect()->route('project.info', ['project' => $project]);
+    }
+
     public function delete(Request $request, Project $project) {
 
         $this->authorize('delete', $project);

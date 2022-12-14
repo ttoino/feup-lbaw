@@ -3,8 +3,6 @@
 @section('title', 'Create User')
 
 @section('form')
-    @csrf
-
     <h2 class="text-center h1">Create a new user</h2>
 
     <div class="form-floating">

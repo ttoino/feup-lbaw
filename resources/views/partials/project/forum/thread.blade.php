@@ -15,9 +15,14 @@
                 Edited
             @endif
         </div>
-        <a href="{{ route('user.profile', ['user' => $thread->author]) }}" role="button" aria-expanded="false"
-            style="z-index: 100">
-            {{ $thread->author->name }}
-        </a>
+        <div class="hstack gap-2 justify-content-between justify-content-md-between">
+            <a href="{{ route('user.profile', ['user' => $thread->author]) }}" role="button" aria-expanded="false"
+                style="z-index: 100">
+                {{ $thread->author->name }}
+            </a>
+            <span>
+                {{ $thread->comments->count() }} <i class="bi bi-chat-right-text"></i>
+            </span>
+        </div>
     </div>
 </li>
