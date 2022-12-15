@@ -3,7 +3,7 @@
 @section('title', $task->name)
 
 @section('project-content')
-    <section class="flex-fill vstack p-3" style="max-width: 480px">
+    <section class="flex-fill vstack p-3">
         <div class="hstack justify-content-between align-items-center">
             <h2>{{ $task->name }}</h2>
             @if ($task->state === 'completed')
