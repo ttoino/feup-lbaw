@@ -8,6 +8,7 @@ import "bootstrap";
 
 import "./task";
 import "./forms";
+import "./tooltips";
 import "./project";
 import "./user";
 import "./board";

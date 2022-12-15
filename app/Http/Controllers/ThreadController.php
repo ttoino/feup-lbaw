@@ -9,15 +9,13 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
-class ThreadController extends Controller
-{
+class ThreadController extends Controller {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index() {
         //
     }
 
@@ -28,7 +26,7 @@ class ThreadController extends Controller
      */
     public function create(Request $request, Project $project) {
         $this->authorize('viewCreationForm', [Thread::class, $project]);
-    
+
         return view('pages.project.forum.new', ['project' => $project]);
     }
 
@@ -43,7 +41,7 @@ class ThreadController extends Controller
         $requestData = $request->all();
 
         $this->threadCreationValidator($requestData)->validate();
-        
+
         $this->authorize('edit', $project);
         $this->authorize('create', [Thread::class, $project]);
 
@@ -51,7 +49,7 @@ class ThreadController extends Controller
 
         return $request->wantsJson()
             ? new JsonResponse($thread->toArray(), 201)
-            : view('pages.project.forum.thread', ['project' => $project, 'thread' => $thread]);
+            : redirect(route('project.thread', ['project' => $project, 'thread' => $thread]));
     }
 
     public function createThread(array $data, Project $project) {
@@ -61,9 +59,9 @@ class ThreadController extends Controller
         $thread->title = $data['title'];
         $thread->content = $data['content'];
         $thread->author_id = Auth::user()->id;
-        
+
         $project->threads()->save($thread);
-        
+
         return $thread;
     }
 
@@ -80,7 +78,7 @@ class ThreadController extends Controller
      * @param  \App\Models\Thread  $thread
      * @return \Illuminate\Http\Response
      */
-    public function show(Project $project, Thread $thread){
+    public function show(Project $project, Thread $thread) {
 
         $this->authorize('view', $thread);
 
@@ -93,8 +91,7 @@ class ThreadController extends Controller
      * @param  \App\Models\Thread  $thread
      * @return \Illuminate\Http\Response
      */
-    public function edit(Thread $thread)
-    {
+    public function edit(Thread $thread) {
         //
     }
 
@@ -105,8 +102,7 @@ class ThreadController extends Controller
      * @param  \App\Models\Thread  $thread
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Thread $thread)
-    {
+    public function update(Request $request, Thread $thread) {
         //
     }
 
@@ -116,8 +112,7 @@ class ThreadController extends Controller
      * @param  \App\Models\Thread  $thread
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Thread $thread)
-    {
+    public function destroy(Thread $thread) {
         //
     }
 }

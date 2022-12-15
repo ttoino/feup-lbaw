@@ -8,17 +8,18 @@
         "@types/bootstrap": "^5.2.6",
         "@types/sortablejs": "^1.15.0",
         "laravel-vite-plugin": "^0.7.1",
-        "ts-loader": "^9.4.2",
         "sass": "^1.56.1",
         "sass-loader": "^13.2.0",
+        "ts-loader": "^9.4.2",
         "typescript": "^4.9.3",
         "vite": "^3.2.5"
     },
     "dependencies": {
         "bootstrap": "^5.2.3",
         "bootstrap-icons": "^1.10.2",
-        "resolve-url-loader": "^5.0.0",
         "popper.js": "^1.16.1",
+        "resolve-url-loader": "^5.0.0",
+        "shiki": "^0.11.1",
         "sortablejs": "^1.15.0"
     }
 }

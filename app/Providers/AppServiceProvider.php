@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Blade;
 
 class AppServiceProvider extends ServiceProvider {
     /**
@@ -27,7 +28,15 @@ class AppServiceProvider extends ServiceProvider {
     public function boot() {
         Paginator::useBootstrapFive();
 
-        Collection::macro('paginate', function($perPage, $total = null, $page = null, $pageName = 'page') {
+        Blade::directive('datediff', fn($expression) =>
+            "<?= \Carbon\Carbon::parse($expression)->diffForHumans(['aUnit' => true]) ?>"
+        );
+
+        Blade::directive('date', fn($expression) =>
+            "<?= \Carbon\Carbon::parse($expression)->isoFormat('MMM D Y, H:mm') ?>"
+        );
+
+        Collection::macro('paginate', function ($perPage, $total = null, $page = null, $pageName = 'page') {
             $page = $page ?: LengthAwarePaginator::resolveCurrentPage($pageName);
 
             return new LengthAwarePaginator(

@@ -11,7 +11,7 @@ const setupTaskGroupDnD = () => {
 
     const sortableTaskGroups = new Sortable(taskGroupsContainer, {
         group: "taskGroups",
-        handle: "div > .grip",
+        handle: "header > .grip",
         animation: 150,
         easing: "ease-in-out",
         draggable: "div[data-task-group-id]",

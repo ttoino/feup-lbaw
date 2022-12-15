@@ -1,0 +1,78 @@
+@use "sass:color";
+
+.forum-threads {
+    @extend .vstack, .border-end;
+
+    flex: 1;
+    max-width: map-get($map: $grid-breakpoints, $key: sm);
+    overflow-y: auto;
+
+    header {
+        @extend .p-2, .vstack, .sticky-top;
+
+        z-index: 500;
+
+        background: linear-gradient(
+            to bottom,
+            $white 25%,
+            color.change($color: $white, $alpha: 0) 90%
+        );
+    }
+
+    ul {
+        @extend .list-group, .list-group-flush;
+    }
+}
+
+.thread {
+    @extend .list-group-item,
+        .list-group-item-action,
+        .position-relative,
+        .hstack,
+        .align-items-center,
+        .gap-3,
+        .text-break;
+
+    > div {
+        @extend .vstack, .gap-2;
+
+        flex: 1;
+
+        > div {
+            @extend .hstack, .gap-2, .align-items-end, .justify-content-between;
+
+            &:first-child {
+                @extend .align-items-start;
+            }
+
+            span {
+                flex-shrink: 0;
+            }
+        }
+    }
+}
+
+.forum-content {
+    @extend .p-3;
+
+    flex: 1;
+    overflow-y: auto;
+}
+
+.thread-content {
+    @extend .text-break, .border-bottom, .pb-2;
+}
+
+.thread-comments {
+    @extend .ms-5, .me-2, .list-unstyled;
+
+    overflow-y: auto;
+}
+
+.thread-comment {
+    @extend .list-group-item, .hstack, .gap-2, .pt-2;
+
+    &:not(:last-child) {
+        @extend .border-bottom;
+    }
+}
