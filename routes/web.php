@@ -67,6 +67,8 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
             Route::prefix('/{task}')->where(['task', '[0-9]+'])->group(function () {
                 Route::get('', 'show')->name('.info');
                 Route::post('', 'edit')->name('.edit');
+
+                Route::post('/comment', 'createComment')->name('.comment');
             });
         });
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use App\Models\TaskGroup;
+use App\Models\TaskComment;
 use App\Models\Project;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -194,6 +195,23 @@ class TaskController extends Controller {
         $task = $this->editTask($task, $requestData);
 
         return new JsonResponse($task->toArray(), 200);
+    }
+
+    public function createComment(Request $request, Project $project, Task $task) {
+        $data = $request->all();
+
+        $this->authorize('edit', $task);
+
+        $task_comment = new TaskComment();
+
+        $task_comment->content = $data['content'];
+        $task_comment->author_id = Auth::user()->id;
+        $task_comment->task_id = $task->id; 
+        $task_comment->save();
+
+        return $request->wantsJson()
+            ? new JsonResponse([$task_comment], 201)
+            : redirect()->route('project.task.info', ['project' => $project, 'task' => $task]);
     }
 
     /**

@@ -30,5 +30,23 @@
                 'itemView' => 'partials.list-item.user',
             ])
         @endif
+
+        <h3>Comments</h3>
+        <form method="POST" action="{{route('project.task.comment', ['project' => $project, 'task' => $task])}}">
+            @csrf
+            <div class="form-floating pb-3">
+                <input class="form-control" type="text" name="content" required>
+                <label for="content" class="form-label">New Comment</label>
+            </div>    
+            <button class='btn btn-outline-secondary submit'>Post</button>
+        </form>
+
+        @if (!$task->comments->isEmpty())
+
+            @include('partials.list', [
+                'paginator' => $task->comments,
+                'itemView' => 'partials.list-item.task-comment',
+            ])
+        @endif
     </section>
 @endsection
