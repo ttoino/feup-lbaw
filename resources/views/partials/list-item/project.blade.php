@@ -17,7 +17,7 @@
                 <a href={{route('admin.reports.project', ['project' => $item])}} >{{ $item->reports_count }} Reports</a>
             </span>
         @endif    
-        <button class="btn btn-outline-danger" style="z-index: 5"><i class="bi bi-trash3"></i></button>
+        <button class="btn project-delete btn-outline-danger" style="z-index: 5"><i class="bi bi-trash3"></i></button>
     @else
         <button class="btn btn-outline favorite-toggle" style="z-index: 5">
             @php

@@ -133,6 +133,10 @@ Route::prefix('/api')->name('api')->group(function () {
             Route::prefix('/favorite')->name('.favorite')->group(function () {
                 Route::post('/toggle', 'toggleFavorite')->name('.toggle');
             });
+
+            Route::prefix('/remove')->name('.remove-user')->group(function () {
+                Route::post('/{user}', 'removeUser');
+            });
         });
     });
 

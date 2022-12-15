@@ -85,7 +85,11 @@ class ProjectPolicy
     }
 
     public function addUser(User $user, Project $project, User $model) {
-        return $user->id === $project->coordinator_id && !$project->users->contains($model);
+        return $user->id === $project->coordinator_id && !$project->users->contains($model) && !$project->archived;
+    }
+
+    public function removeUser(User $user, Project $project, User $model) {
+        return $user->id === $project->coordinator_id && $project->users->contains($model) && !$project->archived;
     }
 
     public function leaveProject(User $user, Project $project) {

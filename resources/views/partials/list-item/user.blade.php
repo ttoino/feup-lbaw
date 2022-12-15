@@ -1,5 +1,5 @@
 <li class="list-group-item list-group-item-action position-relative d-flex flex-row align-items-center gap-2"
-    data-user-id="{{ $item->id }}">
+    data-user-id="{{ $item->id }}" @isset($project) data-project-id="{{$project->id}}" @endisset>
     <img src="{{ asset($item->getProfilePicture()) }}" alt="Profile picture" width="40" height="40" class="rounded-circle">
 
     <div class="vstack flex-fill align-self-center">

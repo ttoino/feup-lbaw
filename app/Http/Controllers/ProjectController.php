@@ -56,6 +56,16 @@ class ProjectController extends Controller {
             : redirect()->route('project.list');
     }
 
+    public function removeUser(Request $request, Project $project, User $user){
+
+        $this->authorize('removeUser', $project);
+
+        $project->users()->detach($user);
+        return $request->wantsJson()
+            ? new JsonResponse($project->toArray(), 200)
+            : redirect()->route('project.list');
+    }
+
     public function search(Request $request) {
 
         $this->authorize('viewAny', Project::class);

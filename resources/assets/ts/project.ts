@@ -7,7 +7,7 @@ const attachDeletionHandler = (project: HTMLLIElement) => {
     if (!projectId) return;
 
     const projectDeletionButton: HTMLButtonElement | null =
-        project.querySelector("button.btn-outline-danger");
+        project.querySelector("button.project-delete");
 
     projectDeletionButton?.addEventListener("click", async () => {
         if (
