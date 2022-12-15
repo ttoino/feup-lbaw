@@ -1,0 +1,106 @@
+.task-group {
+    @extend .shadow-sm,
+        .rounded,
+        .p-2,
+        .pt-3,
+        .d-flex,
+        .flex-column,
+        .gap-3,
+        .bg-light,
+        .flex-shrink-0;
+
+    width: 320px;
+    max-width: 100%;
+    min-width: 256px;
+
+    > header {
+        @extend .hstack, .px-2, .gap-2;
+
+        > .grip {
+            @extend .bi, .bi-grip-vertical;
+        }
+
+        > p {
+            @extend .m-n2, .rounded, .text-break, .p-2;
+
+            flex: 1;
+            outline: solid 1px transparent;
+
+            transition: $transition-base;
+            transition-property: outline, box-shadow;
+
+            &:hover {
+                outline-color: $dark;
+            }
+
+            &:focus-within {
+                box-shadow: $input-focus-box-shadow;
+                outline-color: $primary;
+            }
+        }
+    }
+
+    > ul {
+        @extend .list-unstyled, .vstack, .gap-2, .p-2, .m-n2;
+
+        overflow-y: auto;
+        overflow-x: clip;
+    }
+}
+
+.task {
+    @extend .position-relative,
+        .hstack,
+        .gap-2,
+        .justify-content-between,
+        .text-break;
+
+    &.list-group-item {
+        @extend .list-group-item-action;
+    }
+
+    &:not(.list-group-item) {
+        @extend .shadow-sm, .rounded, .p-2, .bg-white;
+    }
+
+    > .grip {
+        @extend .bi, .bi-grip-vertical;
+    }
+
+    .tags {
+        @extend .hstack, .list-unstyled, .gap-1;
+
+        > * {
+            @extend .rounded-pill, .p-1;
+
+            flex: 48px 0 1;
+        }
+    }
+
+    .assignees {
+        @extend .hstack, .list-unstyled;
+
+        z-index: 50;
+
+        > * {
+            @extend .rounded-circle;
+
+            display: block;
+
+            img {
+                outline: solid $white 2px;
+            }
+
+            transition: $transition-base;
+            transition-property: margin;
+
+            &:not(:first-child) {
+                margin-inline-start: -6px;
+            }
+        }
+
+        &:hover > *:not(:first-child) {
+            margin-inline-start: 4px;
+        }
+    }
+}

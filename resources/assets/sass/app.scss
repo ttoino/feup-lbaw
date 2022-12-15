@@ -6,6 +6,8 @@ $enable-validation-icons: false;
 $enable-negative-margins: true;
 $enable-important-utilities: false;
 
+$primary: #6f42c1;
+
 // 3. Include remainder of required Bootstrap stylesheets
 @import "~bootstrap/scss/variables";
 
@@ -56,6 +58,8 @@ $enable-important-utilities: false;
 // 8. Add additional custom code here
 @import "~bootstrap-icons/font/bootstrap-icons";
 
+@import "pages/board";
+
 a {
     color: inherit;
     text-decoration: inherit;
@@ -65,57 +69,7 @@ a {
     text-decoration: underline;
 }
 
-.assignee {
-    position: relative;
-    z-index: 50;
-}
-
 /***********************************/
-
-:root {
-    color-scheme: light;
-    background-color: rgb(var(--color-surface));
-    color: rgba(var(--color-on-surface), var(--opacity-high-emphasis));
-
-    transition-property: color, background;
-
-    /* Colors (must be used in rgb()/rgba()) */
-    --color-surface: 255, 255, 255;
-    --color-on-surface: 0, 0, 0;
-    --color-image-surface: 0, 0, 0;
-    --color-on-image-surface: 255, 255, 255;
-
-    /* Opacity levels */
-    --opacity-hover: 4%;
-    --opacity-high-emphasis: 87%;
-    --opacity-disabled: 38%;
-
-    --elevation-0: 0px 0px 0px 0px rgba(0, 0, 0, 0.2),
-        0px 0px 0px 0px rgba(0, 0, 0, 0.14), 0px 0px 0px 0px rgba(0, 0, 0, 0.12);
-}
-
-*,
-*::after,
-*::before {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: inherit;
-    font-size: inherit;
-    list-style-type: none;
-
-    --opacity-overlay: 0%;
-    --elevation: var(--elevation-0);
-    --color-overlay: var(--color-on-surface);
-    --shadow: 0 0 0 0 transparent;
-    box-shadow: var(--overlay-common)
-            rgba(var(--color-overlay), var(--opacity-overlay)),
-        var(--elevation), var(--shadow);
-
-    transition-property: box-shadow;
-    transition-duration: 200ms;
-    transition-timing-function: ease-in-out;
-}
 
 .image-input {
     position: relative;

@@ -22,30 +22,55 @@ class CreateDefaultProfilePic {
         return $component * 12.92 <= 0.03928 ? $component * 12.92 : (($component ** (1 / 2.4)) * 1.055) - 0.055;
     }
 
+    private static function hsvToSRGB(float $h, float $s, float $v) {
+        $sector = $h / 60;
+        $c = $s * $v;
+        $x = $c * (1 - abs($sector % 2 - 1));
+
+        if ($sector < 1)
+            return [$c, $x, 0];
+        if ($sector < 2)
+            return [$x, $c, 0];
+        if ($sector < 3)
+            return [0, $c, $x];
+        if ($sector < 4)
+            return [0, $x, $c];
+        if ($sector < 5)
+            return [$x, 0, $c];
+
+        return [$c, 0, $x];
+
+    }
+
     # Based on the formulas at
     # https://www.w3.org/TR/WCAG20/#relativeluminancedef and
     # https://www.w3.org/TR/WCAG20/#contrast-ratiodef
     private static function generateColor(int $seed) {
-        srand($seed);
+        mt_srand($seed);
 
-        $b_8bit = -1;
-        while ($b_8bit > 255 || $b_8bit < 0) {
-            $r_8bit = rand(0, 255);
-            $g_8bit = rand(0, 255);
+        $RAND_MAX = mt_getrandmax();
 
-            $r_srgb = $r_8bit / 255.0;
-            $g_srgb = $g_8bit / 255.0;
+        $h = ((float) mt_rand()) / $RAND_MAX * 360;
+
+        $contrast = -1;
+        while ($contrast < static::TARGET_CONTRAST) {
+            $s = ((float) mt_rand()) / $RAND_MAX * .4 + .6;
+            $v = ((float) mt_rand()) / $RAND_MAX * .4 + .6;
+
+            list($r_srgb, $g_srgb, $b_srgb) = static::hsvToSRGB($h, $s, $v);
 
             $r = static::srgbToSpaceless($r_srgb);
             $g = static::srgbToSpaceless($g_srgb);
+            $b = static::srgbToSpaceless($b_srgb);
 
-            $b = -0.692521 + 14.5429 / static::TARGET_CONTRAST - 2.9446 * $r - 9.90582 * $g;
+            $y = 0.2126 * $r + 0.7152 * $g + 0.0722 * $b;
 
-            $b_srgb = static::spacelessToSRGB($b);
-            $b_8bit = round($b_srgb * 255);
+            $contrast = 1.05 / ($y + 0.05);
         }
 
-        return sprintf("#%02X%02X%02X", $r_8bit, $g_8bit, $b_8bit);
+        Log::debug('COLOR: ', [$h, $s, $v, $r_srgb, $g_srgb, $b_srgb]);
+
+        return sprintf("#%02x%02x%02x", $r_srgb * 255, $g_srgb * 255, $b_srgb * 255);
     }
 
     public function handle(UserEvent $event) {
