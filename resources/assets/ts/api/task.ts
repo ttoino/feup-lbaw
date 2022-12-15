@@ -5,10 +5,10 @@ export const completeTask = (taskId: string) =>
 
 export const repositionTask = (
     taskId: string,
-    task_group: string | null,
+    task_group_id: string | null,
     position: string | null
 ) =>
     apiFetch(`/api/task/${taskId}/reposition`, "POST", {
-        task_group,
+        task_group_id,
         position,
     });
