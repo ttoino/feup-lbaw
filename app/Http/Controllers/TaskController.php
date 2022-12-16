@@ -125,7 +125,7 @@ class TaskController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request, Project $project, Task $task) {
-
+        
         if ($project->id !== $task->project->id) {
             abort(400, 'Task with id ' . $task->id . ' does not belong to project with id ' . $project->id);
         }
@@ -135,6 +135,14 @@ class TaskController extends Controller {
         return $request->expectsJson()
             ? new JsonResponse($task->toArray())
             : view('pages.task', ['task' => $task, 'project' => $project]);
+    }
+
+    // TODO: change this name
+    public function showAPI(Request $request, Task $task) {
+        
+        $this->authorize('view', $task);
+
+        return new JsonResponse($task->load('comments'));
     }
 
     public function edit(Request $request, Project $project, Task $task) {
