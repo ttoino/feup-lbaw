@@ -12,6 +12,7 @@
     width: 320px;
     max-width: 100%;
     min-width: 256px;
+    max-height: 100%;
 
     > header {
         @extend .hstack, .px-2, .gap-2;

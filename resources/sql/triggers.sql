@@ -84,26 +84,6 @@ CREATE TRIGGER invalid_task_tag
     FOR EACH ROW
     EXECUTE FUNCTION invalid_task_tag();
 
--- TRIGGER04
-CREATE OR REPLACE FUNCTION validate_notification_type() RETURNS TRIGGER AS
-$BODY$
-BEGIN
-    -- in the future we can support multiple entities referenced.
-    IF ((NEW.invitation_id IS NOT NULL)::INTEGER + (NEW.thread_id IS NOT NULL)::INTEGER + (NEW.thread_comment_id IS NOT NULL)::INTEGER + (NEW.task_id IS NOT NULL)::INTEGER + (NEW.task_comment_id IS NOT NULL)::INTEGER + (NEW.project_id IS NOT NULL)::INTEGER = 1) THEN
-        RETURN NEW;
-    ELSE
-        RAISE EXCEPTION 'Invalid notification data for %!', NEW.type;
-    END IF;
-END
-$BODY$
-LANGUAGE plpgsql;
---
-DROP TRIGGER IF EXISTS validate_notification_type ON lbaw2265.notification;
-CREATE TRIGGER validate_notification_type
-    BEFORE INSERT ON lbaw2265.notification
-    FOR EACH ROW
-    EXECUTE FUNCTION validate_notification_type();
-
 -- TRIGGER05
 CREATE OR REPLACE FUNCTION validate_assignee_project_member() RETURNS TRIGGER AS
 $BODY$

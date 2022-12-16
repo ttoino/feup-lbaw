@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder {
         DB::unprepared(file_get_contents("$path/triggers.sql"));
 
         $this->command->info('Populating database!');
-        
+
         if (env('DB_LARGE_DATA')) {
             $this->call([
                 UserSeeder::class,

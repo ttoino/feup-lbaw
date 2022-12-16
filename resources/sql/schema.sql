@@ -10,7 +10,6 @@ SET search_path TO lbaw2265;
 DROP TABLE IF EXISTS
     user_profile,
     project,
-    project_invitation,
     project_timeline_action,
     task_group,
     task,
@@ -34,14 +33,6 @@ DROP TYPE IF EXISTS TODAY, TASK_STATE, COLOR, NOTIFICATION_TYPE CASCADE;
 CREATE DOMAIN TODAY AS TIMESTAMP DEFAULT CURRENT_TIMESTAMP CHECK (VALUE <= CURRENT_TIMESTAMP);
 
 CREATE TYPE TASK_STATE AS ENUM ('created', 'member_assigned', 'completed');
-CREATE TYPE NOTIFICATION_TYPE AS ENUM (
-    'invitation_notification',
-    'thread_notification',
-    'thread_comment_notification',
-    'task_notification',
-    'task_comment_notification',
-    'project_notification'
-);
 
 CREATE DOMAIN COLOR AS INTEGER;
 
@@ -79,15 +70,6 @@ CREATE TABLE task_group (
     project_id INTEGER NOT NULL,
     FOREIGN KEY (project_id) REFERENCES project ON DELETE CASCADE,
     UNIQUE (position, project_id) DEFERRABLE INITIALLY DEFERRED
-);
-
-CREATE TABLE project_invitation (
-    id SERIAL PRIMARY KEY,
-    expiration_date TIMESTAMP NOT NULL,
-    creator_id INTEGER NOT NULL,
-    project_id INTEGER NOT NULL,
-    FOREIGN KEY (creator_id) REFERENCES user_profile ON DELETE CASCADE,
-    FOREIGN KEY (project_id) REFERENCES project ON DELETE CASCADE
 );
 
 CREATE TABLE project_timeline_action (
@@ -158,28 +140,12 @@ CREATE TABLE thread_comment (
 
 CREATE TABLE notification (
     id SERIAL PRIMARY KEY,
-    type NOTIFICATION_TYPE NOT NULL,
+    type TEXT NOT NULL,
+    json TEXT NOT NULL,
     creation_date TODAY NOT NULL,
-    dismissed BOOLEAN NOT NULL DEFAULT FALSE,
-    notified_user_id INTEGER NOT NULL,
-    invitation_id INTEGER,
-    thread_id INTEGER,
-    thread_comment_id INTEGER,
-    task_id INTEGER,
-    task_comment_id INTEGER,
-    project_id INTEGER,
-    FOREIGN KEY (notified_user_id) REFERENCES user_profile ON DELETE CASCADE,
-    FOREIGN KEY (invitation_id) REFERENCES project_invitation ON DELETE CASCADE,
-    FOREIGN KEY (thread_id) REFERENCES thread ON DELETE CASCADE,
-    FOREIGN KEY (thread_comment_id) REFERENCES thread_comment ON DELETE CASCADE,
-    FOREIGN KEY (task_id) REFERENCES task ON DELETE CASCADE,
-    FOREIGN KEY (task_comment_id) REFERENCES task_comment ON DELETE CASCADE,
-    FOREIGN KEY (project_id) REFERENCES project ON DELETE CASCADE,
-    CHECK (
-        (invitation_id IS NOT NULL)::INTEGER + (thread_id IS NOT NULL)::INTEGER +
-        (thread_comment_id IS NOT NULL)::INTEGER + (task_id IS NOT NULL)::INTEGER +
-        (task_comment_id IS NOT NULL)::INTEGER + (project_id IS NOT NULL)::INTEGER = 1
-    )
+    read_date TIMESTAMP CHECK (read_date <= CURRENT_TIMESTAMP),
+    notifiable_id INTEGER NOT NULL,
+    FOREIGN KEY (notifiable_id) REFERENCES user_profile ON DELETE CASCADE
 );
 
 CREATE TABLE report (

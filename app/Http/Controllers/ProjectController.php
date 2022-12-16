@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Project;
+use App\Notifications\ProjectInvite;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 
 class ProjectController extends Controller {
@@ -45,7 +47,7 @@ class ProjectController extends Controller {
             : view('pages.project.forum.bare', ['project' => $project]);
     }
 
-    public function leaveProject(Request $request, Project $project){
+    public function leaveProject(Request $request, Project $project) {
         $user = Auth::user();
 
         $this->authorize('leaveProject', $project);
@@ -56,7 +58,15 @@ class ProjectController extends Controller {
             : redirect()->route('project.list');
     }
 
-    public function removeUser(Request $request, Project $project, User $user){
+    public function joinProject(Request $request, Project $project) {
+        $user = User::findOrFail($request->query('user'));
+
+        $project->users()->save($user);
+
+        return redirect()->route('project', ['project' => $project]);
+    }
+
+    public function removeUser(Request $request, Project $project, User $user) {
 
         $this->authorize('removeUser', [$project, $user]);
 
@@ -83,7 +93,7 @@ class ProjectController extends Controller {
 
         if (!empty($searchTerm))
             $userProjects = $userProjects->whereRaw('(fts_search @@ plainto_tsquery(\'english\', ?) OR project.name = ?)', [$searchTerm, $searchTerm])
-            ->orderByRaw('ts_rank(fts_search, plainto_tsquery(\'english\', ?)) DESC', [$searchTerm]);
+                ->orderByRaw('ts_rank(fts_search, plainto_tsquery(\'english\', ?)) DESC', [$searchTerm]);
 
         return $userProjects->paginate(10);
     }
@@ -94,7 +104,7 @@ class ProjectController extends Controller {
 
     public function createProject(Request $request) {
         $requestData = $request->all();
-        
+
         $this->projectCreationValidator($requestData)->validate();
 
         $this->authorize('create', Project::class);
@@ -144,7 +154,11 @@ class ProjectController extends Controller {
 
         $this->authorize('addUser', [$project, $user]);
 
-        $project->users()->save($user);
+        $url = URL::signedRoute('project.join', ['project' => $project, 'user' => $user]);
+
+        $user->notify(new ProjectInvite($url));
+
+        // $project->users()->save($user);
 
         return redirect()->route('project', ['project' => $project]);
     }
@@ -154,7 +168,7 @@ class ProjectController extends Controller {
         // handle auth
         $this->authorize('toggleFavorite', $project);
 
-        $member = $project->users()->get()->first(fn (User $user) => $user->id === Auth::user()->id);
+        $member = $project->users()->get()->first(fn(User $user) => $user->id === Auth::user()->id);
 
         $member->pivot->is_favorite = !$member->pivot->is_favorite;
         $member->pivot->save();
@@ -184,14 +198,14 @@ class ProjectController extends Controller {
 
         $project->archived = true;
         $project->save();
-        
+
         return $request->wantsJson()
-        ? new JsonResponse($project->toArray(), 200)
-        : redirect()->route('project.info', ['project' => $project]);
+            ? new JsonResponse($project->toArray(), 200)
+            : redirect()->route('project.info', ['project' => $project]);
     }
-    
+
     public function unarchive(Request $request, Project $project) {
-        
+
         $project->archived = false;
         $project->save();
 

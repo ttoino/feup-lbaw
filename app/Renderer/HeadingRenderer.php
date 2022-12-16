@@ -14,6 +14,10 @@ use League\CommonMark\Util\HtmlElement;
 use League\CommonMark\Xml\XmlNodeRendererInterface;
 
 final class HeadingRenderer implements NodeRendererInterface, XmlNodeRendererInterface {
+    public static function __set_state($an_array = null) {
+        return true;
+    }
+
     /**
      * @param Heading $node
      *

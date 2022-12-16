@@ -39,7 +39,7 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
 
     Route::prefix('/new')->group(function () {
         Route::get('', 'showProjectCreationPage')->name('.new');
-        Route::post('', 'createProject');
+        Route::post('', 'createProject')->name('.new-action');
     });
 
     // Project Search
@@ -54,6 +54,7 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
         Route::get('/timeline', 'showProjectTimeline')->name('.timeline');
         Route::get('/forum', 'showProjectForum')->name('.forum');
 
+        Route::get('/join', 'joinProject')->name('.join')->middleware('signed');
         Route::post('/leave', 'leaveProject')->name('.leave');
         Route::post('/delete', 'delete')->name('.delete');
         Route::post('/archive', 'archive')->name('.archive');
@@ -91,7 +92,7 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
         Route::prefix('/add')->name('.user')->controller('ProjectController')->group(function () {
             // FIXME: this is a separate page to demonstrate functionality in the prototype and will be changed later
             Route::get('', 'showAddUserPage')->name('.add');
-            Route::post('', 'addUser');
+            Route::post('', 'addUser')->name('.add-action');
         });
     });
 });
@@ -103,7 +104,7 @@ Route::prefix('/admin')->middleware(['auth', 'isAdmin'])->name('admin')->control
     Route::get('/projects', 'listProjects')->name('.projects');
     Route::prefix('/create')->name('.create.')->group(function () {
         Route::get('/user', 'showCreateUser')->name('user');
-        Route::post('/user', 'createUser');
+        Route::post('/user', 'createUser')->name('user-action');
     });
     Route::prefix('/reports')->name('.reports.')->group(function () {
         Route::get('/user/{user}', 'showUserReports')->name('user');

@@ -5,7 +5,7 @@
 SET search_path TO lbaw2265;
 
 -- IDX101
-CREATE INDEX notification_search_idx ON notification USING HASH (notified_user_id);
+CREATE INDEX notification_search_idx ON notification USING HASH (notifiable_id);
 
 -- IDX102
 CREATE INDEX task_group_project ON task_group (project_id, position);
