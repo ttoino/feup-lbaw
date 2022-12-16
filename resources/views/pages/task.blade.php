@@ -18,7 +18,7 @@
                 @foreach ($task->tags as $tag)
                     <li class="p-1 rounded border"
                         style="background: rgba({{ $tag->rgbColor() }}, 30%); cursor: pointer; --bs-border-color: rgb({{ $tag->rgbColor() }})">
-                        {{ $tag->title }}
+                        #{{ $tag->title }}
                     </li>
                 @endforeach
             </ul>

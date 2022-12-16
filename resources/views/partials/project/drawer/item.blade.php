@@ -6,7 +6,7 @@
 <a href="{{ route($route, ['project' => $project]) }}" @class([
     'nav-link',
     'nav-item',
-    'active' => $currentRouteName === 'project.thread'
+    'active' => str_starts_with($currentRouteName, 'project.thread')
         ? $route === 'project.forum'
         : $route === $currentRouteName,
 ])>

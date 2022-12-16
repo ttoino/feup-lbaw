@@ -36,7 +36,7 @@ if (chipSearchForm) {
         const chips = chipSearchForm.querySelectorAll<HTMLLIElement>("li");
     
         chips.forEach(chip => {
-            chip?.addEventListener("click", (e) => {
+            chip?.addEventListener("click", () => {
                 query.value = chip.textContent?.trim() ?? '';
 
                 chipSearchForm.submit();

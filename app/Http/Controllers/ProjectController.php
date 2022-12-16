@@ -58,7 +58,7 @@ class ProjectController extends Controller {
 
     public function removeUser(Request $request, Project $project, User $user){
 
-        $this->authorize('removeUser', $project);
+        $this->authorize('removeUser', [$project, $user]);
 
         $project->users()->detach($user);
         return $request->wantsJson()
