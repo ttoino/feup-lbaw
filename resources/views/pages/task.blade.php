@@ -12,14 +12,17 @@
         </div>
         <p>{{ $task->description }}</p>
 
-        <ul class="list-unstyled hstack gap-2">
-            @foreach ($task->tags as $tag)
-                <li class="p-1 rounded border"
-                    style="background: rgba({{ $tag->rgbColor() }}, 30%); --bs-border-color: rgb({{ $tag->rgbColor() }})">
-                    {{ $tag->title }}
-                </li>
-            @endforeach
-        </ul>
+        <form method="GET" action="{{ route('project.task.search', ['project' => $project]) }}" class="chip-search-form">
+            <ul class="list-unstyled hstack gap-2">
+                <input type="hidden" name="q">
+                @foreach ($task->tags as $tag)
+                    <li class="p-1 rounded border"
+                        style="background: rgba({{ $tag->rgbColor() }}, 30%); cursor: pointer; --bs-border-color: rgb({{ $tag->rgbColor() }})">
+                        {{ $tag->title }}
+                    </li>
+                @endforeach
+            </ul>
+        </form>
 
 
         @if (!$task->assignees->isEmpty())
@@ -32,17 +35,16 @@
         @endif
 
         <h3>Comments</h3>
-        <form method="POST" action="{{route('project.task.comment', ['project' => $project, 'task' => $task])}}">
+        <form method="POST" action="{{ route('project.task.comment', ['project' => $project, 'task' => $task]) }}">
             @csrf
             <div class="form-floating pb-3">
                 <input class="form-control" type="text" name="content" required>
                 <label for="content" class="form-label">New Comment</label>
-            </div>    
+            </div>
             <button class='btn btn-outline-secondary submit'>Post</button>
         </form>
 
         @if (!$task->comments->isEmpty())
-
             @include('partials.list', [
                 'paginator' => $task->comments,
                 'itemView' => 'partials.list-item.task-comment',

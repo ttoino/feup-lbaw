@@ -26,5 +26,21 @@ const attachCompletionHandler = (task: HTMLLIElement) => {
 };
 
 const tasks = document.querySelectorAll<HTMLLIElement>("li[data-task-id]");
-
 tasks.forEach(attachCompletionHandler);
+
+const chipSearchForm = document.querySelector<HTMLFormElement>(".chip-search-form");
+if (chipSearchForm) {
+    const query = chipSearchForm.querySelector<HTMLInputElement>("input[type=hidden]");
+
+    if (query) {
+        const chips = chipSearchForm.querySelectorAll<HTMLLIElement>("li");
+    
+        chips.forEach(chip => {
+            chip?.addEventListener("click", (e) => {
+                query.value = chip.textContent?.trim() ?? '';
+
+                chipSearchForm.submit();
+            });
+        });
+    }
+}

@@ -10,8 +10,8 @@
 <aside class="offcanvas-lg offcanvas-start border-end p-2 flex-shrink-0" style="width: 270px" id="drawer">
     <nav class="nav nav-pills flex-column">
         <div class="dropdown nav-item">
-            <a class="nav-link link-dark dropdown-toggle text-wrap" data-bs-toggle="dropdown" href="#" role="button"
-                aria-expanded="false">
+            <a class="nav-link link-dark dropdown-toggle text-wrap" data-bs-toggle="dropdown" href="#"
+                role="button" aria-expanded="false">
                 {{ $project->name }}
             </a>
             <ul class="dropdown-menu w-100 shadow-sm">
@@ -54,8 +54,7 @@
         @endforeach
 
         @if (Auth::user()->projects->contains($project))
-            <a type="button" data-bs-toggle="modal" data-bs-target="#taskCreationModal"
-                @class(['nav-link', 'nav-item'])>
+            <a type="button" data-bs-toggle="modal" data-bs-target="#taskCreationModal" @class(['nav-link', 'nav-item'])>
                 <i @class(['bi', 'bi-plus'])></i> Create Task
             </a>
         @endif

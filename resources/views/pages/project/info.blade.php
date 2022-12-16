@@ -10,17 +10,15 @@
                 <p>{{ $project->description }}</p>
             </section>
             <section class="flex-fill d-flex flex-row gap-3">
-                @php
-                    use Carbon\Carbon;
-                    
-                    $creation_date = Carbon::parse($project->creation_date);
-                    $last_modification_date = Carbon::parse($project->last_modification_date);
-                @endphp
-                <p><i class="bi bi-calendar mx-1"></i>Created {{ $creation_date->diffForHumans(['aUnit' => true]) }}
+                <p><i class="bi bi-calendar mx-1"></i>Created @include('partials.datediff', [
+                    'date' => $project->creation_date,
+                ])
                 </p>
                 @if ($project->last_modification_date !== null)
                     <span>-</span>
-                    <p>Last edited {{ $last_modification_date->diffForHumans(['aUnit' => true]) }}</p>
+                    <p>Last edited @include('partials.datediff', [
+                        'date' => $project->last_modification_date,
+                    ])</p>
                 @endif
             </section>
             <section class="flex-fill d-flex flex-row gap-3" style="max-width: 50%">
