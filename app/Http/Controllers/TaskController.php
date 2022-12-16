@@ -132,7 +132,9 @@ class TaskController extends Controller {
 
         $this->authorize('view', $task);
 
-        return view('pages.task', ['task' => $task, 'project' => $project]);
+        return $request->expectsJson()
+            ? new JsonResponse($task->toArray())
+            : view('pages.task', ['task' => $task, 'project' => $project]);
     }
 
     public function edit(Request $request, Project $project, Task $task) {

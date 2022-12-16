@@ -151,6 +151,9 @@ Route::prefix('/api')->name('api')->group(function () {
 
     Route::prefix('/task')->name('.task')->controller('TaskController')->group(function () {
         Route::prefix('/{task}')->group(function () {
+
+            Route::get('/', 'show')->name('');
+
             Route::put('/complete', 'complete')->name('.complete');
             Route::post('/reposition', 'repositionTask')->name('.reposition');
         });
