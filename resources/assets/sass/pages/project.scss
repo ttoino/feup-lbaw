@@ -1,0 +1,34 @@
+#project-drawer {
+    @extend .offcanvas-lg,
+        .offcanvas-start,
+        .border-end,
+        .p-2,
+        .flex-shrink-0,
+        .text-break;
+
+    width: map-get($map: $grid-breakpoints, $key: "sm") / 2;
+
+    nav {
+        @extend .nav, .nav-pills, .flex-column;
+
+        .dropdown {
+            @extend .nav-item;
+
+            > a {
+                @extend .nav-link, .link-dark, .dropdown-toggle, .text-wrap;
+            }
+
+            .dropdown-menu {
+                @extend .w-100, .shadow-sm;
+
+                a {
+                    @extend .dropdown-item, .text-truncate;
+                }
+            }
+        }
+
+        > a {
+            @extend .nav-link, .nav-item;
+        }
+    }
+}

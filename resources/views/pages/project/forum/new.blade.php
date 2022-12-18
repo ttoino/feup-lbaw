@@ -21,7 +21,8 @@
         <textarea placeholder="" style="height: 240px" @class(['form-control', 'is-invalid' => $errors->has('content')])
             aria-describedby="content-feedback" id="content" name="content"
             minlength=6 maxlength=512 required></textarea>
-        <a href="https://www.markdownguide.org/basic-syntax/"><i class="bi bi-markdown"></i> Markdown is supported</a>
+        <a href="https://www.markdownguide.org/basic-syntax/"><i
+                class="bi bi-markdown"></i> Markdown is supported</a>
         <label for="content" class="form-label">Content</label>
         <div class="invalid-feedback" id="content-feedback">
             @error('content')
@@ -32,7 +33,7 @@
         </div>
     </div>
 
-    <button class="btn btn-primary submit">Create Thread</button>
+    <button class="btn btn-primary" type="submit">Create Thread</button>
 @endsection
 
 @section('forum-content')

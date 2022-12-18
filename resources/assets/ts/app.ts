@@ -11,6 +11,8 @@ import "./forms";
 import "./tooltips";
 import "./project";
 import "./user";
-import "./board";
+
+if (window.location.pathname.match(/project\/\d+\/(board|task)/))
+    import("./pages/board");
 
 import "./components/imageinput";

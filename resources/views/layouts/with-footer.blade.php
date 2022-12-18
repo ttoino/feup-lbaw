@@ -3,12 +3,12 @@
 @section('body')
     @yield('above-footer')
 
-    <footer class="bd-footer bg-light">
-        <nav class="nav justify-content-center">
-            <a class="nav-link" href="{{ url('about') }}">About us</a>
-            <a class="nav-link" href="{{ url('faq') }}">FAQ</a>
-            <a class="nav-link" href="{{ url('contacts') }}">Contacts</a>
-            <a class="nav-link" href="{{ url('services') }}">Services</a>
+    <footer id="footer">
+        <nav>
+            <a href="{{ url('about') }}">About us</a>
+            <a href="{{ url('faq') }}">FAQ</a>
+            <a href="{{ url('contacts') }}">Contacts</a>
+            <a href="{{ url('services') }}">Services</a>
         </nav>
     </footer>
 @endsection

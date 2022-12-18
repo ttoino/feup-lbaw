@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Spatie\LaravelMarkdown\MarkdownRenderer;
 
 class TaskController extends Controller {
 
@@ -33,7 +34,7 @@ class TaskController extends Controller {
 
         $this->taskCreationValidator($requestData)->validate();
 
-        $task_group = TaskGroup::findOrFail($requestData['task_group_id']); 
+        $task_group = TaskGroup::findOrFail($requestData['task_group_id']);
 
         $this->authorize('create', [Task::class, $task_group]);
 
@@ -104,8 +105,8 @@ class TaskController extends Controller {
 
         if (!empty($searchTerm))
             $projectTasks = $projectTasks->whereRaw('(task.fts_search @@ plainto_tsquery(\'english\', ?) OR task.name = ?)', [$searchTerm, $searchTerm])
-            ->orderByRaw('ts_rank(task.fts_search, plainto_tsquery(\'english\', ?)) DESC', [$searchTerm]);
-        
+                ->orderByRaw('ts_rank(task.fts_search, plainto_tsquery(\'english\', ?)) DESC', [$searchTerm]);
+
         return $projectTasks->paginate(10);
     }
 
@@ -125,7 +126,7 @@ class TaskController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request, Project $project, Task $task) {
-        
+
         if ($project->id !== $task->project->id) {
             abort(400, 'Task with id ' . $task->id . ' does not belong to project with id ' . $project->id);
         }
@@ -139,10 +140,12 @@ class TaskController extends Controller {
 
     // TODO: change this name
     public function showAPI(Request $request, Task $task) {
-        
         $this->authorize('view', $task);
 
-        return new JsonResponse($task->load('comments'));
+        $task->load(['comments' => ['author'], 'tags', 'assignees']);
+        $task->description = app(MarkdownRenderer::class)->toHtml($task->description ?? "");
+
+        return new JsonResponse($task);
     }
 
     public function edit(Request $request, Project $project, Task $task) {
@@ -166,10 +169,10 @@ class TaskController extends Controller {
         if (($data['task_group_id'] ??= null) !== null) {
             $task->task_group_id = $data['task_group_id'];
         }
-            
+
         if (($data['position'] ??= null) !== null)
             $task->position = $data['position'];
-            
+
         if (($data['description'] ??= null) !== null)
             $task->description = $data['description'];
 
@@ -178,7 +181,7 @@ class TaskController extends Controller {
 
         if ($task->isDirty())
             $task->edit_date = date('Y-m-d');
-        
+
         $task->save();
 
         return $task;
@@ -188,7 +191,7 @@ class TaskController extends Controller {
         return Validator::make($data, [
             'name' => 'string|min:4|max:255',
             'description' => 'string|min:6|max:512',
-            'task_group_id' => 'integer', 
+            'task_group_id' => 'integer',
             'position' => 'integer|min:0',
         ]);
     }
@@ -216,7 +219,7 @@ class TaskController extends Controller {
 
         $task_comment->content = $data['content'];
         $task_comment->author_id = Auth::user()->id;
-        $task_comment->task_id = $task->id; 
+        $task_comment->task_id = $task->id;
         $task_comment->save();
 
         return $request->wantsJson()

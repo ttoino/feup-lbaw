@@ -1,20 +1,22 @@
 @extends('layouts.with-footer')
 
 @section('above-footer')
-    <header class="navbar navbar-expand navbar-dark sticky-top bg-primary shadow">
+    <header id="navbar">
         <div class="container-fluid">
             @stack('navbar-left')
 
-            <a class="navbar-brand d-flex align-items-center gap-2"
-                href="{{ route('home') }}">
+            <a class="navbar-brand" href="{{ route('home') }}">
                 <img src="{{ asset('logo.svg') }}" alt="Atrellado logo" width="40"
                     height="40">
+                {{-- <h1> --}}
                 {{ config('app.name', 'Laravel') }}
+                {{-- </h1> --}}
             </a>
 
             @auth
                 <form method="GET" action="{{ route('project.search') }}"
-                    class="input-group ms-auto" role="search" style="max-width: 360px">
+                    class="input-group ms-auto d-none d-sm-flex" role="search"
+                    style="max-width: 360px">
                     <input class="form-control" name="q" type="search"
                         placeholder="Search projects" aria-label="Search"
                         value="{{ Request::route()->getName() === 'project.search' ? Request::query('q', '') : '' }}">
@@ -22,7 +24,14 @@
                             class="bi bi-search"></i></button>
                 </form>
 
-                <div class="dropdown ms-3">
+                <button class="btn btn-outline-light d-block d-sm-none ms-auto"
+                    type="button" data-bs-toggle="collapse"
+                    data-bs-target="#searchbar-collapse" aria-controls="drawer"
+                    aria-expanded="false" aria-label="Toggle project drawer">
+                    <i class="bi bi-search"></i>
+                </button>
+
+                <div class="dropdown">
                     <a href="#" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         <img width="40" height="40" alt="Profile picture"
@@ -44,10 +53,20 @@
                         </a>
                     </nav>
                 </div>
+
+                <form method="GET" action="{{ route('project.search') }}"
+                    id="searchbar-collapse" role="search"
+                    class="input-group collapse navbar-collapse d-flex d-sm-none">
+                    <input class="form-control" name="q" type="search"
+                        placeholder="Search projects" aria-label="Search"
+                        value="{{ Request::route()->getName() === 'project.search' ? Request::query('q', '') : '' }}">
+                    <button class="btn btn-outline-light" type="submit"><i
+                            class="bi bi-search"></i></button>
+                </form>
             @endauth
 
             @guest
-                <nav class="navbar-nav ms-3">
+                <nav class="navbar-nav">
                     <a href="{{ route('login') }}" class="nav-link">Login</a>
                     <a href="{{ route('register') }}" class="nav-link">Register</a>
                 </nav>

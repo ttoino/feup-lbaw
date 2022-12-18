@@ -12,3 +12,5 @@ export const repositionTask = (
         task_group_id,
         position,
     });
+
+export const getTask = (taskId: string) => apiFetch(`/api/task/${taskId}`);

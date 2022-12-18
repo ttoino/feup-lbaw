@@ -105,3 +105,93 @@
         }
     }
 }
+
+.project-board-main {
+    @extend .position-relative, .overflow-auto;
+}
+
+.project-board {
+    @extend .d-flex, .flex-row, .gap-3, .p-3, .align-items-start;
+
+    flex: 1.5;
+    overflow-x: auto;
+
+    @supports selector(:has(#new-task-button)) {
+        &:has(#new-task-button) {
+            @include media-breakpoint-down(sm) {
+                padding-bottom: $btn-font-size * $btn-line-height +
+                    $btn-padding-y * 2 + $spacer;
+            }
+        }
+    }
+
+    @supports not selector(:has(#new-task-button)) {
+        @include media-breakpoint-down(sm) {
+            padding-bottom: $btn-font-size * $btn-line-height + $btn-padding-y *
+                2 + $spacer;
+        }
+    }
+}
+
+#task-offcanvas,
+#new-task-offcanvas {
+    @extend .offcanvas, .offcanvas-end;
+
+    flex: 1;
+    width: 100%;
+    max-width: map-get($map: $grid-breakpoints, $key: "lg");
+}
+
+#new-task-offcanvas {
+    form {
+        @extend .vstack, .p-3, .pt-0, .gap-3;
+    }
+}
+
+#task-offcanvas {
+    @extend .vstack, .gap-3, .p-3;
+
+    header {
+        @extend .d-flex, .align-items-start, .justify-content-between, .gap-2;
+    }
+
+    h3 {
+        @extend .m-0;
+    }
+
+    #task-description {
+        :last-child {
+            @extend .m-0;
+        }
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    .chip-search-form {
+        display: contents;
+
+        ul[data-length="0"] {
+            display: none;
+        }
+    }
+
+    #task-assignees,
+    #task-comments {
+        display: contents;
+
+        &[data-length="0"] {
+            display: none;
+        }
+    }
+}
+
+#new-task-button {
+    @extend .btn, .btn-primary, .m-2;
+
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: $zindex-fixed;
+}
