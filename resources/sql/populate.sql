@@ -200,23 +200,6 @@ VALUES
     '2022-03-28', 5, 2
   );
 
-INSERT INTO project_invitation(
-  expiration_date, creator_id, project_id
-) 
-VALUES 
-  ('2021-09-27', 11, 1), 
-  ('2021-09-03', 10, 2), 
-  ('2022-01-15', 4, 3), 
-  ('2022-03-04', 4, 3), 
-  ('2021-07-09', 6, 3), 
-  ('2022-04-28', 2, 2), 
-  ('2022-03-19', 11, 2), 
-  ('2021-09-21', 1, 1), 
-  ('2021-10-09', 7, 2), 
-  ('2022-07-08', 1, 1), 
-  ('2022-08-19', 3, 1), 
-  ('2021-10-24', 11, 1);
-
 INSERT INTO task(
   name, description, creation_date, 
   edit_date, state, creator_id, position, 
