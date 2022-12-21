@@ -6,7 +6,10 @@
     @isset($group)
         <header>
             <i class="grip" style="cursor: grab"></i>
-            <p contenteditable>{{ $group->name }}</p>
+
+            <form action="" method="post">
+                <textarea class="auto-resize" autocomplete="off">{{ $group->name }}</textarea>
+            </form>
         </header>
 
         <ul data-task-group-id="{{ $group->id }}">
@@ -18,8 +21,8 @@
             @csrf
             <div class="input-group">
                 <input aria-label="Create Task Name" aria-describedby="task-name"
-                    class="form-control" id="name" type="text" name="name"
-                    placeholder="Create Task" minlength=4 required>
+                    class="form-control" id="name" type="text"
+                    name="name" placeholder="Create Task" minlength=4 required>
                 <button class="btn btn-primary" type="submit"><i
                         class="bi bi-plus"></i></button>
             </div>

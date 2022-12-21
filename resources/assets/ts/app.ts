@@ -7,7 +7,6 @@
 import "bootstrap";
 
 import "./task";
-import "./forms";
 import "./tooltips";
 import "./project";
 import "./user";
@@ -15,4 +14,8 @@ import "./user";
 if (window.location.pathname.match(/project\/\d+\/(board|task)/))
     import("./pages/board");
 
-import "./components/imageinput";
+// Enhancements
+import "./enhancements/autoresize";
+import "./enhancements/form";
+import "./enhancements/imageinput";
+import "./enhancements/passwordinput";

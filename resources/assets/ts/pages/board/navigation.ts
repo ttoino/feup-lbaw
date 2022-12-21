@@ -1,6 +1,7 @@
 import { getTask } from "../../api/task";
 import { Offcanvas } from "bootstrap";
 import { Task } from "types/task";
+import { ajaxNavigation, navigation } from "../../navigation";
 
 const projectId = document.location.pathname.split("/")[2];
 
@@ -8,41 +9,41 @@ const taskOffcanvasEl = document.querySelector("#task-offcanvas");
 const taskOffcanvas =
     taskOffcanvasEl && Offcanvas.getOrCreateInstance(taskOffcanvasEl);
 
-taskOffcanvasEl?.addEventListener("hide.bs.offcanvas", (e) => {
-    if (history.state)
-        history.pushState(undefined, "board", `/project/${projectId}/board`);
-});
+const showBoard = navigation(
+    "project.board",
+    `/project/${projectId}/board`,
+    () => taskOffcanvas?.hide()
+);
 
-window.addEventListener("popstate", (e) => {
-    if (e.state) showTask(e.state);
-    else showBoard();
+taskOffcanvasEl?.addEventListener("hide.bs.offcanvas", (e) => {
+    if (history.state.name != "project.board") showBoard();
 });
 
 const taskNameEl = document.querySelector<HTMLElement>("#task-name");
 const taskDescriptionEl =
     document.querySelector<HTMLElement>("#task-description");
 
-const showTask = (task?: Task) => {
-    taskOffcanvas?.show();
+const showTask = ajaxNavigation(
+    "project.task",
+    getTask,
+    ({ name, description }: Task) => {
+        taskOffcanvas?.show();
+        taskOffcanvasEl?.classList.remove("loading");
 
-    if (task) {
-        if (!history.state)
-            history.pushState(
-                task,
-                "task",
-                `/project/${projectId}/task/${task.id}`
-            );
-
-        if (taskNameEl) taskNameEl.innerText = task.name;
-        if (taskDescriptionEl) taskDescriptionEl.innerHTML = task.description;
+        taskNameEl && (taskNameEl.innerText = name);
+        taskDescriptionEl && (taskDescriptionEl.innerHTML = description);
+    },
+    (e) => {
+        taskOffcanvas?.show();
+        taskOffcanvasEl?.classList.remove("loading");
+    },
+    () => {
+        taskOffcanvas?.show();
+        taskOffcanvasEl?.classList.add("loading");
     }
-};
+);
 
-const showBoard = () => {
-    taskOffcanvas?.hide();
-};
-
-const tasks = document.querySelectorAll<HTMLAnchorElement>("[data-task-id]");
+const tasks = document.querySelectorAll<HTMLElement>("[data-task-id]");
 
 tasks.forEach((task) => {
     const { taskId } = task.dataset;
@@ -51,8 +52,6 @@ tasks.forEach((task) => {
     a?.addEventListener("click", (e) => {
         e.preventDefault();
 
-        const task = getTask(taskId ?? "");
-        showTask();
-        task.then(async (task) => showTask(await task.json()));
+        showTask(`/project/${projectId}/task/${taskId}`, taskId ?? "");
     });
 });

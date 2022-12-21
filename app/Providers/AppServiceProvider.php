@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider {
         Paginator::useBootstrapFive();
 
         Blade::directive('datediff', fn($expression) =>
-            "<?= \Carbon\Carbon::parse($expression)->diffForHumans(['aUnit' => true]) ?>"
+            "<?= \Carbon\Carbon::parse($expression)->diffForHumans(['aUnit' => true, 'short' => true, 'syntax' => \Carbon\CarbonInterface::DIFF_ABSOLUTE]) ?>"
         );
 
         Blade::directive('date', fn($expression) =>

@@ -49,7 +49,7 @@ $primary: #6f42c1;
 // @import "~bootstrap/scss/carousel";
 // @import "~bootstrap/scss/spinners";
 @import "~bootstrap/scss/offcanvas";
-// @import "~bootstrap/scss/placeholders";
+@import "~bootstrap/scss/placeholders";
 @import "~bootstrap/scss/helpers";
 
 // 7. Optionally include utilities API last to generate classes based on the Sass map in `_utilities.scss`
@@ -59,6 +59,8 @@ $primary: #6f42c1;
 @import "~bootstrap-icons/font/bootstrap-icons";
 
 @import "common";
+
+@import "enhancements/passwordinput";
 
 @import "pages/board";
 @import "pages/forum";

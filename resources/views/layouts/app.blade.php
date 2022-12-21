@@ -66,7 +66,7 @@
             @endauth
 
             @guest
-                <nav class="navbar-nav">
+                <nav class="navbar-nav flex-row">
                     <a href="{{ route('login') }}" class="nav-link">Login</a>
                     <a href="{{ route('register') }}" class="nav-link">Register</a>
                 </nav>

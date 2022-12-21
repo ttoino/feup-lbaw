@@ -18,7 +18,7 @@ export const apiFetch = (
             ...options?.headers,
             "X-CSRF-TOKEN": token,
             "Content-Type": "application/json",
-            "Accept": "application/json"
+            Accept: "application/json",
         },
     });
 
@@ -41,3 +41,27 @@ export const tryRequest = async <Params extends Parameters<any>>(
         showToast(error);
     }
 };
+
+export const ajaxNavigation =
+    <Params extends Parameters<any>>(
+        fn: (...params: Params) => ReturnType<typeof apiFetch>,
+        ok: (response: any) => any,
+        notOk: (response: any) => any,
+        loading: () => any
+    ): ((newUrl: string, ...params: Params) => void) =>
+    (newUrl: string, ...params) => {
+        const r = fn(...params);
+
+        r.then(async (r) => {
+            history.replaceState(r, "");
+            ok(await r.json());
+        });
+
+        r.catch(async (r) => {
+            history.replaceState(r, "");
+            notOk(await r.json());
+        });
+
+        history.pushState(undefined, "", newUrl);
+        loading();
+    };
