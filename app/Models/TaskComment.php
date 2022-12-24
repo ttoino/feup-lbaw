@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TaskComment extends Model {
+    use HasFactory;
     const CREATED_AT = 'creation_date';
     const UPDATED_AT = 'edit_date';
 
@@ -27,7 +29,7 @@ class TaskComment extends Model {
     public function task() {
         return $this->belongsTo(
             Task::class,
-            'task'
+            'task_id'
         );
     }
 

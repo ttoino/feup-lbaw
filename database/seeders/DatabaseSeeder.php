@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder {
                 TagSeeder::class,
                 TaskGroupSeeder::class,
                 TaskSeeder::class,
+                TaskCommentSeeder::class,
                 ThreadSeeder::class,
                 ThreadCommentSeeder::class,
             ]);
