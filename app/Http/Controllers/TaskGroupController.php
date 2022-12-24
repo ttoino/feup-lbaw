@@ -57,27 +57,27 @@ class TaskGroupController extends Controller {
         ]);
     }
 
-    public function repositionTaskGroup(Request $request, TaskGroup $taskGroup) {
+    public function update(Request $request, TaskGroup $taskGroup) {
 
         $requestData = $request->all();
 
-        $this->taskGroupRepositionValidator($requestData)->validate();
+        $this->taskGroupUpdateValidator($requestData)->validate();
 
-        $this->authorize('reposition', $taskGroup);
         $this->authorize('edit', $taskGroup->project);
+        $this->authorize('update', $taskGroup);
 
-        $taskGroup = $this->reposition($taskGroup, $requestData);
+        $taskGroup = $this->updateTaskGroup($taskGroup, $requestData);
 
         return new JsonResponse($taskGroup, 200);
     }
 
-    protected function taskGroupRepositionValidator(array $data) {
+    protected function taskGroupUpdateValidator(array $data) {
         return Validator::make($data, [
             'position' => 'integer|min:0',
         ]);
     }
 
-    public function reposition(TaskGroup $taskGroup, array $data) {
+    public function updateTaskGroup(TaskGroup $taskGroup, array $data) {
 
         if (($data['position'] ??= null) !== null)
             $taskGroup->position = $data['position'];

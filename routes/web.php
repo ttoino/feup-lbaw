@@ -158,13 +158,13 @@ Route::prefix('/api')->name('api')->group(function () {
             Route::get('', 'showAPI')->name('');
 
             Route::put('/complete', 'complete')->name('.complete');
-            Route::post('/reposition', 'repositionTask')->name('.reposition');
+            Route::post('/reposition', 'update')->name('.reposition');
         });
     });
 
     Route::prefix('/task-group')->name('.task-group')->controller('TaskGroupController')->group(function () {
         Route::prefix('/{taskGroup}')->group(function () {
-            Route::post('/reposition', 'repositionTaskGroup')->name('.reposition');
+            Route::post('/reposition', 'update')->name('.reposition');
         });
     });
 });

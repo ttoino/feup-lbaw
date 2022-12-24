@@ -142,9 +142,8 @@ class TaskController extends Controller {
 
     public function editTask(Task $task, array $data) {
 
-        if (($data['task_group_id'] ??= null) !== null) {
+        if (($data['task_group_id'] ??= null) !== null)
             $task->task_group_id = $data['task_group_id'];
-        }
 
         if (($data['position'] ??= null) !== null)
             $task->position = $data['position'];
@@ -171,20 +170,6 @@ class TaskController extends Controller {
             'task_group_id' => 'integer',
             'position' => 'integer|min:0',
         ]);
-    }
-
-    public function repositionTask(Request $request, Task $task) {
-
-        $requestData = $request->all();
-
-        $this->editTaskValidator($requestData)->validate();
-
-        $this->authorize('edit', $task);
-        $this->authorize('edit', $task->project);
-
-        $task = $this->editTask($task, $requestData);
-
-        return new JsonResponse($task->toArray(), 200);
     }
 
     public function createComment(Request $request, Project $project, Task $task) {

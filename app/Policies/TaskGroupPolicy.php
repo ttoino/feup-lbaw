@@ -41,7 +41,7 @@ class TaskGroupPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function create(User $user, Project $project) {
-        return $user->projects->contains($project);
+        return $project->users->contains($user);
     }
 
     /**
@@ -51,9 +51,8 @@ class TaskGroupPolicy
      * @param  \App\Models\TaskGroup  $taskGroup
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, TaskGroup $taskGroup)
-    {
-        //
+    public function update(User $user, TaskGroup $taskGroup) {
+        return $taskGroup->project->users->contains($user);
     }
 
     /**
@@ -90,9 +89,5 @@ class TaskGroupPolicy
     public function forceDelete(User $user, TaskGroup $taskGroup)
     {
         //
-    }
-
-    public function reposition(User $user, TaskGroup $taskGroup) {
-        return $taskGroup->project()->get()->first()->users->contains($user);
     }
 }
