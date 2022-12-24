@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ProjectController extends Controller {
 
-    public function showProject(Request $request, Project $project) {
+    public function showProjectBoard(Request $request, Project $project) {
 
         $this->authorize('view', $project);
 
@@ -98,22 +98,41 @@ class ProjectController extends Controller {
         return $userProjects->paginate(10);
     }
 
-    public function showProjectCreationPage() {
+    public function create() {
         return view('pages.project.new');
     }
 
-    public function createProject(Request $request) {
+    public function store(Request $request) {
         $requestData = $request->all();
 
         $this->projectCreationValidator($requestData)->validate();
 
         $this->authorize('create', Project::class);
 
-        $project = $this->create($requestData);
+        $project = $this->createProject($requestData);
 
         return $request->wantsJson()
             ? new JsonResponse($project->toArray(), 200)
             : redirect()->route('project', ['project' => $project]);
+    }
+
+
+    /**
+     * Creates a new project.
+     *
+     * @return Project The project created.
+     */
+    public function createProject(array $data) {
+
+        $project = new Project();
+
+        $project->name = $data['name'];
+        $project->archived = FALSE;
+        $project->description = $data['description'];
+        $project->coordinator_id = Auth::user()->id;
+        $project->save();
+
+        return $project;
     }
 
     /**
@@ -134,7 +153,7 @@ class ProjectController extends Controller {
      *
      * @return Response
      */
-    public function listUserProjects() {
+    public function index() {
         $this->authorize('viewAny', Project::class);
 
         $projects = Auth::user()->projects()->paginate(10);
@@ -176,24 +195,6 @@ class ProjectController extends Controller {
         return new JsonResponse(['isFavorite' => $member->pivot->is_favorite], 200);
     }
 
-    /**
-     * Creates a new project.
-     *
-     * @return Project The project created.
-     */
-    public function create(array $data) {
-
-        $project = new Project();
-
-        $project->name = $data['name'];
-        $project->archived = FALSE;
-        $project->description = $data['description'];
-        $project->coordinator_id = Auth::user()->id;
-        $project->save();
-
-        return $project;
-    }
-
     public function archive(Request $request, Project $project) {
 
         $project->archived = true;
@@ -214,7 +215,7 @@ class ProjectController extends Controller {
             : redirect()->route('project.info', ['project' => $project]);
     }
 
-    public function delete(Request $request, Project $project) {
+    public function destroy(Request $request, Project $project) {
 
         $this->authorize('delete', $project);
         $project->delete();

@@ -17,54 +17,43 @@ use Illuminate\Support\Facades\Storage;
 class UserController extends Controller {
 
     /**
-     * Shows the user profile of the user identified by the argument id
+     * Shows the user profile of the user identified by the argument id.
      * 
      * @param int $id the id of the user to show
      */
-    public function show(User $user) {
+    public function show(Request $request, User $user) {
         $this->authorize('view', $user);
 
-        return view('pages.profile', ['user' => $user]);
-    }
-
-    /**
-     * Shows users by project.
-     *
-     * @return Response
-     */
-    public function list($id) {
-        if (!Auth::check())
-            return redirect('/login');
-        //$this->authorize('list', User::class);
-        $users = Project::findOrFail($id)->users()->orderBy('id')->get();
-        return view('', ['users' => $users]);
+        return $request->wantsJson()
+            ? new JsonResponse($user)
+            : view('pages.profile', ['user' => $user]);
     }
 
     /**
      * Register a new user.
+     * This endpoint is API only. 
      *
      * @return User The user registered.
      */
-    public function create(Request $request) {
+    public function store(Request $request) {
 
         $requestData = $request->all();
 
         $this->userCreationValidator($requestData)->validate();
 
-        $user = $this->createProfile($requestData);
+        $user = $this->storeUser($requestData);
 
-        return $request->wantsJson()
-            ? new JsonResponse($user->toArray(), 201)
-            : redirect()->route('user.profile', ['id' => $user->id]);
+        return new JsonResponse($user->toArray(), 201);
     }
 
-    public function createUser(array $data) {
+    public function storeUser(array $data) {
         $user = new User();
 
         $user->name = $data['name'];
         $user->email = $data['email'];
         $user->password = $data['password'];
-        $user->is_blocked = FALSE;
+        $user->is_blocked = $data['is_blocked'] ?? FALSE;
+        $user->is_admin = $data['is_admin'] ?? FALSE;
         $user->save();
 
         return $user;
@@ -79,11 +68,13 @@ class UserController extends Controller {
                 'confirmed',
                 Password::min(8)
                     ->letters()
-            ]
+            ],
+            'is_blocked' => 'boolean',
+            'is_admin' => 'boolean'
         ]);
     }
 
-    public function edit(Request $request, User $user) {
+    public function update(Request $request, User $user) {
 
         $requestData = $request->all();
 
@@ -91,14 +82,14 @@ class UserController extends Controller {
 
         $this->authorize('update', $user);
 
-        $user = $this->editUser($user, $requestData);
+        $user = $this->updateUser($user, $requestData);
 
         return $request->wantsJson()
             ? new JsonResponse($user->toArray(), 201)
             : redirect()->route('user.profile', ['user' => $user]);
     }
 
-    public function editUser(User $user, array $data) {
+    public function updateUser(User $user, array $data) {
         if ($data['name'] !== null)
             $user->name = $data['name'];
 
@@ -127,7 +118,7 @@ class UserController extends Controller {
       ]);
     }
 
-    public function showProfileEditPage($id) {
+    public function edit($id) {
         $user = User::findOrFail($id);
 
         $this->authorize('showProfileEditPage', $user);
@@ -135,8 +126,9 @@ class UserController extends Controller {
         return view('pages.profile.edit', ['user' => $user]);
     }
 
-    public function delete(Request $request, User $user) {
+    public function destroy(Request $request, User $user) {
         $this->authorize('delete', $user);
+        
         $user->delete();
 
         return $request->wantsJson()

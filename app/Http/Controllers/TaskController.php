@@ -15,21 +15,7 @@ use Spatie\LaravelMarkdown\MarkdownRenderer;
 
 class TaskController extends Controller {
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index() {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function createTask(Request $request, Project $project) {
+    public function store(Request $request, Project $project) {
         $requestData = $request->all();
 
         $this->taskCreationValidator($requestData)->validate();
@@ -38,14 +24,14 @@ class TaskController extends Controller {
 
         $this->authorize('create', [Task::class, $task_group]);
 
-        $task = $this->create($requestData);
+        $task = $this->createTask($requestData);
 
         return $request->wantsJson()
             ? new JsonResponse([$task], 201)
             : redirect()->route('project', ['project' => $project]);
     }
 
-    public function create(array $data) {
+    public function createTask(array $data) {
 
         $task = new Task();
 
@@ -59,7 +45,7 @@ class TaskController extends Controller {
     }
 
     /**
-     * Get a validator for an incoming project creation request.
+     * Get a validator for an incoming task creation request.
      *
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
@@ -75,7 +61,7 @@ class TaskController extends Controller {
     /**
      * Mark a task as completed. Used by the Web API.
      * 
-     * @param int $id the task id
+     * @param Task $task the task to complete
      * @return \Illuminate\Http\JsonResponse the JSON response to the API
      */
     public function complete(Task $task) {
@@ -111,22 +97,13 @@ class TaskController extends Controller {
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request) {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request, Project $project, Task $task) {
 
+        // TODO: yuck
         if ($project->id !== $task->project->id) {
             abort(400, 'Task with id ' . $task->id . ' does not belong to project with id ' . $project->id);
         }
@@ -138,7 +115,6 @@ class TaskController extends Controller {
             : view('pages.task', ['task' => $task, 'project' => $project]);
     }
 
-    // TODO: change this name
     public function showAPI(Request $request, Task $task) {
         $this->authorize('view', $task);
 
@@ -148,7 +124,7 @@ class TaskController extends Controller {
         return new JsonResponse($task);
     }
 
-    public function edit(Request $request, Project $project, Task $task) {
+    public function update(Request $request, Project $project, Task $task) {
 
         $requestData = $request->all();
 
@@ -179,6 +155,7 @@ class TaskController extends Controller {
         if (($data['name'] ??= null) !== null)
             $task->name = $data['name'];
 
+        // need to do this since tasks don't have a creation date (yet)
         if ($task->isDirty())
             $task->edit_date = date('Y-m-d');
 
@@ -225,17 +202,6 @@ class TaskController extends Controller {
         return $request->wantsJson()
             ? new JsonResponse([$task_comment], 201)
             : redirect()->route('project.task.info', ['project' => $project, 'task' => $task]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Task $task) {
-        //
     }
 
     /**

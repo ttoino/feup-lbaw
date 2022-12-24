@@ -27,19 +27,19 @@ Route::prefix('/user')->name('user.')->controller('UserController')->group(funct
         Route::get('', 'show')->name('profile');
 
         Route::prefix('/edit')->group(function () {
-            Route::get('', 'showProfileEditPage')->name('edit');
-            Route::post('', 'edit');
+            Route::get('', 'edit')->name('edit');
+            Route::post('', 'update')->name('edit-action');
         });
     });
 });
 
 // Project 
 Route::prefix('/project')->middleware('auth')->name('project')->controller('ProjectController')->group(function () {
-    Route::get('', 'listUserProjects')->name('.list');
+    Route::get('', 'index')->name('.list');
 
     Route::prefix('/new')->group(function () {
-        Route::get('', 'showProjectCreationPage')->name('.new');
-        Route::post('', 'createProject')->name('.new-action');
+        Route::get('', 'create')->name('.new');
+        Route::post('', 'store')->name('.new-action');
     });
 
     // Project Search
@@ -50,24 +50,27 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
         Route::redirect('', "/project/{project}/board")->name('');
 
         Route::get('/info', 'showProjectInfo')->name('.info');
-        Route::get('/board', 'showProject')->name('.board');
+        Route::get('/board', 'showProjectBoard')->name('.board');
         Route::get('/timeline', 'showProjectTimeline')->name('.timeline');
         Route::get('/forum', 'showProjectForum')->name('.forum');
 
+        // This breaks the HTTP standard since a GET request is changing server state (a project's members). However this should only be changed if this application scales
         Route::get('/join', 'joinProject')->name('.join')->middleware('signed');
         Route::post('/leave', 'leaveProject')->name('.leave');
-        Route::post('/delete', 'delete')->name('.delete');
+        
+        Route::post('/delete', 'destroy')->name('.delete');
+        
         Route::post('/archive', 'archive')->name('.archive');
         Route::post('/unarchive', 'unarchive')->name('.unarchive');
 
         Route::prefix('/task')->name('.task')->controller('TaskController')->group(function () {
-            Route::post('/new', 'createTask')->name('.new');
+            Route::post('/new', 'store')->name('.new');
 
             Route::get('search', 'search')->name('.search');
 
             Route::prefix('/{task}')->where(['task', '[0-9]+'])->group(function () {
                 Route::get('', 'show')->name('.info');
-                Route::post('', 'edit')->name('.edit');
+                Route::post('', 'update')->name('.edit');
 
                 Route::post('/comment', 'createComment')->name('.comment');
             });
@@ -86,11 +89,10 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
         });
 
         Route::prefix('/task-group')->name('.task-group')->controller('TaskGroupController')->group(function () {
-            Route::post('new', 'createTaskGroup')->name('.new');
+            Route::post('new', 'store')->name('.new');
         });
 
         Route::prefix('/add')->name('.user')->controller('ProjectController')->group(function () {
-            // FIXME: this is a separate page to demonstrate functionality in the prototype and will be changed later
             Route::get('', 'showAddUserPage')->name('.add');
             Route::post('', 'addUser')->name('.add-action');
         });
@@ -102,13 +104,13 @@ Route::prefix('/admin')->middleware(['auth', 'isAdmin'])->name('admin')->control
     Route::redirect('', '/admin/users')->name('');
     Route::get('/users', 'listUsers')->name('.users');
     Route::get('/projects', 'listProjects')->name('.projects');
-    Route::prefix('/create')->name('.create.')->group(function () {
-        Route::get('/user', 'showCreateUser')->name('user');
-        Route::post('/user', 'createUser')->name('user-action');
+    Route::prefix('/create')->name('.create')->group(function () {
+        Route::get('/user', 'showCreateUser')->name('.user');
+        Route::post('/user', 'createUser')->name('.user-action');
     });
-    Route::prefix('/reports')->name('.reports.')->group(function () {
-        Route::get('/user/{user}', 'showUserReports')->name('user');
-        Route::get('/project/{project}', 'showProjectReports')->name('project');
+    Route::prefix('/reports')->name('.reports')->group(function () {
+        Route::get('/user/{user}', 'showUserReports')->name('.user');
+        Route::get('/project/{project}', 'showProjectReports')->name('.project');
     });
 });
 
@@ -131,29 +133,29 @@ Route::prefix('/api')->name('api')->group(function () {
 
     Route::prefix('/project')->name('.project')->controller('ProjectController')->group(function () {
         Route::prefix('/{project}')->group(function () {
-            Route::delete('', 'delete')->name('.delete');
+            Route::delete('', 'destroy')->name('.delete');
 
             Route::prefix('/favorite')->name('.favorite')->group(function () {
                 Route::post('/toggle', 'toggleFavorite')->name('.toggle');
             });
 
-            Route::prefix('/remove')->name('.remove-user')->group(function () {
-                Route::post('/{user}', 'removeUser');
+            Route::prefix('/remove')->name('.remove')->group(function () {
+                Route::post('/{user}', 'removeUser')->name('.user');
             });
         });
     });
 
     Route::prefix('/user')->name('.user')->controller('UserController')->group(function () {
         Route::prefix('/{user}')->group(function () {
-            Route::delete('', 'delete')->name('.delete');
+            Route::delete('', 'destroy')->name('.delete');
         });
     });
 
     Route::prefix('/task')->name('.task')->controller('TaskController')->group(function () {
         Route::prefix('/{task}')->group(function () {
 
-            // TODO: change controller method name
-            Route::get('/', 'showAPI')->name('');
+            // this needs to be a separate function since this won't be wrapped in a project route group
+            Route::get('', 'showAPI')->name('');
 
             Route::put('/complete', 'complete')->name('.complete');
             Route::post('/reposition', 'repositionTask')->name('.reposition');
