@@ -21,7 +21,7 @@ class TaskCommentSeeder extends Seeder {
      */
     public function run() {
 
-        $faker = \Faker\Factory::create();
+        $faker = fake();
 
         $projects = Project::all();
 
