@@ -19,11 +19,11 @@ Route::get('', 'HomeController@show')->name('home');
 
 // Static
 Route::get('{name}', 'StaticController@show')
-    ->whereIn('name', StaticController::STATIC_PAGES);
+    ->whereIn('name', StaticController::STATIC_PAGES)->name('static');
 
 // User
-Route::prefix('/user')->name('user.')->controller('UserController')->group(function () {
-    Route::prefix('/{user}')->group(function () {
+Route::prefix('/user')->middleware('auth')->name('user.')->controller('UserController')->group(function () {
+    Route::prefix('/{user}')->where(['user', '[0-9]+'])->group(function () {
         Route::get('', 'show')->name('profile');
 
         Route::prefix('/edit')->group(function () {
@@ -45,7 +45,7 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
     // Project Search
     Route::get('/search', 'search')->name('.search');
 
-    Route::prefix('/{project}')->middleware('withOtherProjects')->group(function () {
+    Route::prefix('/{project}')->where(['project', '[0-9]+'])->middleware('withOtherProjects')->group(function () {
 
         Route::redirect('', "/project/{project}/board")->name('');
 
@@ -63,12 +63,12 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
         Route::post('/archive', 'archive')->name('.archive');
         Route::post('/unarchive', 'unarchive')->name('.unarchive');
 
-        Route::prefix('/task')->name('.task')->scopeBindings()->controller('TaskController')->group(function () {
+        Route::prefix('/task')->name('.task')->controller('TaskController')->group(function () {
             Route::post('/new', 'store')->name('.new');
 
             Route::get('search', 'search')->name('.search');
 
-            Route::prefix('/{task}')->where(['task', '[0-9]+'])->group(function () {
+            Route::prefix('/{task}')->where(['task', '[0-9]+'])->scopeBindings()->group(function () {
                 Route::get('', 'show')->name('.info');
                 Route::post('', 'update')->name('.edit');
 
@@ -76,19 +76,19 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
             });
         });
 
-        Route::prefix('/thread')->name('.thread')->scopeBindings()->controller('ThreadController')->group(function () {
+        Route::prefix('/thread')->name('.thread')->controller('ThreadController')->group(function () {
 
             Route::prefix('/new')->group(function () {
                 Route::get('', 'create')->name('.new');
-                Route::post('', 'store')->name('new-action');
+                Route::post('', 'store')->name('.new-action');
             });
 
-            Route::prefix('/{thread}')->group(function () {
+            Route::prefix('/{thread}')->where(['thread', '[0-9]+'])->scopeBindings()->group(function () {
                 Route::get('', 'show')->name('');
             });
         });
 
-        Route::prefix('/task-group')->name('.task-group')->scopeBindings()->controller('TaskGroupController')->group(function () {
+        Route::prefix('/task-group')->name('.task-group')->controller('TaskGroupController')->group(function () {
             Route::post('new', 'store')->name('.new');
         });
 
@@ -135,7 +135,7 @@ Route::prefix('/api')->name('api')->group(function () {
 
         Route::post('', 'store')->name('.new');
 
-        Route::prefix('/{project}')->group(function () {
+        Route::prefix('/{project}')->where(['project', '[0-9]+'])->group(function () {
             Route::delete('', 'destroy')->name('.delete');
             Route::get('', 'show')->name('');
 
@@ -155,7 +155,7 @@ Route::prefix('/api')->name('api')->group(function () {
         
         Route::post('', 'store')->name('.new');      
 
-        Route::prefix('/{user}')->group(function () {
+        Route::prefix('/{user}')->where(['user', '[0-9]+'])->group(function () {
             Route::delete('', 'destroy')->name('.delete');
 
             Route::put('', 'update')->name('.update');
@@ -168,7 +168,7 @@ Route::prefix('/api')->name('api')->group(function () {
 
         Route::post('/new', 'store')->name('.new');
 
-        Route::prefix('/{task}')->group(function () {
+        Route::prefix('/{task}')->where(['task', '[0-9]+'])->group(function () {
 
             // this needs to be a separate function since this won't be wrapped in a project route group
             Route::get('', 'showAPI')->name('');
@@ -184,12 +184,11 @@ Route::prefix('/api')->name('api')->group(function () {
         
         Route::post('/new', 'store')->name('.new');
         
-        Route::prefix('/{taskGroup}')->group(function () {
+        Route::prefix('/{taskGroup}')->where(['taskGroup', '[0-9]+'])->group(function () {
 
             Route::get('', 'show')->name('');
             Route::put('', 'update')->name('.update');
             Route::delete('', 'destroy')->name('.delete');
-
 
             Route::post('/reposition', 'update')->name('.reposition');
         });

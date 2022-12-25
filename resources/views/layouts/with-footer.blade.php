@@ -5,10 +5,10 @@
 
     <footer id="footer">
         <nav>
-            <a href="{{ url('about') }}">About us</a>
-            <a href="{{ url('faq') }}">FAQ</a>
-            <a href="{{ url('contacts') }}">Contacts</a>
-            <a href="{{ url('services') }}">Services</a>
+            <a href="{{ route('static', ['name' => 'about']) }}">About us</a>
+            <a href="{{ route('static', ['name' => 'faq']) }}">FAQ</a>
+            <a href="{{ route('static', ['name' => 'contacts']) }}">Contacts</a>
+            <a href="{{ route('static', ['name' => 'services']) }}">Services</a>
         </nav>
     </footer>
 @endsection
