@@ -31,23 +31,22 @@ const attachFavoriteToggleHandler = (project: HTMLLIElement) => {
         project.querySelector("button.btn-outline.favorite-toggle");
 
     projectFavoriteToggleButton?.addEventListener("click", async () => {
-
-        const { isFavorite } = await tryRequest(
+        const response = await tryRequest(
             toggleFavorite,
             `Could not toggle favorite status of project with id ${projectId}`,
             undefined,
             projectId
         );
 
+        if (response === null) return;
+
         const icon = projectFavoriteToggleButton.querySelector("i");
 
         if (!icon) return;
 
-        if (isFavorite)
+        if (response.isFavorite)
             icon.classList.replace("bi-heart", "bi-heart-fill");
-        else
-            icon.classList.replace("bi-heart-fill", "bi-heart");
-
+        else icon.classList.replace("bi-heart-fill", "bi-heart");
     });
 };
 

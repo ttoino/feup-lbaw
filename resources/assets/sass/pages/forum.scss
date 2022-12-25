@@ -4,13 +4,14 @@
     @extend .vstack, .border-end;
 
     flex: 1;
-    max-width: map-get($map: $grid-breakpoints, $key: sm);
+    max-width: map-get($map: $grid-breakpoints, $key: md);
     overflow-y: auto;
 
     header {
         @extend .p-2, .vstack, .sticky-top;
 
         z-index: 500;
+        flex: 0 0 auto;
 
         background: linear-gradient(
             to bottom,
@@ -34,7 +35,7 @@
         .text-break;
 
     > div {
-        @extend .vstack, .gap-2;
+        @extend .vstack, .gap-1;
 
         flex: 1;
 
@@ -45,34 +46,68 @@
                 @extend .align-items-start;
             }
 
-            span {
+            span,
+            time {
                 flex-shrink: 0;
             }
         }
     }
 }
 
-.forum-content {
-    @extend .p-3;
+#thread-offcanvas,
+#new-thread-offcanvas {
+    @extend .offcanvas-md, .offcanvas-end;
 
     flex: 1;
+    width: 100%;
     overflow-y: auto;
+
+    .offcanvas-header {
+        display: flex;
+    }
+
+    .btn-close {
+        @extend .d-md-none;
+    }
 }
 
-.thread-content {
-    @extend .text-break, .border-bottom, .pb-2;
+#thread-offcanvas {
+    &:not(.show) {
+        display: none;
+    }
+
+    form {
+        @extend .p-3, .pt-0;
+    }
+}
+
+#new-thread-offcanvas {
+    form {
+        @extend .vstack, .p-3, .pt-0, .gap-3;
+    }
+
+    #thread-offcanvas.show ~ & {
+        display: none;
+    }
+}
+
+#thread,
+.thread-comment {
+    @extend .text-break, .p-3, .gap-2, .vstack;
+
+    > * {
+        @extend .p-0;
+    }
+
+    .content :last-child {
+        @extend .m-0;
+    }
 }
 
 .thread-comments {
-    @extend .ms-5, .me-2, .list-unstyled;
-
-    overflow-y: auto;
+    @extend .list-unstyled, .m-0;
 }
 
 .thread-comment {
-    @extend .list-group-item, .hstack, .gap-2, .pt-2;
-
-    &:not(:last-child) {
-        @extend .border-bottom;
-    }
+    @extend .border-top;
 }

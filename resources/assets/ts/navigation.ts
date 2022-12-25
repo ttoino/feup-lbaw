@@ -17,12 +17,15 @@ export const navigation = (
     });
 
     return () => {
+        if (window.location.toString() == newUrl) return;
+
         const state: Route<null> = {
             name,
             state: "ok",
             data: null,
         };
         history.pushState(state, "", newUrl);
+        onNavigate();
     };
 };
 

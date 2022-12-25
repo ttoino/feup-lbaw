@@ -107,7 +107,7 @@ class TaskController extends Controller {
 
         return $request->expectsJson()
             ? new JsonResponse($task->toArray())
-            : view('pages.task', ['task' => $task, 'project' => $project]);
+            : view('pages.project.task', ['task' => $task, 'project' => $project]);
     }
 
     public function showAPI(Request $request, Task $task) {

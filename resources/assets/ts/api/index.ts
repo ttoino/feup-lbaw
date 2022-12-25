@@ -4,12 +4,16 @@ const token =
     document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')
         ?.content ?? "";
 
-export const apiFetch = (
+interface EnhancedResponse<T> extends Response {
+    json(): Promise<T>;
+}
+
+export const apiFetch = <T>(
     url: RequestInfo,
     method: RequestInit["method"] = "GET",
     body?: any,
     options?: RequestInit
-) =>
+): Promise<EnhancedResponse<T>> =>
     fetch(url, {
         ...options,
         method,
@@ -22,46 +26,23 @@ export const apiFetch = (
         },
     });
 
-export const tryRequest = async <Params extends Parameters<any>>(
-    fn: (...params: Params) => ReturnType<typeof apiFetch>,
+export const tryRequest = async <K, Params extends Array<any>>(
+    fn: (...params: Params) => ReturnType<typeof apiFetch<K>>,
     notOk: string,
     error: string = "Request failed, are you online?",
     ...params: Params
-) => {
+): Promise<K | null> => {
     try {
         const response = await fn(...params);
 
         if (!response.ok) {
             showToast(notOk);
-            return;
+            return null;
         }
 
         return await response.json();
     } catch {
         showToast(error);
+        return null;
     }
 };
-
-export const ajaxNavigation =
-    <Params extends Parameters<any>>(
-        fn: (...params: Params) => ReturnType<typeof apiFetch>,
-        ok: (response: any) => any,
-        notOk: (response: any) => any,
-        loading: () => any
-    ): ((newUrl: string, ...params: Params) => void) =>
-    (newUrl: string, ...params) => {
-        const r = fn(...params);
-
-        r.then(async (r) => {
-            history.replaceState(r, "");
-            ok(await r.json());
-        });
-
-        r.catch(async (r) => {
-            history.replaceState(r, "");
-            notOk(await r.json());
-        });
-
-        history.pushState(undefined, "", newUrl);
-        loading();
-    };

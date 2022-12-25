@@ -8,9 +8,9 @@
             <a class="navbar-brand" href="{{ route('home') }}">
                 <img src="{{ asset('logo.svg') }}" alt="Atrellado logo" width="40"
                     height="40">
-                {{-- <h1> --}}
-                {{ config('app.name', 'Laravel') }}
-                {{-- </h1> --}}
+                <h1 class="h4 m-0">
+                    {{ config('app.name', 'Laravel') }}
+                </h1>
             </a>
 
             @auth

@@ -2,7 +2,7 @@ import Sortable from "sortablejs";
 import { tryRequest } from "../../api";
 
 import { repositionTask } from "../../api/task";
-import { repositionTaskGroup } from "../../api/taskGroup";
+import { repositionTaskGroup } from "../../api/task_group";
 
 const setupTaskGroupDnD = () => {
     const taskGroupsContainer = document.querySelector<HTMLElement>("section");

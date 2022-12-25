@@ -12,11 +12,9 @@
                 @class(['fw-bold', 'stretched-link'])>
                 {{ $thread->title }}
             </a>
-            @if ($thread->edit_date !== null)
-                <span>
-                    Edited
-                </span>
-            @endif
+            @include('partials.datediff', [
+                'date' => $thread->creation_date,
+            ])
         </div>
         <div>
             <a href="{{ route('user.profile', ['user' => $thread->author]) }}"

@@ -50,7 +50,7 @@ class ProjectController extends Controller {
 
         return $request->wantsJson()
             ? new JsonResponse($project->toArray(), 200)
-            : view('pages.project.forum.bare', ['project' => $project]);
+            : view('pages.project.forum', ['project' => $project]);
     }
 
     public function leaveProject(Request $request, Project $project) {

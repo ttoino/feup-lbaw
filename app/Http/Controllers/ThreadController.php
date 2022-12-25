@@ -82,7 +82,7 @@ class ThreadController extends Controller {
 
         $this->authorize('view', $thread);
 
-        return view('pages.project.forum.thread', ['project' => $project, 'thread' => $thread]);
+        return view('pages.project.thread', ['project' => $project, 'thread' => $thread]);
     }
 
     /**

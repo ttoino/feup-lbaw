@@ -31,7 +31,6 @@
                 border-color: transparent;
                 background: none;
                 padding: $input-padding-y;
-                resize: none;
 
                 @include transition(
                     $input-transition,

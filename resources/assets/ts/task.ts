@@ -10,14 +10,16 @@ const attachCompletionHandler = (task: HTMLLIElement) => {
         task.querySelector<HTMLButtonElement>("button");
 
     taskCompletionButton?.addEventListener("click", async () => {
-        const { state } = await tryRequest(
+        const response = await tryRequest(
             completeTask,
             "Could not complete task!",
             undefined,
             taskId
         );
 
-        if (state === "completed") {
+        if (response === null) return;
+
+        if (response.state === "completed") {
             const icon = taskCompletionButton.querySelector("i");
 
             icon?.classList.replace("bi-check-circle", "bi-check-circle-fill");

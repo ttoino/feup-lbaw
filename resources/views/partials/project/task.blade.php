@@ -41,7 +41,7 @@
 
 <form method="POST" class="input-group"
     action="{{ route('project.task.comment', ['project' => $project, 'task' => $task->id ?? 'task']) }}">
-    <textarea class="form-control" type="text" name="content" required
+    <textarea class="form-control auto-resize" name="content" required
         placeholder="New comment"></textarea>
 
     @csrf

@@ -7,15 +7,18 @@
 import "bootstrap";
 
 import "./task";
-import "./tooltips";
 import "./project";
 import "./user";
 
 if (window.location.pathname.match(/project\/\d+\/(board|task)/))
     import("./pages/board");
 
+if (window.location.pathname.match(/project\/\d+\/(forum|thread)/))
+    import("./pages/forum");
+
 // Enhancements
 import "./enhancements/autoresize";
 import "./enhancements/form";
 import "./enhancements/imageinput";
 import "./enhancements/passwordinput";
+import "./enhancements/tooltip";

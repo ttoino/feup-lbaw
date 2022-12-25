@@ -1,16 +1,18 @@
+import { Task } from "../types/task";
 import { apiFetch } from ".";
 
 export const completeTask = (taskId: string) =>
-    apiFetch(`/api/task/${taskId}/complete`, "PUT");
+    apiFetch<Task>(`/api/task/${taskId}/complete`, "PUT");
 
 export const repositionTask = (
     taskId: string,
     task_group_id: string | null,
     position: string | null
 ) =>
-    apiFetch(`/api/task/${taskId}/reposition`, "POST", {
+    apiFetch<Task>(`/api/task/${taskId}/reposition`, "POST", {
         task_group_id,
         position,
     });
 
-export const getTask = (taskId: string) => apiFetch(`/api/task/${taskId}`);
+export const getTask = (taskId: string) =>
+    apiFetch<Task>(`/api/task/${taskId}`);

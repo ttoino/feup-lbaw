@@ -72,7 +72,7 @@ class Project extends Model {
         return $this->hasMany(
             Thread::class,
             'project_id'
-        )->orderBy('creation_date');
+        )->orderBy('creation_date', "desc");
     }
 
     public function reports() {
