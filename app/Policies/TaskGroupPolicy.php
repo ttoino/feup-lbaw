@@ -31,7 +31,7 @@ class TaskGroupPolicy
      */
     public function view(User $user, TaskGroup $taskGroup)
     {
-        //
+        return $taskGroup->project->users->contains($user);
     }
 
     /**
@@ -64,7 +64,7 @@ class TaskGroupPolicy
      */
     public function delete(User $user, TaskGroup $taskGroup)
     {
-        //
+        return $taskGroup->project->users->contains($user);
     }
 
     /**

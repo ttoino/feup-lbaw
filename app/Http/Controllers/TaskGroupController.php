@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\Auth;
 
 class TaskGroupController extends Controller {
 
+    public function show(Request $request, TaskGroup $taskGroup) {
+
+        $this->authorize('view', $taskGroup);
+
+        return new JsonResponse($taskGroup);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -21,6 +28,7 @@ class TaskGroupController extends Controller {
 
         $this->taskGroupCreationValidator($requestData)->validate();
         
+        $this->authorize('edit', $project);
         $this->authorize('create', [TaskGroup::class, $project]);
 
         $taskGroup = $this->createTaskGroup($requestData);
@@ -86,9 +94,9 @@ class TaskGroupController extends Controller {
         return $taskGroup;
     }
 
-    public function delete(Request $request, TaskGroup $taskGroup) {
+    public function destroy(Request $request, TaskGroup $taskGroup) {
 
-        //$this->authorize('delete', $task);
+        $this->authorize('delete', $taskGroup);
         $taskGroup->delete();
 
         return $taskGroup;

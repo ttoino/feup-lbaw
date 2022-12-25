@@ -30,9 +30,9 @@ class TaskPolicy
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Task $task)
+    public function view(User $user, Task $task, Project $project)
     {
-        return $user->is_admin || $task->project->users->contains($user);
+        return $project->id === $task->project->id && ($user->is_admin || $task->project->users->contains($user));
     }
 
     /**
@@ -65,7 +65,7 @@ class TaskPolicy
      */
     public function delete(User $user, Task $task)
     {
-        //
+        return $task->project->users->contains($user);
     }
 
     /**

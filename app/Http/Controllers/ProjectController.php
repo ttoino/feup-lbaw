@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Validator;
 
 class ProjectController extends Controller {
 
+    public function show(Project $project) {
+        $this->authorize('view', $project);
+
+        return new JsonResponse($project->toArray());
+    }
+
     public function showProjectBoard(Request $request, Project $project) {
 
         $this->authorize('view', $project);
@@ -112,10 +118,9 @@ class ProjectController extends Controller {
         $project = $this->createProject($requestData);
 
         return $request->wantsJson()
-            ? new JsonResponse($project->toArray(), 200)
+            ? new JsonResponse($project->toArray(), 201)
             : redirect()->route('project', ['project' => $project]);
     }
-
 
     /**
      * Creates a new project.
@@ -145,6 +150,60 @@ class ProjectController extends Controller {
         return Validator::make($data, [
             'name' => 'required|string|min:6|max:255',
             'description' => 'string|min:6|max:512',
+        ]);
+    }
+
+
+    public function update(Request $request, Project $project) {
+        $requestData = $request->all();
+
+        $this->projectUpdateValidator($requestData)->validate();
+
+        $this->authorize('update', $project);
+
+        $project = $this->updateProject($project, $requestData);
+
+        return $request->wantsJson()
+            ? new JsonResponse($project->toArray(), 200)
+            : redirect()->route('project', ['project' => $project]);
+    }
+
+    /**
+     * Creates a new project.
+     *
+     * @return Project The project created.
+     */
+    public function updateProject(Project $project, array $data) {
+
+        if (($data['name'] ??= null) !== null)
+            $project->name = $data['name'];
+        
+        if (($data['archived'] ??= null) !== null)
+            $project->archived = $data['archived'];
+        
+        if (($data['description'] ??= null) !== null)
+            $project->description = $data['description'];
+        
+        if (($data['coordinator_id'] ??= null) !== null)
+            $project->coordinator_id = $data['coordinator_id'];
+        
+        $project->save();
+
+        return $project;
+    }
+
+    /**
+     * Get a validator for an incoming project creation request.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function projectUpdateValidator(array $data) {
+        return Validator::make($data, [
+            'name' => 'string|min:6|max:255',
+            'description' => 'string|min:6|max:512',
+            'coordinator_id' => 'integer',
+            'archived' => 'boolean'
         ]);
     }
 

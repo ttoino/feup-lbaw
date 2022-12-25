@@ -90,7 +90,7 @@ class UserController extends Controller {
     }
 
     public function updateUser(User $user, array $data) {
-        if ($data['name'] !== null)
+        if (($data['name'] ??= null) !== null)
             $user->name = $data['name'];
 
         if (isset($data['profile_picture'])) {
@@ -103,6 +103,12 @@ class UserController extends Controller {
             }
         }
 
+        if (($data['is_admin'] ??= null) !== null)
+            $user->is_admin = $data['is_admin'];
+
+        if (($data['is_blocked'] ??= null) !== null)
+            $user->is_blocked = $data['is_blocked'];
+
         $user->save();
 
         return $user;
@@ -114,7 +120,9 @@ class UserController extends Controller {
           'profile_picture' => [
             File::image()
               ->max(5*1024)
-          ]
+          ],
+          'is_blocked' => 'boolean',
+          'is_admin' => 'boolean'
       ]);
     }
 

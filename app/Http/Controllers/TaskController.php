@@ -103,12 +103,7 @@ class TaskController extends Controller {
      */
     public function show(Request $request, Project $project, Task $task) {
 
-        // TODO: yuck
-        if ($project->id !== $task->project->id) {
-            abort(400, 'Task with id ' . $task->id . ' does not belong to project with id ' . $project->id);
-        }
-
-        $this->authorize('view', $task);
+        $this->authorize('view', [$task, $project]);
 
         return $request->expectsJson()
             ? new JsonResponse($task->toArray())
@@ -130,8 +125,8 @@ class TaskController extends Controller {
 
         $this->editTaskValidator($requestData)->validate();
 
-        $this->authorize('edit', $task);
         $this->authorize('edit', $task->project);
+        $this->authorize('edit', $task);
 
         $task = $this->editTask($task, $requestData);
 
@@ -195,10 +190,9 @@ class TaskController extends Controller {
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function delete(Request $request, $id) {
-        $task = Task::findOrFail($id);
+    public function destroy(Request $request, Task $task) {
 
-        //$this->authorize('delete', $task);
+        $this->authorize('delete', $task);
         $task->delete();
 
         return $task;

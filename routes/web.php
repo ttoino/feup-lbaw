@@ -63,7 +63,7 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
         Route::post('/archive', 'archive')->name('.archive');
         Route::post('/unarchive', 'unarchive')->name('.unarchive');
 
-        Route::prefix('/task')->name('.task')->controller('TaskController')->group(function () {
+        Route::prefix('/task')->name('.task')->scopeBindings()->controller('TaskController')->group(function () {
             Route::post('/new', 'store')->name('.new');
 
             Route::get('search', 'search')->name('.search');
@@ -76,7 +76,7 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
             });
         });
 
-        Route::prefix('/thread')->name('.thread')->controller('ThreadController')->group(function () {
+        Route::prefix('/thread')->name('.thread')->scopeBindings()->controller('ThreadController')->group(function () {
 
             Route::prefix('/new')->group(function () {
                 Route::get('', 'create')->name('.new');
@@ -88,7 +88,7 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
             });
         });
 
-        Route::prefix('/task-group')->name('.task-group')->controller('TaskGroupController')->group(function () {
+        Route::prefix('/task-group')->name('.task-group')->scopeBindings()->controller('TaskGroupController')->group(function () {
             Route::post('new', 'store')->name('.new');
         });
 
@@ -132,8 +132,14 @@ Route::name('')->group(function () {
 Route::prefix('/api')->name('api')->group(function () {
 
     Route::prefix('/project')->name('.project')->controller('ProjectController')->group(function () {
+
+        Route::post('', 'store')->name('.new');
+
         Route::prefix('/{project}')->group(function () {
             Route::delete('', 'destroy')->name('.delete');
+            Route::get('', 'show')->name('');
+
+            Route::put('', 'update')->name('.update');
 
             Route::prefix('/favorite')->name('.favorite')->group(function () {
                 Route::post('/toggle', 'toggleFavorite')->name('.toggle');
@@ -146,16 +152,28 @@ Route::prefix('/api')->name('api')->group(function () {
     });
 
     Route::prefix('/user')->name('.user')->controller('UserController')->group(function () {
+        
+        Route::post('', 'store')->name('.new');      
+
         Route::prefix('/{user}')->group(function () {
             Route::delete('', 'destroy')->name('.delete');
+
+            Route::put('', 'update')->name('.update');
+
+            Route::get('', 'show')->name('');
         });
     });
 
     Route::prefix('/task')->name('.task')->controller('TaskController')->group(function () {
+
+        Route::post('/new', 'store')->name('.new');
+
         Route::prefix('/{task}')->group(function () {
 
             // this needs to be a separate function since this won't be wrapped in a project route group
             Route::get('', 'showAPI')->name('');
+            Route::put('', 'update')->name('update');
+            Route::delete('', 'destroy')->name('.delete');
 
             Route::put('/complete', 'complete')->name('.complete');
             Route::post('/reposition', 'update')->name('.reposition');
@@ -163,7 +181,16 @@ Route::prefix('/api')->name('api')->group(function () {
     });
 
     Route::prefix('/task-group')->name('.task-group')->controller('TaskGroupController')->group(function () {
+        
+        Route::post('/new', 'store')->name('.new');
+        
         Route::prefix('/{taskGroup}')->group(function () {
+
+            Route::get('', 'show')->name('');
+            Route::put('', 'update')->name('.update');
+            Route::delete('', 'destroy')->name('.delete');
+
+
             Route::post('/reposition', 'update')->name('.reposition');
         });
     });
