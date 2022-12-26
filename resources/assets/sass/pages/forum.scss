@@ -93,7 +93,7 @@
 
 #thread,
 .thread-comment {
-    @extend .text-break, .p-3, .gap-2, .vstack;
+    @extend .text-break, .p-3, .gap-2, .d-flex, .flex-column;
 
     > * {
         @extend .p-0;
@@ -104,7 +104,7 @@
     }
 }
 
-.thread-comments {
+#thread-comments {
     @extend .list-unstyled, .m-0;
 }
 

@@ -2,13 +2,16 @@
     role="button" style="z-index: 100" class="hstack gap-2">
     <img width="40" height="40" alt="Profile picture"
         src="{{ asset($item->author?->getProfilePicture()) }}"
-        class="rounded-circle author-avatar">
+        class="rounded-circle" data-render-prop="author_id"
+        data-render-method="profile_pic">
     <div class="vstack">
-        <span class="author">{{ $item->author?->name }}</span>
-        <time class="date" datetime="{{ $item->creation_date }}">
+        <span data-render-prop="author_id">{{ $item->author?->name }}</span>
+        <time data-render-prop="creation_date" data-render-method="date"
+            datetime="{{ $item->creation_date }}">
             @date($item->creation_date)
         </time>
     </div>
 </a>
 
-<x-markdown class="content">{!! $item->content !!}</x-markdown>
+<x-markdown class="content" data-render-prop="content"
+    data-render-method="html">{!! $item->content !!}</x-markdown>

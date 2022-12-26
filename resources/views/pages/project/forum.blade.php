@@ -2,6 +2,14 @@
 
 @push('main-classes', 'overflow-auto ')
 
+@once
+    @push('templates')
+        <template id="thread-comment-template">
+            @include('partials.project.forum.comment')
+        </template>
+    @endpush
+@endonce
+
 @section('project-content')
     <section class="forum-threads">
         @if (Auth::user()?->projects->contains($project))
@@ -23,8 +31,10 @@
         'show' => $show_thread ?? false,
         'offcanvas-md',
         'offcanvas-end',
+        'loader',
     ])>
         @include('partials.project.thread')
+        @include('partials.loading')
     </aside>
 
     @if (Auth::user()?->projects->contains($project))
@@ -33,7 +43,8 @@
                 <h2 class="offcanvas-title h4" id="new-thread-offcanvas-title">
                     New thread
                 </h2>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#new-thread-offcanvas"
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+                    data-bs-target="#new-thread-offcanvas"
                     aria-label="Close"></button>
             </header>
             @include('partials.project.forum.new-thread')

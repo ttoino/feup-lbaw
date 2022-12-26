@@ -3,6 +3,7 @@ import { getThread } from "../../api/thread";
 import { registerEnhancement } from "../../enhancements";
 import { ajaxNavigation, navigation } from "../../navigation";
 import { Offcanvas } from "bootstrap";
+import { renderThread, renderThreadComments } from "./render";
 
 const projectId = document.location.pathname.split("/")[2];
 
@@ -43,9 +44,6 @@ newThreadButton?.addEventListener("click", (e) => {
     }
 });
 
-const threadTitleEl = document.querySelector<HTMLElement>("#thread-title");
-const threadContentEl = document.querySelector<HTMLElement>("#thread-content");
-
 const showThreadOffcanvas = () => {
     if (threadOffcanvas) {
         const style = getComputedStyle(threadOffcanvasEl);
@@ -61,12 +59,14 @@ const showThreadOffcanvas = () => {
 const showThread = ajaxNavigation(
     "project.thread",
     getThread,
-    ({ title, content }: Thread) => {
+    (thread: Thread) => {
         showThreadOffcanvas();
         threadOffcanvasEl?.classList.remove("loading");
 
-        threadTitleEl && (threadTitleEl.innerText = title);
-        threadContentEl && (threadContentEl.innerHTML = content);
+        console.debug(thread);
+
+        renderThread?.(thread);
+        renderThreadComments?.(thread.comments ?? []);
     },
     (e) => {
         showThreadOffcanvas();

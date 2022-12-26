@@ -1,0 +1,128 @@
+.loader {
+    @extend .position-relative;
+
+    &.loading {
+        overflow: clip !important;
+
+        > .load {
+            opacity: 1;
+
+            .car,
+            .board {
+                animation: trolley-shake 500ms ease infinite;
+            }
+
+            .wheel {
+                animation: wheel-rotate 500ms linear infinite;
+            }
+        }
+    }
+
+    &:not(.loading) {
+        > :not(.load) {
+            opacity: 1;
+        }
+    }
+
+    > * {
+        @extend .fade;
+    }
+
+    > .load {
+        @extend .m-auto, .p-5, .w-100, .h-100;
+
+        max-width: map-get($map: $grid-breakpoints, $key: sm) * 0.5;
+
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        * {
+            fill: currentColor;
+            fill-opacity: 50%;
+        }
+
+        .trolley {
+            transform: matrix(1, 0, -0.3, 1, 8, 0);
+        }
+
+        .wheel {
+            transform-origin: 37px 32.5px;
+        }
+
+        .trail {
+            &:nth-of-type(1) {
+                transform: translateX(6px);
+                animation: speed-line-top 350ms 100ms ease infinite alternate;
+            }
+
+            &:nth-of-type(2) {
+                transform: translateX(3px);
+                animation: speed-line-middle 350ms 200ms ease infinite alternate;
+            }
+
+            &:nth-of-type(3) {
+                animation: speed-line-bottom 350ms ease infinite alternate;
+            }
+        }
+    }
+}
+
+@keyframes trolley-shake {
+    0% {
+        transform: translateY(0.25px);
+    }
+    50% {
+        transform: translateY(-0.25px);
+    }
+    100% {
+        transform: translateY(0.25px);
+    }
+}
+
+@keyframes wheel-rotate {
+    0% {
+        transform: rotate(0deg) scaleX(1.025);
+    }
+    100% {
+        transform: rotate(360deg) scaleX(1.025);
+    }
+}
+
+@keyframes speed-line-top {
+    0% {
+        x: 12px;
+        width: 14px;
+    }
+
+    100% {
+        x: 22px;
+        width: 4px;
+    }
+}
+
+@keyframes speed-line-middle {
+    0% {
+        x: 7px;
+        width: 19px;
+    }
+
+    100% {
+        x: 17px;
+        width: 9px;
+    }
+}
+
+@keyframes speed-line-bottom {
+    0% {
+        x: 2px;
+        width: 24px;
+    }
+
+    100% {
+        x: 12px;
+        width: 14px;
+    }
+}

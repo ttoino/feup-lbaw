@@ -188,20 +188,6 @@
             display: none;
         }
     }
-
-    > .load {
-        display: none;
-    }
-
-    &.loading {
-        > .load {
-            display: initial;
-        }
-
-        > :not(.load) {
-            display: none;
-        }
-    }
 }
 
 #new-task-button {
