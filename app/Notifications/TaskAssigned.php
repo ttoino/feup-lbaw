@@ -2,21 +2,24 @@
 
 namespace App\Notifications;
 
-use App\Models\ProjectInvitation;
+use App\Models\Task;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class ProjectInvite extends Notification {
-    public string $url;
+class TaskAssigned extends Notification {
+    public Task $task;
+    public User $assigner;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(string $url) {
-        $this->url = $url;
+    public function __construct(Task $task, User $assigner) {
+        $this->task = $task;
+        $this->assigner = $assigner;
     }
 
     /**
@@ -40,8 +43,8 @@ class ProjectInvite extends Notification {
      */
     public function toMail($notifiable) {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', $url)
+                    ->line("You've been assigned to a task in " . $task->project()->name . " by " . $assigner->name .  ".")
+                    ->action('View the task', route('project.task.info', ['project' => $task->project, 'task' => $task]))
                     ->line('Thank you for using our application!');
     }
 
@@ -53,7 +56,8 @@ class ProjectInvite extends Notification {
      */
     public function toArray($notifiable) {
         return [
-            'url' => $this->url
+            'task' => $this->task,
+            'assigner' => $this->assigner,
         ];
     }
 }

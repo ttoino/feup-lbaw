@@ -2,23 +2,22 @@
 
 namespace App\Notifications;
 
-use App\Models\ProjectInvitation;
+use App\Models\Project;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class ProjectInvite extends Notification {
-    public string $url;
+class ProjectDeleted extends Notification {
+    public Project $project;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(string $url) {
-        $this->url = $url;
+    public function __construct(Project $project) {
+        $this->project = $project;
     }
-
     /**
      * Get the notification's delivery channels.
      *
@@ -40,8 +39,7 @@ class ProjectInvite extends Notification {
      */
     public function toMail($notifiable) {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', $url)
+                    ->line("A project you're a member of - " . $project->name . " - has been deleted.")
                     ->line('Thank you for using our application!');
     }
 
@@ -53,7 +51,7 @@ class ProjectInvite extends Notification {
      */
     public function toArray($notifiable) {
         return [
-            'url' => $this->url
+            'project' => $project
         ];
     }
 }

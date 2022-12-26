@@ -2,21 +2,22 @@
 
 namespace App\Notifications;
 
-use App\Models\ProjectInvitation;
+use App\Models\TaskComment;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class ProjectInvite extends Notification {
-    public string $url;
+class TaskCommented extends Notification {
+    public TaskComment $comment;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(string $url) {
-        $this->url = $url;
+    public function __construct(TaskComment $comment) {
+        $this->comment = $comment;
     }
 
     /**
@@ -40,8 +41,8 @@ class ProjectInvite extends Notification {
      */
     public function toMail($notifiable) {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', $url)
+                    ->line($comment->author()->name . "has left a comment on a task you're assigned to - " . $comment->task()->name . ".")
+                    ->action('View the task', route('project.task.info', ['project' => $comment->task()->project, 'task' => $comment->task]))
                     ->line('Thank you for using our application!');
     }
 
@@ -53,7 +54,7 @@ class ProjectInvite extends Notification {
      */
     public function toArray($notifiable) {
         return [
-            'url' => $this->url
+            'comment' => $this->comment
         ];
     }
 }
