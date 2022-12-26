@@ -39,8 +39,8 @@ class ProjectArchived extends Notification {
      */
     public function toMail($notifiable) {
         return (new MailMessage)
-                    ->line("A project you're a member of - " . $project->name . " - has been archived.")
-                    ->action('View the project', route('project.board', ['project' => $project]))
+                    ->line("A project you're a member of - " . $this->project->name . " - has been archived.")
+                    ->action('View the project', route('project.board', ['project' => $this->project]))
                     ->line('Thank you for using our application!');
     }
 
@@ -52,7 +52,7 @@ class ProjectArchived extends Notification {
      */
     public function toArray($notifiable) {
         return [
-            'project' => $project
+            'project' => $this->project
         ];
     }
 }

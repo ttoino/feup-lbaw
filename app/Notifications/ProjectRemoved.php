@@ -39,7 +39,7 @@ class ProjectRemoved extends Notification {
      */
     public function toMail($notifiable) {
         return (new MailMessage)
-                    ->line("You've been removed from project - " . $project->name . ".")
+                    ->line("You've been removed from project - " . $this->project->name . ".")
                     ->line('Thank you for using our application!');
     }
 
@@ -51,7 +51,7 @@ class ProjectRemoved extends Notification {
      */
     public function toArray($notifiable) {
         return [
-            'project' => $project
+            'project' => $this->project
         ];
     }
 }

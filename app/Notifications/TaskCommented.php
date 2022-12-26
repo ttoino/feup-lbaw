@@ -41,8 +41,8 @@ class TaskCommented extends Notification {
      */
     public function toMail($notifiable) {
         return (new MailMessage)
-                    ->line($comment->author()->name . "has left a comment on a task you're assigned to - " . $comment->task()->name . ".")
-                    ->action('View the task', route('project.task.info', ['project' => $comment->task()->project, 'task' => $comment->task]))
+                    ->line($this->comment->author()->name . "has left a comment on a task you're assigned to - " . $this->comment->task->name . ".")
+                    ->action('View the task', route('project.task.info', ['project' => $this->comment->task()->project, 'task' => $this->comment->task]))
                     ->line('Thank you for using our application!');
     }
 

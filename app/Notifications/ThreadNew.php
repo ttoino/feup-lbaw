@@ -41,8 +41,8 @@ class ThreadNew extends Notification {
      */
     public function toMail($notifiable) {
         return (new MailMessage)
-                    ->line($thread->author()->name . "has opened a thread in project " . $thread->project()->name . ".")
-                    ->action('View the thread', route('project.thread', ['project' => $thread->project, 'thread' => $thread]))
+                    ->line($this->thread->author->name . "has opened a thread in project " . $this->thread->project->name . ".")
+                    ->action('View the thread', route('project.thread', ['project' => $this->thread->project, 'thread' => $this->thread]))
                     ->line('Thank you for using our application!');
     }
 

@@ -43,8 +43,8 @@ class TaskAssigned extends Notification {
      */
     public function toMail($notifiable) {
         return (new MailMessage)
-                    ->line("You've been assigned to a task in " . $task->project()->name . " by " . $assigner->name .  ".")
-                    ->action('View the task', route('project.task.info', ['project' => $task->project, 'task' => $task]))
+                    ->line("You've been assigned to a task in " . $this->task->project()->name . " by " . $this->assigner->name .  ".")
+                    ->action('View the task', route('project.task.info', ['project' => $this->task->project, 'task' => $this->task]))
                     ->line('Thank you for using our application!');
     }
 

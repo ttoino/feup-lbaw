@@ -41,8 +41,8 @@ class ThreadCommented extends Notification {
      */
     public function toMail($notifiable) {
         return (new MailMessage)
-                    ->line($comment->author()->name . "has commented on a thread you opened in project " . $comment->thread()->project()->name . ".")
-                    ->action('View the thread', route('project.thread', ['project' => $comment->thread()->project, 'thread' => $comment->thread]))
+                    ->line($this->comment->author()->name . "has commented on a thread you opened in " . $this->comment->thread->project->name . ".")
+                    ->action('View the thread', route('project.thread', ['project' => $this->comment->thread->project, 'thread' => $this->comment->thread]))
                     ->line('Thank you for using our application!');
     }
 

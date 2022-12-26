@@ -39,7 +39,7 @@ class ProjectDeleted extends Notification {
      */
     public function toMail($notifiable) {
         return (new MailMessage)
-                    ->line("A project you're a member of - " . $project->name . " - has been deleted.")
+                    ->line("A project you're a member of - " . $this->project->name . " - has been deleted.")
                     ->line('Thank you for using our application!');
     }
 
@@ -51,7 +51,7 @@ class ProjectDeleted extends Notification {
      */
     public function toArray($notifiable) {
         return [
-            'project' => $project
+            'project' => $this->project
         ];
     }
 }

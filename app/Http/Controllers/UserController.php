@@ -126,9 +126,7 @@ class UserController extends Controller {
       ]);
     }
 
-    public function edit($id) {
-        $user = User::findOrFail($id);
-
+    public function edit(User $user) { 
         $this->authorize('showProfileEditPage', $user);
 
         return view('pages.profile.edit', ['user' => $user]);

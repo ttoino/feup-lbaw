@@ -40,8 +40,8 @@ class TaskCompleted extends Notification {
      */
     public function toMail($notifiable) {
         return (new MailMessage)
-                    ->line("Task '" . $task->name . "' has been set as complete.")
-                    ->action('View the task', route('project.task.info', ['project' => $task->project, 'task' => $task]))
+                    ->line("Task '" . $this->task->name . "' has been set as complete.")
+                    ->action('View the task', route('project.task.info', ['project' => $this->task->project, 'task' => $this->task]))
                     ->line('Thank you for using our application!');
     }
 
