@@ -25,6 +25,7 @@
         <button class="btn user-delete btn-outline-danger" style="z-index: 5"><i class="bi bi-trash3"></i></button> 
     @endif
 
+    {{-- TODO: This shoule be a new partial --}}
     @isset($project) 
         @if (Auth::user() == $project->coordinator)
             <button class="btn user-remove btn-outline-danger" style="z-index: 5"><i class="bi bi-x-lg"></i></button> 

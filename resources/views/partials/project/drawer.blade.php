@@ -66,7 +66,7 @@
                     'nav-item',
                     'active' => Request::route()->getName() === 'project.user.add',
                 ])>
-                <i @class(['bi', 'bi-plus'])></i> Add User
+                Add User
             </a>
         @endif
 

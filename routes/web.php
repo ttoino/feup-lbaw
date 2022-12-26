@@ -193,4 +193,16 @@ Route::prefix('/api')->name('api')->middleware('throttle')->group(function () {
             Route::post('/reposition', 'update')->name('.reposition');
         });
     });
+
+    Route::prefix('/thread')->name('.thread')->controller('ThreadController')->group(function () {
+
+        Route::post('/new', 'store')->name('.new');
+        
+        Route::prefix('/{thread}')->where(['thread', '[0-9]+'])->group(function () {
+
+            Route::get('', 'show')->name('');
+            Route::put('', 'update')->name('.update');
+            Route::delete('', 'destroy')->name('.delete');
+        });
+    });
 });

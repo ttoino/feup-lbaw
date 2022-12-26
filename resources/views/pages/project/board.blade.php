@@ -8,13 +8,16 @@
         @each('partials.project.board.task-group', $project->taskGroups, 'group')
         @include('partials.project.board.task-group')
 
-
         @if (Auth::user()?->projects->contains($project))
             <a id="new-task-button" data-bs-toggle="offcanvas"
-                href="#new-task-offcanvas" role="button"
-                aria-controls="new-task-offcanvas">
-                <i class="bi bi-plus"></i> Create task
-            </a>
+                @if (!$project->archived) href="#new-task-offcanvas" @endif role="button"
+                @class([
+                    'disabled' => $project->archived,
+                ]) aria-controls="new-task-offcanvas" @if (!$project->archived)
+                aria-disabled="true"
+        @endif>
+        <i class="bi bi-plus"></i> Create task
+        </a>
         @endif
     </section>
 
@@ -28,8 +31,7 @@
                 <h2 class="offcanvas-title h4" id="new-task-offcanvas-title">
                     New task
                 </h2>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-                    data-bs-target="#new-task-offcanvas"
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#new-task-offcanvas"
                     aria-label="Close"></button>
             </header>
             @include('partials.project.task.new')

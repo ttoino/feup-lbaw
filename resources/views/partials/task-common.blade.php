@@ -27,7 +27,7 @@
         </ul>
     @endif
 </div>
-<button class="btn btn-outline" style="z-index: 50">
+<button class="btn btn-outline btn-disable" style="z-index: 50" @if ($task->state === 'completed') disabled @endif>
     <i @class([
         'bi',
         'bi-check-circle' => $task->state !== 'completed',

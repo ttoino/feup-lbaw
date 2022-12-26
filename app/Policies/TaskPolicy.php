@@ -35,7 +35,7 @@ class TaskPolicy
         if ($project->id !== $task->project->id)
             return $this->deny('Task is not a child of the given project');
 
-        if (!$user->is_admin && !$task->project->users->contains($user));
+        if (!$user->is_admin && !$task->project->users->contains($user))
             return $this->deny('Only admins or members of this task\'s project can view this task');
         
         return $this->allow();

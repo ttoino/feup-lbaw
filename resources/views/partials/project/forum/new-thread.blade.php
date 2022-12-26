@@ -73,5 +73,7 @@
         </div>
     </div>
 
-    <button class="btn btn-primary" type="submit">Create thread</button>
+    <button class="btn btn-primary" type="submit" @if ($project->archived)
+        disabled
+    @endif>Create thread</button>
 </form>

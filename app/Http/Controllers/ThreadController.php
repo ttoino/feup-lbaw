@@ -78,11 +78,13 @@ class ThreadController extends Controller {
      * @param  \App\Models\Thread  $thread
      * @return \Illuminate\Http\Response
      */
-    public function show(Project $project, Thread $thread) {
+    public function show(Request $request, Project $project, Thread $thread) {
 
         $this->authorize('view', $thread);
 
-        return view('pages.project.thread', ['project' => $project, 'thread' => $thread]);
+        return $request->wantsJson() 
+            ? new JsonResponse($thread) 
+            : view('pages.project.thread', ['project' => $project, 'thread' => $thread]);
     }
 
     /**
