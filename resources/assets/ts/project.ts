@@ -18,7 +18,7 @@ const attachDeletionHandler = (project: HTMLLIElement) => {
                 projectId
             )
         )
-            window.location.reload();
+            window.location.reload(); // this needs to be a reload because of the use of pagination
     });
 };
 

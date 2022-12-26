@@ -29,9 +29,11 @@ class TaskGroupPolicy
      * @param  \App\Models\TaskGroup  $taskGroup
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, TaskGroup $taskGroup)
-    {
-        return $taskGroup->project->users->contains($user);
+    public function view(User $user, TaskGroup $taskGroup) {
+        if (!$user->is_admin && !$taskGroup->project->users->contains($user))
+            return $this->deny('Only admins or members of this group\'s project can view info on this task group');
+        
+        return $this->allow();
     }
 
     /**
@@ -41,7 +43,10 @@ class TaskGroupPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function create(User $user, Project $project) {
-        return $project->users->contains($user);
+        if (!$project->users->contains($user))
+            return $this->deny('Only members of this given project can create task groups');
+        
+        return $this->allow();
     }
 
     /**
@@ -52,7 +57,10 @@ class TaskGroupPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function update(User $user, TaskGroup $taskGroup) {
-        return $taskGroup->project->users->contains($user);
+        if (!$taskGroup->project->users->contains($user))
+            return $this->deny('Only members of this group\'s project can update task groups');
+        
+        return $this->allow();
     }
 
     /**
@@ -62,9 +70,11 @@ class TaskGroupPolicy
      * @param  \App\Models\TaskGroup  $taskGroup
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, TaskGroup $taskGroup)
-    {
-        return $taskGroup->project->users->contains($user);
+    public function delete(User $user, TaskGroup $taskGroup) {
+        if (!$taskGroup->project->users->contains($user))
+            return $this->deny('Only members of this group\'s project can update task groups');
+        
+        return $this->allow();
     }
 
     /**

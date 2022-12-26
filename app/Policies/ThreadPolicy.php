@@ -30,11 +30,18 @@ class ThreadPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function view(User $user, Thread $thread) {
-        return $user->is_admin || $thread->author === $user || $thread->project->users->contains($user);
+        if (!$user->is_admin && $thread->author !== $user && !$thread->project->users->contains($user))
+            return $this->deny('Only admins, the thread\'s author or a member of the thread\'s project can view this thread');
+        
+        return $this->allow();
     }
 
     public function viewCreationForm(User $user, Project $project) {
-        return $user->is_admin || $project->users->contains($user);
+
+        if (!$user->is_admin && !$project->users->contains($user))
+            return $this->deny('Only admins or a member of the given project can view this thread');
+        
+        return $this->allow();
     }
 
     /**
@@ -44,7 +51,14 @@ class ThreadPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function create(User $user, Project $project) {
-        return !$user->is_admin && $project->users->contains($user);
+
+        if ($user->is_admin)
+            return $this->deny('Admins cannot create threads');
+
+        if (!$project->users->contains($user))
+            return $this->deny('To create a thread in this project you must be a member of this project');
+
+        return $this->allow();
     }
 
     /**

@@ -5,7 +5,7 @@ const deleteListener = (userId: string) => async () => {
     if (
         await tryRequest(deleteUser, "Could not delete user", undefined, userId)
     )
-        window.location.reload();
+        window.location.reload(); // this needs to be a reload because of the use of pagination
 };
 
 const attachListItemDeletionHandler = (user: HTMLLIElement) => {
@@ -20,13 +20,13 @@ const attachListItemDeletionHandler = (user: HTMLLIElement) => {
     userDeletionButton?.addEventListener("click", deleteListener(userId));
 };
 
-const attachModalDeletionHandler = (model: HTMLDivElement) => {
-    const userId = model.dataset.userId;
+const attachModalDeletionHandler = (modal: HTMLDivElement) => {
+    const userId = modal.dataset.userId;
 
     if (!userId) return;
 
     const userDeletionButton =
-        model.querySelector<HTMLButtonElement>("button.btn-danger");
+        modal.querySelector<HTMLButtonElement>("button.btn-danger");
 
     userDeletionButton?.addEventListener("click", deleteListener(userId));
 };

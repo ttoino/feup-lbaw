@@ -29,7 +29,17 @@ class UserPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function view(User $user, User $model) {
-        return $user->is_admin || $user->id === $model->id || $user->projects->intersect($model->projects)->count() > 0;
+
+        if (!$user->is_admin && $user->id !== $model->id)
+            return $this->deny('Only admins or the profile\'s owner can view this profile');
+
+        $projectsInCommon = $user->projects->intersect($model->projects)->count() > 0;
+
+        if (! $projectsInCommon) {
+            return $this->deny('The current user must have some project in common with the specified user');
+        }
+
+        return $this->allow();
     }
 
     /**
@@ -50,11 +60,17 @@ class UserPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function update(User $user, User $model) {
-        return $user->is_admin || $user->id === $model->id;
+        if (!$user->is_admin && $user->id !== $model->id){
+            return $this->deny('Only admins or the profile\'s owner can update this user profile');
+        }
+        return $this->allow();
     }
     
     public function showProfileEditPage(User $user, User $model) {
-        return $user->is_admin || $user->id === $model->id;
+        if (!$user->is_admin && $user->id !== $model->id){
+            return $this->deny('Only admins or the profile\'s owner can update this user profile');
+        }
+        return $this->allow();
     }
 
     /**
@@ -66,12 +82,23 @@ class UserPolicy
      */
     public function delete(User $user, User $model) {
 
+        if ($model->is_admin) {
+            return $this->deny('Cannot delete admin accounts');
+        }
+
+        if (!$user->is_admin && $user->id !== $model->id) {
+            return $this->deny('Only admins can delete accounts that belong to other users');
+        }
+        
         $userProjects = Project::where('coordinator_id', $model->id);
 
         $projectsHaveOtherMembers = $userProjects->get()->reduce(fn (bool $carry, Project $project) => $carry | ($project->users->count() > 1), false);
 
-        return ($user->id === $model->id || ($user->is_admin && !$model->is_admin)) &&
-               ($userProjects->count() === 0 || !$projectsHaveOtherMembers);
+        if ($userProjects->count() > 0 && $projectsHaveOtherMembers) {
+            return $this->deny('Cannot delete coordinator account while new coordinators are not assigned for the user\'s projects');
+        }
+
+        return $this->allow();
     }
 
     /**

@@ -83,9 +83,6 @@ class ProjectController extends Controller {
     }
 
     public function search(Request $request) {
-
-        $this->authorize('viewAny', Project::class);
-
         $searchTerm = $request->query('q') ?? '';
 
         $projects = $this->searchProjects($searchTerm)->appends($request->query());
@@ -213,9 +210,8 @@ class ProjectController extends Controller {
      * @return Response
      */
     public function index() {
-        $this->authorize('viewAny', Project::class);
-
         $projects = Auth::user()->projects()->paginate(10);
+        
         return view('pages.project.list', ['projects' => $projects]);
     }
 

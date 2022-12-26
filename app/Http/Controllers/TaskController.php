@@ -66,6 +66,7 @@ class TaskController extends Controller {
      */
     public function complete(Task $task) {
 
+        $this->authorize('edit', $task->project);
         $this->authorize('completeTask', $task);
 
         $task->state = 'completed';

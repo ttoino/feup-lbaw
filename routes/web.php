@@ -129,7 +129,7 @@ Route::name('')->group(function () {
     });
 });
 
-Route::prefix('/api')->name('api')->group(function () {
+Route::prefix('/api')->name('api')->middleware('throttle')->group(function () {
 
     Route::prefix('/project')->name('.project')->controller('ProjectController')->group(function () {
 

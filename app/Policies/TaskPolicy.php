@@ -30,9 +30,15 @@ class TaskPolicy
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Task $task, Project $project)
-    {
-        return $project->id === $task->project->id && ($user->is_admin || $task->project->users->contains($user));
+    public function view(User $user, Task $task, Project $project) {
+
+        if ($project->id !== $task->project->id)
+            return $this->deny('Task is not a child of the given project');
+
+        if (!$user->is_admin && !$task->project->users->contains($user));
+            return $this->deny('Only admins or members of this task\'s project can view this task');
+        
+        return $this->allow();
     }
 
     /**
@@ -42,7 +48,10 @@ class TaskPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function create(User $user, TaskGroup $task_group) {
-        return $task_group->project->users->contains($user);
+        if (!$task_group->project->users->contains($user))
+            return $this->deny('Only members of the given group\'s project can create tasks');
+        
+        return $this->allow();
     }
 
     /**
@@ -53,7 +62,10 @@ class TaskPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function edit(User $user, Task $task) {
-        return $task->project->users->contains($user);
+        if (!$task->project->users->contains($user))
+            return $this->deny('Only members of the given task\'s project can update tasks');
+        
+        return $this->allow();
     }
 
     /**
@@ -63,9 +75,11 @@ class TaskPolicy
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Task $task)
-    {
-        return $task->project->users->contains($user);
+    public function delete(User $user, Task $task) {
+        if (!$task->project->users->contains($user))
+            return $this->deny('Only members of the given task\'s project can delete tasks');
+        
+        return $this->allow();
     }
 
     /**
@@ -100,10 +114,20 @@ class TaskPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function completeTask(User $user, Task $task) {
-        return !$user->is_admin && $task->project->users->contains($user);
+        
+        if ($user->is_admin)
+            return $this->deny('Admins cannot mark tasks as completed');
+        
+        if (!$task->project->users->contains($user))
+            return $this->deny('Only members of the task\'s project can mark it as completed');
+        
+        return $this->allow();
     }
 
     public function search(User $user, Project $project) {
-        return $user->is_admin || $user->projects->contains($project);
+        if (!$user->is_admin && !$user->projects->contains($project))
+            return $this->deny('Only admins or members of the given project can search tasks in it');
+        
+        return $this->allow();
     }
 }

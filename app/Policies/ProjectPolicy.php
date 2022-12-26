@@ -18,7 +18,6 @@ class ProjectPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function viewAny(User $user) {
-        return !$user->is_admin;
     }
 
     /**
@@ -29,7 +28,10 @@ class ProjectPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function view(User $user, Project $project) {
-        return $user->is_admin || $project->users->contains($user);
+        if (!$user->is_admin && !$project->users->contains($user))
+            return $this->deny('Only admins or the project\'s members can view this project');
+        
+        return $this->allow();
     }
 
     /**
@@ -39,7 +41,11 @@ class ProjectPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function create(User $user) {
-        return !$user->is_admin;
+
+        if ($user->is_admin)
+            return $this->deny('Admins cannot create projects');
+
+        return $this->allow();
     }
 
     /**
@@ -50,7 +56,14 @@ class ProjectPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function edit(User $user, Project $project) {
-        return !$project->archived && $project->users->contains($user);
+
+        if ($project->archived)
+            return $this->deny('Cannot update an archived project');
+
+        if (!$project->users->contains($user))
+            return $this->deny('Only the project\'s members can edit this project');
+        
+        return $this->allow();
     }
 
     /**
@@ -61,7 +74,10 @@ class ProjectPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function delete(User $user, Project $project) {
-        return $user->is_admin || $project->coordinator_id === $user->id;
+        if (!$user->is_admin && $project->coordinator_id !== $user->id)
+            return $this->deny('Only admins the project\'s coordinator can delete this project');
+        
+        return $this->allow();
     }
 
     /**
@@ -77,23 +93,63 @@ class ProjectPolicy
     }
 
     public function toggleFavorite(User $user, Project $project) {
-        return !$user->is_admin && $project->users->contains($user);
+
+        if ($user->is_admin)
+            return $this->deny('Admins cannot mark projects as favorites');
+
+        if (!$project->users->contains($user))
+            return $this->deny('Only the project\'s members can mark this project as favorite');
+        
+        return $this->allow();
     }
 
     public function showAddUserPage(User $user, Project $project) {
-        return $user->id === $project->coordinator_id;
+        if ($user->id !== $project->coordinator_id)
+            return $this->deny('Only the project\'s coordinator can see the \'Add User to Project\' page');
+        
+        return $this->allow();
     }
 
     public function addUser(User $user, Project $project, User $model) {
-        return $user->id === $project->coordinator_id && !$project->users->contains($model) && !$project->archived;
+
+        if ($user->id !== $project->coordinator_id)
+            return $this->deny('Only the project\'s coordinator can invite users to this project');
+
+        if ($project->archived)
+            return $this->deny('Cannot invite users to an archived project');
+
+        if ($project->users->contains($model))
+            return $this->deny('Cannot invite user to a project they are already a member of');
+
+        return $this->allow();
     }
 
     public function removeUser(User $user, Project $project, User $model) {
-        return $user->id === $project->coordinator_id && $project->users->contains($model) && !$project->archived;
+
+        if ($user->id !== $project->coordinator_id)
+            return $this->deny('Only the project\'s coordinator can remove users from this project');
+
+        if ($project->archived)
+            return $this->deny('Cannot remove users from an archived project');
+
+        if (!$project->users->contains($model))
+            return $this->deny('Cannot remove user from a project they are not a member of');
+
+        return $this->allow();
     }
 
     public function leaveProject(User $user, Project $project) {
-        return !$user->is_admin && $project->users->contains($user) && ($user->id !== $project->coordinator_id);
+
+        if ($user->is_admin)
+            return $this->deny('Admins cannot leave projects');
+
+        if ($user->id !== $project->coordinator_id)
+            return $this->deny('The project\' coordinator cannot leave the project without appointing a new coordinator');
+
+        if (!$project->users->contains($user))
+            return $this->deny('Only the project\'s members can leave the project');
+        
+        return $this->allow();
     }
 
     /**
