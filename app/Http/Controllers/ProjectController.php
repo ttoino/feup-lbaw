@@ -230,9 +230,9 @@ class ProjectController extends Controller {
 
         $url = URL::signedRoute('project.join', ['project' => $project, 'user' => $user]);
 
-        $user->notify(new ProjectInvite($url));
+        $user->notify(new ProjectInvite($url, $project));
 
-        $project->users()->save($user);
+        // $project->users()->save($user);
 
         return redirect()->route('project', ['project' => $project]);
     }

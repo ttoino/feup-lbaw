@@ -30,7 +30,7 @@ class TaskAssigned extends Notification {
      */
     public function via($notifiable) {
         return [
-            // 'mail',
+            'mail',
             CustomDatabaseChannel::class
         ];
     }

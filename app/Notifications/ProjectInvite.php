@@ -3,20 +3,23 @@
 namespace App\Notifications;
 
 use App\Models\ProjectInvitation;
+use App\Models\Project;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
 class ProjectInvite extends Notification {
     public string $url;
+    public Project $project;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(string $url) {
+    public function __construct(string $url, Project $project) {
         $this->url = $url;
+        $this->project = $project;
     }
 
     /**
@@ -40,8 +43,8 @@ class ProjectInvite extends Notification {
      */
     public function toMail($notifiable) {
         return (new MailMessage)
-                    ->line('You have been invited to join <inserir nome do projeto>.')
-                    ->action('Notification Action', url($this->url))
+                    ->line("You've been invited to join " . $this->project->name . ".")
+                    ->action('Join this project', url($this->url))
                     ->line('Thank you for using our application!');
     }
 
