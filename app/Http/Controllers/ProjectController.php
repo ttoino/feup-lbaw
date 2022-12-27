@@ -65,6 +65,9 @@ class ProjectController extends Controller {
     }
 
     public function joinProject(Request $request, Project $project) {
+
+        // TODO: handle authorization with policies
+
         $user = User::findOrFail($request->query('user'));
 
         $project->users()->save($user);
@@ -215,14 +218,14 @@ class ProjectController extends Controller {
         return view('pages.project.list', ['projects' => $projects]);
     }
 
-    public function showAddUserPage(Project $project) {
+    public function showInviteUserPage(Project $project) {
 
         $this->authorize('showAddUserPage', $project);
 
         return view('pages.project.add', ['project' => $project]);
     }
 
-    public function addUser(Request $request, Project $project) {
+    public function inviteUser(Request $request, Project $project) {
 
         $user = User::where('email', $request->input('email'))->first();
 
@@ -278,5 +281,14 @@ class ProjectController extends Controller {
         return $request->wantsJson()
             ? new JsonResponse($project->toArray(), 200)
             : redirect()->route('project.list');
+    }
+
+    public function getProjectMembers(Request $request, Project $project) {
+
+        $this->authorize('getProjectMembers', $project);
+
+        $members = $project->users()->cursorPaginate(10);
+
+        return new JsonResponse($members);
     }
 }

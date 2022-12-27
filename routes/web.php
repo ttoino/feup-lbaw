@@ -92,9 +92,9 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
             Route::post('new', 'store')->name('.new');
         });
 
-        Route::prefix('/add')->name('.user')->controller('ProjectController')->group(function () {
-            Route::get('', 'showAddUserPage')->name('.add');
-            Route::post('', 'addUser')->name('.add-action');
+        Route::prefix('/invite')->name('.user')->controller('ProjectController')->group(function () {
+            Route::get('', 'showInviteUserPage')->name('.invite');
+            Route::post('', 'inviteUser')->name('.invite-action');
         });
     });
 });
@@ -140,6 +140,11 @@ Route::prefix('/api')->name('api')->middleware('throttle')->group(function () {
             Route::get('', 'show')->name('');
 
             Route::put('', 'update')->name('.update');
+
+            Route::prefix('/members')->name('.members')->group(function () {
+                Route::get('', 'getProjectMembers')->name('');
+                // Route::post('', 'addProjectMember')->name('.add');
+            });
 
             Route::prefix('/favorite')->name('.favorite')->group(function () {
                 Route::post('/toggle', 'toggleFavorite')->name('.toggle');

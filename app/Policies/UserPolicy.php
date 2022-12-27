@@ -29,17 +29,19 @@ class UserPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function view(User $user, User $model) {
+        
+        if ($user->is_admin)
+            return $this->allow();
 
-        if (!$user->is_admin && $user->id !== $model->id)
-            return $this->deny('Only admins or the profile\'s owner can view this profile');
+        if ($user->id === $model->id)
+            return $this->allow();
 
         $projectsInCommon = $user->projects->intersect($model->projects)->count() > 0;
-
-        if (! $projectsInCommon) {
-            return $this->deny('The current user must have some project in common with the specified user');
-        }
-
-        return $this->allow();
+        
+        if ($projectsInCommon)
+            return $this->allow();
+            
+        return $this->deny('Only admins, the profile\'s owner or users that share a project with the profile\'s owner can view this profile');
     }
 
     /**

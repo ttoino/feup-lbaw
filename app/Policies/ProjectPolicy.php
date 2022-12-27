@@ -152,6 +152,14 @@ class ProjectPolicy
         return $this->allow();
     }
 
+    public function getProjectMembers(User $user, Project $project) {
+
+        if ($user->is_admin || $project->users->contains($user))
+            return $this->allow();
+
+        return $this->deny('Only admins or project members can see the project\'s members');
+    }
+
     /**
      * Determine whether the user can permanently delete the model.
      *

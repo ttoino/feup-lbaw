@@ -60,13 +60,13 @@
         @endforeach
 
         @if (Auth::user()->id == $project->coordinator_id)
-            <a href="{{ route('project.user.add', ['project' => $project]) }}"
+            <a href="{{ route('project.user.invite', ['project' => $project]) }}"
                 @class([
                     'nav-link',
                     'nav-item',
                     'active' => Request::route()->getName() === 'project.user.add',
                 ])>
-                Add User
+                Invite User
             </a>
         @endif
 
