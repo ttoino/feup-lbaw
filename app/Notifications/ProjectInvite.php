@@ -41,7 +41,7 @@ class ProjectInvite extends Notification {
     public function toMail($notifiable) {
         return (new MailMessage)
                     ->line('You have been invited to join <inserir nome do projeto>.')
-                    ->action('Notification Action', $this->url)
+                    ->action('Notification Action', url($this->url))
                     ->line('Thank you for using our application!');
     }
 

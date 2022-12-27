@@ -54,7 +54,7 @@ class TaskCommented extends Notification {
      */
     public function toArray($notifiable) {
         return [
-            'comment' => $this->comment
+            'comment' => $this->comment->id
         ];
     }
 }

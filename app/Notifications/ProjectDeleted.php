@@ -51,7 +51,7 @@ class ProjectDeleted extends Notification {
      */
     public function toArray($notifiable) {
         return [
-            'project' => $this->project
+            'project' => $this->project->id
         ];
     }
 }

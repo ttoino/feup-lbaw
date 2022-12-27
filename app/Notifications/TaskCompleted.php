@@ -53,7 +53,7 @@ class TaskCompleted extends Notification {
      */
     public function toArray($notifiable) {
         return [
-            'task' => $this->task
+            'task' => $this->task->id
         ];
     }
 }
