@@ -232,7 +232,7 @@ class ProjectController extends Controller {
 
         $user->notify(new ProjectInvite($url));
 
-        // $project->users()->save($user);
+        $project->users()->save($user);
 
         return redirect()->route('project', ['project' => $project]);
     }
