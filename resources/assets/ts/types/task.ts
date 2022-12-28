@@ -8,7 +8,7 @@ export interface Task {
     description: string;
     creation_date: Date;
     edit_date: Date;
-    state: string;
+    completed: boolean;
     creator_id: number;
     position: number;
     task_group_id: number;

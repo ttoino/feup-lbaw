@@ -24,15 +24,13 @@ DROP TABLE IF EXISTS
     task_tag
 CASCADE;
 
-DROP TYPE IF EXISTS TODAY, TASK_STATE, COLOR, NOTIFICATION_TYPE CASCADE;
+DROP TYPE IF EXISTS TODAY, COLOR CASCADE;
 
 ------------------------------------------------------------
 -- Types
 ------------------------------------------------------------
 
 CREATE DOMAIN TODAY AS TIMESTAMP DEFAULT CURRENT_TIMESTAMP CHECK (VALUE <= CURRENT_TIMESTAMP);
-
-CREATE TYPE TASK_STATE AS ENUM ('created', 'member_assigned', 'completed');
 
 CREATE DOMAIN COLOR AS INTEGER;
 
@@ -86,7 +84,7 @@ CREATE TABLE task (
     description TEXT,
     creation_date TODAY NOT NULL,
     edit_date TIMESTAMP CHECK (edit_date <= CURRENT_TIMESTAMP),
-    state TASK_STATE NOT NULL DEFAULT 'created',
+    completed BOOLEAN NOT NULL DEFAULT false,
     creator_id INTEGER,
     position INTEGER NOT NULL,
     task_group_id INTEGER NOT NULL,

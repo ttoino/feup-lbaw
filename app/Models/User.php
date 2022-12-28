@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Events\UserCreated;
 use App\Events\UserDeleted;
 use App\Events\UserUpdated;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Storage;
@@ -40,6 +41,14 @@ class User extends Authenticatable {
         'remember_token'
     ];
 
+    protected $casts = [
+        'is_admin' => 'boolean',
+    ];
+
+    protected $appends = [
+        'profile_pic'
+    ];
+
     protected $dispatchesEvents = [
         'created' => UserCreated::class,
         'updated' => UserUpdated::class,
@@ -59,10 +68,10 @@ class User extends Authenticatable {
         return $this->hasMany(Report::class, 'user_profile_id');
     }
 
-    public function getProfilePicture() {
-        return Storage::disk('public')->exists("users/$this->id.webp")
-            ? Storage::url("public/users/$this->id.webp")
-            : Storage::url("public/users/default_$this->id.svg");
+    protected function profilePic(): Attribute {
+        return Attribute::make(fn($_, $attributes) => Storage::disk('public')->exists("users/{$attributes['id']}.webp")
+            ? Storage::url("public/users/{$attributes['id']}.webp")
+            : Storage::url("public/users/default_{$attributes['id']}.svg"));
     }
 
     protected $table = 'user_profile';

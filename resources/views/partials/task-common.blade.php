@@ -1,36 +1,22 @@
 <div class="vstack gap-1 align-self-center">
-    @if (!$task->tags->isEmpty())
-        <ul class="tags">
-            @foreach ($task->tags as $tag)
-                <li style="background: rgb({{ $tag->rgbColor() }})">
-                </li>
-            @endforeach
-        </ul>
-    @endif
+    <ul class="tags" data-render-list="tags,#tag-template">
+        @each('partials.project.board.task-tag', $task->tags, 'tag')
+    </ul>
 
-    <a class="stretched-link"
-        href="{{ route('project.task.info', ['project' => $project, 'task' => $task]) }}">
+    <a class="stretched-link" data-render-text="name"
+        href="{{ route('project.task.info', ['project' => $project, 'task' => $task->id ?? 0]) }}">
         {{ $task->name }}
     </a>
 
-    @if (!$task->assignees->isEmpty())
-        <ul class="assignees">
-            @foreach ($task->assignees as $assignee)
-                <li>
-                    <a href="{{ route('user.profile', ['user' => $assignee]) }}">
-                        <img src="{{ asset($assignee->getProfilePicture()) }}"
-                            alt="{{ $assignee->name }}" width="24"
-                            height="24" class="rounded-circle">
-                    </a>
-                </li>
-            @endforeach
-        </ul>
-    @endif
+    <div class="bottom-row">
+        <ul class="assignees" data-render-list="assignees,#assignee-template">
+            @each('partials.project.board.task-assignee', $task->assignees, 'assignee')</ul>
+        <span class="comments" data-render-attr="comments.length,comment-count"
+            data-comment-count="{{ $task->comments->count() }}">
+            <i class="bi bi-reply"></i>
+        </span>
+    </div>
 </div>
-<button class="btn btn-outline btn-disable" style="z-index: 50" @if ($task->state === 'completed') disabled @endif>
-    <i @class([
-        'bi',
-        'bi-check-circle' => $task->state !== 'completed',
-        'bi-check-circle-fill' => $task->state === 'completed',
-    ])></i>
-</button>
+
+<i data-render-class-condition="completed,d-none,false"
+    @class(['completed-check', 'd-none' => !$task->completed])></i>

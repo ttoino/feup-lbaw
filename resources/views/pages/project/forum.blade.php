@@ -12,12 +12,10 @@
 
 @section('project-content')
     <section class="forum-threads">
-        @if (Auth::user()?->projects->contains($project))
+        @if (Auth::user()?->projects->contains($project) && !$project->archived)
             <header>
-                <a id="new-thread-button"
-                    @if ($project->archived) href="#new-thread-offcanvas"
-                    aria-disabled="true" @endif
-                    role="button" @class(['btn', 'btn-primary', 'disabled' => $project->archived])>
+                <a id="new-thread-button" href="#new-thread-offcanvas" role="button"
+                    @class(['btn', 'btn-primary'])>
                     <i class="bi bi-plus"></i>New Thread
                 </a>
             </header>
@@ -37,7 +35,7 @@
         @include('partials.loading')
     </aside>
 
-    @if (Auth::user()?->projects->contains($project))
+    @if (Auth::user()?->projects->contains($project) && !$project->archived)
         <aside id="new-thread-offcanvas">
             <header class="offcanvas-header">
                 <h2 class="offcanvas-title h4" id="new-thread-offcanvas-title">

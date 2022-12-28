@@ -1,13 +1,16 @@
 <li class="list-group-item list-group-item-action position-relative d-flex flex-row align-items-center gap-2"
-    data-user-id="{{ $item->id }}" @isset($project) data-project-id="{{$project->id}}" @endisset>
-    <img src="{{ asset($item->getProfilePicture()) }}" alt="Profile picture" width="40" height="40" class="rounded-circle">
+    data-user-id="{{ $item->id }}"
+    @isset($project) data-project-id="{{ $project->id }}" @endisset>
+    <img src="{{ asset($item->profile_pic) }}" alt="Profile picture" width="40"
+        height="40" class="rounded-circle">
 
     <div class="vstack flex-fill align-self-center">
-        <a href="{{ route('user.profile', ['user' => $item]) }}" @class([
-            'stretched-link',
-            'fw-bold',
-            'underline' => Auth::user()?->id === $item->id,
-        ])>
+        <a href="{{ route('user.profile', ['user' => $item]) }}"
+            @class([
+                'stretched-link',
+                'fw-bold',
+                'underline' => Auth::user()?->id === $item->id,
+            ])>
             {{ $item->name }}
         </a>
 
@@ -19,16 +22,19 @@
     @if (Auth::user()?->is_admin)
         @if ($item->reports_count > 0)
             <span class="text-danger" style="z-index: 5">
-                <a href={{route('admin.reports.user', ['user' => $item])}} >{{ $item->reports_count }} Reports</a>
+                <a href={{ route('admin.reports.user', ['user' => $item]) }}>{{ $item->reports_count }}
+                    Reports</a>
             </span>
-        @endif    
-        <button class="btn user-delete btn-outline-danger" style="z-index: 5"><i class="bi bi-trash3"></i></button> 
+        @endif
+        <button class="btn user-delete btn-outline-danger" style="z-index: 5"><i
+                class="bi bi-trash3"></i></button>
     @endif
 
     {{-- TODO: This shoule be a new partial --}}
-    @isset($project) 
+    @isset($project)
         @if (Auth::user() == $project->coordinator)
-            <button class="btn user-remove btn-outline-danger" style="z-index: 5"><i class="bi bi-x-lg"></i></button> 
+            <button class="btn user-remove btn-outline-danger" style="z-index: 5"><i
+                    class="bi bi-x-lg"></i></button>
         @endif
     @endisset
 </li>

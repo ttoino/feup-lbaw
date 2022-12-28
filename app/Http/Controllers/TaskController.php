@@ -69,7 +69,7 @@ class TaskController extends Controller {
         $this->authorize('edit', $task->project);
         $this->authorize('completeTask', $task);
 
-        $task->state = 'completed';
+        $task->completed = true;
         $task->save();
 
         return new JsonResponse($task->toArray());
@@ -112,7 +112,7 @@ class TaskController extends Controller {
     }
 
     public function showAPI(Request $request, Task $task) {
-        $this->authorize('view', $task);
+        // $this->authorize('view', $task);
 
         $task->load(['comments' => ['author'], 'tags', 'assignees']);
         $task->description = app(MarkdownRenderer::class)->toHtml($task->description ?? "");

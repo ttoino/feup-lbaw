@@ -202,106 +202,106 @@ VALUES
 
 INSERT INTO task(
   name, description, creation_date, 
-  edit_date, state, creator_id, position, 
+  edit_date, completed, creator_id, position, 
   task_group_id
 ) 
 VALUES 
   (
     'Information search', 'Nothing done', 
-    '2021-06-09', '2021-06-13', 'created', 
+    '2021-06-09', '2021-06-13', false, 
     4, 1, 1
   ), 
   (
     'Information analysis', 'stil things left to do', 
-    '2022-02-02', NULL, 'member_assigned', 
+    '2022-02-02', NULL, false, 
     6, 2, 1
   ), 
   (
     'Information Architecture', 'Develop the architecture', 
-    '2021-06-07', NULL, 'member_assigned', 
+    '2021-06-07', NULL, false, 
     10, 3, 1
   ), 
   (
     'Potential Clients', 'Search for potential clients', 
-    '2022-02-02', '2022-05-18', 'created', 
+    '2022-02-02', '2022-05-18', false, 
     4, 3, 4
   ), 
   (
     'Design review', 'Design review with stakeholders', 
-    '2021-06-09', '2021-06-13', 'created', 
+    '2021-06-09', '2021-06-13', false, 
     8, 2, 12
   ), 
   (
     'Implementation', 'Implement landing page', 
-    '2022-02-04', '2022-02-05', 'created', 
+    '2022-02-04', '2022-02-05', false, 
     14, 4, 12
   ), 
   (
     'User research', 'Summarize user reseach insights', 
-    '2022-02-04', NULL, 'created', 12, 
+    '2022-02-04', NULL, false, 12, 
     2, 7
   ), 
   (
     'Finalize use cases', 'Sign off user quotes', 
-    '2022-02-04', NULL, 'completed', 
+    '2022-02-04', NULL, true, 
     9, 1, 7
   ), 
   (
     'Info search', 'Need more info', 
-    '2022-02-04', '2022-03-09', 'member_assigned', 
+    '2022-02-04', '2022-03-09', false, 
     20, 1, 9
   ), 
   (
     'Design new website', 'Is missing the last item', 
-    '2022-02-04', '2022-02-05', 'created', 
+    '2022-02-04', '2022-02-05', false, 
     15, 3, 9
   ), 
   (
     'Design', 'Do the page design', '2021-03-02', 
-    '2021-03-03', 'completed', 17, 1, 
+    '2021-03-03', true, 17, 1, 
     4
   ), 
   (
     'Front', 'Frontend', '2021-05-05', 
-    NULL, 'completed', 11, 2, 4
+    NULL, true, 11, 2, 4
   ), 
   (
     'Implement', 'Implementing frontend', 
-    '2021-05-04', NULL, 'completed', 
+    '2021-05-04', NULL, true, 
     16, 4, 4
   ), 
   (
     'Project definition', 'divide tasks', 
-    '2021-02-06', '2021-02-07', 'created', 
+    '2021-02-06', '2021-02-07', false, 
     13, 5, 4
   ), 
   (
     'info analysis', 'more more', '2022-05-03', 
-    NULL, 'created', 10, 2, 3
+    NULL, false, 10, 2, 3
   ), 
   (
     'info search', 'need more info', 
-    '2022-04-23', NULL, 'member_assigned', 
+    '2022-04-23', NULL, false, 
     5, 1, 3
   ), 
   (
     'potential members', 'look for potential members', 
-    '2022-07-23', '2022-07-24', 'created', 
+    '2022-07-23', '2022-07-24', false, 
     19, 3, 3
   ), 
   (
     'information Architecture', 'architecture development', 
-    '2022-04-23', '2022-04-24', 'created', 
+    '2022-04-23', '2022-04-24', false, 
     18, 1, 12
   ), 
   (
     'generic research', 'everything', 
-    '2021-10-31', NULL, 'completed', 
+    '2021-10-31', NULL, true, 
     12, 1, 8
   ), 
   (
     'user research', 'summarize user research', 
-    '2021-11-08', NULL, 'completed', 
+    '2021-11-08', NULL, true, 
     15, 2, 8
   );
 

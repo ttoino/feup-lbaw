@@ -7,7 +7,6 @@ export interface Thread {
     content: string;
     creation_date: Date;
     edit_date: Date;
-    state: string;
     author_id: number;
     project_id: number;
 

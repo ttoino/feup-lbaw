@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\LaravelMarkdown\MarkdownRenderer;
 
 class Project extends Model {
     use HasFactory;
@@ -31,6 +33,8 @@ class Project extends Model {
     protected $hidden = [
         'fts_search'
     ];
+
+    protected $appends = ['description_formatted'];
 
     public function coordinator() {
         return $this->belongsTo(User::class, 'coordinator_id');
@@ -77,6 +81,10 @@ class Project extends Model {
 
     public function reports() {
         return $this->hasMany(Report::class, 'project_id');
+    }
+
+    public function descriptionFormatted(): Attribute {
+        return Attribute::make(fn($_, $attributes) => app(MarkdownRenderer::class)->toHtml($attributes['description'] ?? ""));
     }
 
     protected $table = 'project';

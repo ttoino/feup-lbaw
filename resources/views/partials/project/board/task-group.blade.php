@@ -1,44 +1,53 @@
-<div class="task-group" @isset($group)
+@php($project ??= $group->project)
+
+<div class="task-group"
+    @isset($group)
     data-task-group-id="{{ $group->id }}"
 @endisset>
 
     @isset($group)
         <header>
-            @if (!$group->project->archived)
+            @if (!$project->archived)
                 <i class="grip" style="cursor: grab"></i>
             @endif
 
             <form action="" method="post">
-                <textarea class="auto-resize disabled" autocomplete="off">{{ $group->name }}</textarea>
+                <textarea class="auto-resize disabled" autocomplete="off"
+                    data-render-content="name" @if ($project->archived) disabled @endif>{{ $group->name }}</textarea>
             </form>
         </header>
 
-        <ul data-task-group-id="{{ $group->id }}">
-            @each ('partials.project.board.task', $group->tasks, 'task')
-        </ul>
+        <ul data-task-group-id="{{ $group->id }}">@each('partials.project.board.task', $group->tasks, 'task')</ul>
 
-        <form method="@yield('method', 'POST')" action="{{ route('project.task.new', ['project' => $project]) }}">
-            @csrf
-            <div class="input-group">
-                <input aria-label="Create Task Name" aria-describedby="task-name" class="form-control" id="name"
-                    type="text" name="name" placeholder="Create Task" minlength=4 required
-                    @if ($group->project->archived) disabled @endif>
-                <button class="btn btn-primary" type="submit" @if ($group->project->archived) disabled @endif><i
-                        class="bi bi-plus"></i></button>
-            </div>
-            <input type="hidden" class="form-control" id="task_group" name="task_group_id" value="{{ $group->id }}">
-        </form>
+        @if (!$project->archived)
+            <form method="@yield('method', 'POST')"
+                action="{{ route('project.task.new', ['project' => $project]) }}">
+                @csrf
+                <div class="input-group">
+                    <input aria-label="Create Task Name"
+                        aria-describedby="task-name" class="form-control"
+                        id="name" type="text" name="name"
+                        placeholder="Create Task" minlength=4 required>
+                    <button class="btn btn-primary" type="submit"><i
+                            class="bi bi-plus"></i></button>
+                </div>
+                <input type="hidden" class="form-control" id="task_group"
+                    name="task_group_id" value="{{ $group->id }}">
+            </form>
+        @endif
     @else
-        <form method="@yield('method', 'POST')" action="{{ route('project.task-group.new', ['project' => $project]) }}">
+        <form method="@yield('method', 'POST')"
+            action="{{ route('project.task-group.new', ['project' => $project]) }}">
             @csrf
             <div class="input-group">
-                <input aria-label="Create Group Name" aria-describedby="group-name" class="form-control" id="name"
-                    type="text" name="name" placeholder="Create Group" minlength=4 required
-                    @if ($project->archived) disabled @endif>
-                <button class="btn btn-primary" type="submit" @if ($project->archived) disabled @endif><i
+                <input aria-label="Create Group Name" aria-describedby="group-name"
+                    class="form-control" id="name" type="text"
+                    name="name" placeholder="Create Group" minlength=4 required>
+                <button class="btn btn-primary" type="submit"><i
                         class="bi bi-plus"></i></button>
             </div>
-            <input type="hidden" class="form-control" id="project" name="project_id" value="{{ $project->id }}">
+            <input type="hidden" class="form-control" id="project"
+                name="project_id" value="{{ $project->id }}">
         </form>
     @endisset
 </div>

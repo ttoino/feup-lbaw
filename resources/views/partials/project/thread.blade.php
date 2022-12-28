@@ -2,7 +2,7 @@
 
 <article id="thread">
     <header class="offcanvas-header">
-        <h2 class="offcanvas-title" data-render-prop="title">
+        <h2 class="offcanvas-title" data-render-text="title">
             {{ $thread->title }}
         </h2>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas"

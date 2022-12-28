@@ -2,7 +2,6 @@
     @extend .shadow-sm,
         .rounded,
         .p-2,
-        .pt-3,
         .d-flex,
         .flex-column,
         .gap-3,
@@ -15,7 +14,7 @@
     max-height: 100%;
 
     > header {
-        @extend .hstack, .px-2, .gap-2;
+        @extend .hstack, .px-2, .gap-2, .pt-2;
 
         > .grip {
             @extend .bi, .bi-grip-vertical;
@@ -29,7 +28,7 @@
                 @extend .form-control;
 
                 border-color: transparent;
-                background: none;
+                background: none !important;
                 padding: $input-padding-y;
 
                 @include transition(
@@ -37,7 +36,7 @@
                     background-color 0.15s ease-in-out
                 );
 
-                &:hover {
+                &:not(:disabled):hover {
                     border: $input-border-width solid $input-border-color;
                 }
             }
@@ -49,6 +48,14 @@
 
         overflow-y: auto;
         overflow-x: clip;
+
+        &:empty {
+            @extend .m-n3;
+
+            &:last-child {
+                margin: -$spacer * 0.75;
+            }
+        }
     }
 }
 
@@ -78,7 +85,12 @@
             @extend .rounded-pill, .p-1;
 
             flex: 48px 0 1;
+            background-color: rgb(var(--tag-color));
         }
+    }
+
+    .bottom-row {
+        @extend .hstack, .gap-3;
     }
 
     .assignees {
@@ -106,6 +118,32 @@
         &:hover > *:not(:first-child) {
             margin-inline-start: 4px;
         }
+
+        &:empty {
+            @extend .d-none;
+        }
+    }
+
+    .comments {
+        @extend .hstack, .gap-1;
+
+        &[data-comment-count="0"] {
+            @extend .d-none;
+        }
+
+        &::before {
+            content: attr(data-comment-count);
+        }
+    }
+
+    .completed-check {
+        @extend .bi,
+            .bi-check-lg,
+            .position-absolute,
+            .end-0,
+            .bottom-0,
+            .mx-2,
+            .my-1;
     }
 }
 

@@ -21,9 +21,9 @@ class Notification extends Model {
         'creation_date'
     ];
 
-    public function data() {
-        return json_decode($this->json);
-    }
+    protected $casts = [
+        'json' => 'array',
+    ];
 
     protected $table = 'notification';
 }

@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\LaravelMarkdown\MarkdownRenderer;
 
 class Task extends Model {
     use Notifiable, HasFactory;
@@ -19,9 +21,11 @@ class Task extends Model {
         'name',
         'description',
         'edit_date',
-        'state',
+        'completed',
         'position'
     ];
+
+    protected $appends = ['description_formatted'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -30,6 +34,10 @@ class Task extends Model {
      */
     protected $hidden = [
         'fts_search'
+    ];
+
+    protected $casts = [
+        'completed' => 'boolean'
     ];
 
     public function project() {
@@ -77,6 +85,10 @@ class Task extends Model {
             'task_id',
             'user_profile_id'
         );
+    }
+
+    public function descriptionFormatted(): Attribute {
+        return Attribute::make(fn($_, $attributes) => app(MarkdownRenderer::class)->toHtml($attributes['description'] ?? ""));
     }
 
     protected $table = 'task';

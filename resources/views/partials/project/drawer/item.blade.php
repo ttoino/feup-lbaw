@@ -3,10 +3,10 @@
     $currentRouteName = $currentRoute->getName();
 @endphp
 
-<a href="{{ route($route, ['project' => $project]) }}"
+<a href="{{ route(is_array($route) ? $route[0] : $route, ['project' => $project]) }}"
     @class([
-        'active' => str_starts_with($currentRouteName, 'project.thread')
-            ? $route === 'project.forum'
+        'active' => is_array($route)
+            ? in_array($currentRouteName, $route)
             : $route === $currentRouteName,
     ])>
     {{ $label }}

@@ -3,22 +3,32 @@
 @section('title', $project->name)
 @push('main-classes', 'project-board-main ')
 
+@push('templates')
+    <template id="tag-template">@include('partials.project.board.task-tag')</template>
+    <template id="assignee-template">@include('partials.project.board.task-assignee')</template>
+    <template id="tag-template">@include('partials.project.board.task-tag')</template>
+    <template id="task-template">@include('partials.project.board.task')</template>
+    <template id="task-group-template">@include('partials.project.board.task-group', [
+        'group' => new \App\Models\TaskGroup(),
+        'project' => $project,
+    ])</template>
+@endpush
+
 @section('project-content')
     <section class="project-board">
         @each('partials.project.board.task-group', $project->taskGroups, 'group')
-        @include('partials.project.board.task-group')
+        @if (!$project->archived)
+            @include('partials.project.board.task-group')
+        @endif
 
-        @if (Auth::user()?->projects->contains($project))
+        @if (Auth::user()?->projects->contains($project) && !$project->archived)
             <a id="new-task-button" data-bs-toggle="offcanvas"
-                @if (!$project->archived) href="#new-task-offcanvas" @endif
-                role="button" @class([
+                href="#new-task-offcanvas" role="button" @class([
                     'disabled' => $project->archived,
                 ])
-                aria-controls="new-task-offcanvas" @if (!$project->archived)
-                aria-disabled="true"
-        @endif>
-        <i class="bi bi-plus"></i> Create task
-        </a>
+                aria-controls="new-task-offcanvas">
+                <i class="bi bi-plus"></i> Create task
+            </a>
         @endif
     </section>
 

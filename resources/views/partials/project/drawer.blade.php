@@ -55,7 +55,7 @@
                     class="bi bi-search"></i></button>
         </form>
 
-        @foreach ([['label' => 'Info', 'route' => 'project.info'], ['label' => 'Board', 'route' => 'project.board'], ['label' => 'Timeline', 'route' => 'project.timeline'], ['label' => 'Forum', 'route' => 'project.forum']] as $item)
+        @foreach ([['label' => 'Info', 'route' => 'project.info'], ['label' => 'Board', 'route' => ['project.board', 'project.task.info']], ['label' => 'Forum', 'route' => ['project.forum', 'project.thread']]] as $item)
             @include('partials.project.drawer.item', $item)
         @endforeach
 

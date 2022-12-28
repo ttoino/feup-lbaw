@@ -5,7 +5,6 @@ export interface ThreadComment {
     content: string;
     creation_date: Date;
     edit_date: Date;
-    state: string;
     author_id: number;
     thread_id: number;
 

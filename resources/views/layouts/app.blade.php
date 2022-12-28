@@ -35,7 +35,7 @@
                     <a href="#" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         <img width="40" height="40" alt="Profile picture"
-                            src="{{ asset(Auth::user()->getProfilePicture()) }}"
+                            src="{{ asset(Auth::user()->profile_pic) }}"
                             class="rounded-circle">
                     </a>
                     <nav class="dropdown-menu dropdown-menu-end shadow-sm"

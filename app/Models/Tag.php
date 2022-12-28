@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -43,8 +44,8 @@ class Tag extends Model {
         );
     }
 
-    public function rgbColor() {
-        return ($this->color >> 16) . ', ' . (($this->color >> 8) & 255) . ', ' . ($this->color & 255);
+    protected function color(): Attribute {
+        return Attribute::make(fn($color) => ($color >> 16) . ', ' . (($color >> 8) & 255) . ', ' . ($color & 255));
     }
 
     protected $table = 'tag';
