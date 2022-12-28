@@ -50,6 +50,14 @@
             time {
                 flex-shrink: 0;
             }
+
+            .comments {
+                @extend .hstack, .gap-1;
+
+                &::before {
+                    content: attr(data-comment-count);
+                }
+            }
         }
     }
 }

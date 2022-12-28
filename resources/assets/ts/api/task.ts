@@ -6,8 +6,8 @@ export const completeTask = (taskId: string) =>
 
 export const repositionTask = (
     taskId: string,
-    task_group_id: string | null,
-    position: string | null
+    task_group_id: string,
+    position: string
 ) =>
     apiFetch<Task>(`/api/task/${taskId}/reposition`, "POST", {
         task_group_id,
@@ -16,3 +16,12 @@ export const repositionTask = (
 
 export const getTask = (taskId: string) =>
     apiFetch<Task>(`/api/task/${taskId}`);
+
+export const newTask = (task: Task) =>
+    apiFetch<Task>(`/api/task/new`, "POST", task);
+
+export const editTask = (task: Task) =>
+    apiFetch<Task>(`/api/task/${task.id}`, "PUT", task);
+
+export const deleteTask = (taskId: string) =>
+    apiFetch<Task>(`/api/task/${taskId}`, "DELETE");

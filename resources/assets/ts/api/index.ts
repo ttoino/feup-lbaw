@@ -4,20 +4,35 @@ const token =
     document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')
         ?.content ?? "";
 
-type ResponseContentWithErrorMessage<T> = T & { message?: string };
-
-interface EnhancedResponse<T> extends Response {
-    json(): Promise<ResponseContentWithErrorMessage<T>>;
+export interface APIError {
+    message: string;
 }
+
+interface ErrorResponse extends Response {
+    ok: false;
+    json(): Promise<APIError>;
+}
+
+interface SuccessfulResponse<T> extends Response {
+    ok: true;
+    json(): Promise<T>;
+}
+
+export type EnhancedResponse<T> = ErrorResponse | SuccessfulResponse<T>;
+
+export type APIMethod = "GET" | "POST" | "PUT" | "DELETE";
 
 export const apiFetch = <T>(
     url: RequestInfo,
-    method: RequestInit["method"] = "GET",
+    method: APIMethod = "GET",
     body?: any,
     options?: RequestInit
 ): Promise<EnhancedResponse<T>> => {
-
-    console.log(`Making ${method} request to ${url} with options ${options} and body ${JSON.stringify(body)}`);
+    console.log(
+        `Making ${method} request to ${url} with options ${options} and body ${JSON.stringify(
+            body
+        )}`
+    );
     return fetch(url, {
         ...options,
         method,
@@ -26,10 +41,10 @@ export const apiFetch = <T>(
             ...options?.headers,
             "X-CSRF-TOKEN": token,
             "Content-Type": "application/json",
-            "Accept": "application/json",
+            Accept: "application/json",
         },
     });
-}
+};
 
 export const tryRequest = async <K, Params extends Array<any>>(
     fn: (...params: Params) => ReturnType<typeof apiFetch<K>>,
@@ -41,7 +56,6 @@ export const tryRequest = async <K, Params extends Array<any>>(
         const response = await fn(...params);
 
         if (!response.ok) {
-
             let message;
             try {
                 const responseBody = await response.json();

@@ -15,19 +15,21 @@ use Spatie\LaravelMarkdown\MarkdownRenderer;
 
 class TaskController extends Controller {
 
-    public function store(Request $request, Project $project) {
+    public function store(Request $request) {
         $requestData = $request->all();
 
         $this->taskCreationValidator($requestData)->validate();
 
         $task_group = TaskGroup::findOrFail($requestData['task_group_id']);
+        $project = Project::findOrFail($task_group->project_id);
 
+        $this->authorize('edit', $project);
         $this->authorize('create', [Task::class, $task_group]);
 
         $task = $this->createTask($requestData);
 
         return $request->wantsJson()
-            ? new JsonResponse([$task], 201)
+            ? new JsonResponse($task, 201)
             : redirect()->route('project', ['project' => $project]);
     }
 
@@ -41,7 +43,7 @@ class TaskController extends Controller {
         $task->position = (Task::where('task_group_id', $task->task_group_id)->max('position') ?? 0) + 1;
         $task->save();
 
-        return $task;
+        return $task->fresh();
     }
 
     /**
@@ -113,9 +115,6 @@ class TaskController extends Controller {
 
     public function showAPI(Request $request, Task $task) {
         // $this->authorize('view', $task);
-
-        $task->load(['comments' => ['author'], 'tags', 'assignees']);
-        $task->description = app(MarkdownRenderer::class)->toHtml($task->description ?? "");
 
         return new JsonResponse($task);
     }

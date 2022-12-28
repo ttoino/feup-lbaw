@@ -4,8 +4,7 @@ import { registerEnhancement } from "../../enhancements";
 import { ajaxNavigation, navigation } from "../../navigation";
 import { Offcanvas } from "bootstrap";
 import { renderThread, renderThreadComments } from "./render";
-
-const projectId = document.location.pathname.split("/")[2];
+import { projectId } from "../project";
 
 const newThreadButton =
     document.querySelector<HTMLAnchorElement>("#new-thread-button");
@@ -44,11 +43,12 @@ newThreadButton?.addEventListener("click", (e) => {
     }
 });
 
-const showThreadOffcanvas = () => {
+export const showThreadOffcanvas = () => {
     if (threadOffcanvas) {
         const style = getComputedStyle(threadOffcanvasEl);
 
         if (style.position == "fixed") {
+            newThreadOffcanvas?.hide();
             threadOffcanvas.show();
         }
     }

@@ -7,6 +7,9 @@
         <template id="thread-comment-template">
             @include('partials.project.forum.comment')
         </template>
+        <template id="thread-template">
+            @include('partials.project.forum.thread')
+        </template>
     @endpush
 @endonce
 

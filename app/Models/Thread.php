@@ -32,6 +32,8 @@ class Thread extends Model {
 
     protected $appends = ['content_formatted'];
 
+    protected $with = ['comments', 'author'];
+
     public function project() {
         return $this->belongsTo(
             Project::class,

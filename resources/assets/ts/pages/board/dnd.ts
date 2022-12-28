@@ -1,92 +1,84 @@
 import Sortable from "sortablejs";
-import { tryRequest } from "../../api";
 
+import { registerEnhancement } from "../../enhancements";
+import { tryRequest } from "../../api";
 import { repositionTask } from "../../api/task";
 import { repositionTaskGroup } from "../../api/task_group";
 
-const setupTaskGroupDnD = () => {
-    const taskGroupsContainer = document.querySelector<HTMLElement>("section");
+registerEnhancement({
+    selector: ".project-board",
+    onattach: (taskGroupsContainer) => {
+        new Sortable(taskGroupsContainer, {
+            group: "taskGroups",
+            handle: ".task-group > header > .grip",
+            animation: 150,
+            easing: "ease-in-out",
+            draggable: ".task-group",
 
-    if (!taskGroupsContainer) return;
+            onEnd: async (e) => {
+                const taskGroupId = e.item.dataset.taskGroupId;
 
-    const sortableTaskGroups = new Sortable(taskGroupsContainer, {
-        group: "taskGroups",
-        handle: "header > .grip",
-        animation: 150,
-        easing: "ease-in-out",
-        draggable: "div[data-task-group-id]",
+                if (!taskGroupId) return;
 
-        onEnd: async (e) => {
-            const taskGroupId = e.item.dataset.taskGroupId;
+                const newPosition = ((e.newIndex ?? 0) + 1).toString();
 
-            if (!taskGroupId) return;
+                console.log(
+                    "task group",
+                    taskGroupId,
+                    "position",
+                    newPosition,
+                    e
+                );
 
-            const newPosition = ((e.newIndex ?? 0) + 1).toString();
+                await tryRequest(
+                    repositionTaskGroup,
+                    "Could not change task group position!",
+                    undefined,
+                    taskGroupId,
+                    newPosition
+                );
+            },
+        });
+    },
+});
 
-            console.log("task group", taskGroupId, "position", newPosition, e);
+const onTaskMove = async (e: Sortable.SortableEvent) => {
+    const taskId = e.item.dataset.taskId;
+    if (!taskId) return;
 
-            await tryRequest(
-                repositionTaskGroup,
-                "Could not change task group position!",
-                undefined,
-                taskGroupId,
-                newPosition
-            );
-        },
-    });
+    const taskGroup = e.to.parentElement?.dataset.taskGroupId;
+    if (!taskGroup) return;
 
-    return sortableTaskGroups;
-};
+    const newPosition = ((e.newIndex ?? 0) + 1).toString();
 
-const setupTaskDnD = () => {
-    const taskGroups = document.querySelectorAll<HTMLUListElement>(
-        "ul[data-task-group-id]"
+    console.log(
+        "task",
+        taskId,
+        "task-group",
+        taskGroup,
+        "position",
+        newPosition
     );
 
-    const onEnd = async (e: Sortable.SortableEvent) => {
-        const taskId = e.item.dataset.taskId;
-
-        if (!taskId) return;
-
-        console.log(e);
-
-        const taskGroup = e.to.dataset.taskGroupId ?? null;
-        const newPosition = ((e.newIndex ?? 0) + 1).toString();
-
-        console.log(
-            "task",
-            taskId,
-            "task-group",
-            taskGroup,
-            "position",
-            newPosition
-        );
-
-        await tryRequest(
-            repositionTask,
-            "Could not change the task position!",
-            undefined,
-            taskId,
-            taskGroup,
-            newPosition
-        );
-    };
-
-    const sortableTasks = Array.prototype.map.call(
-        taskGroups,
-        (group) =>
-            new Sortable(group, {
-                group: "tasks",
-                handle: ".grip",
-                animation: 150,
-                easing: "cubic-bezier(1, 0, 0, 1)",
-
-                onEnd,
-            })
+    await tryRequest(
+        repositionTask,
+        "Could not change the task position!",
+        undefined,
+        taskId,
+        taskGroup,
+        newPosition
     );
-
-    return sortableTasks;
 };
 
-setupTaskGroupDnD();
-setupTaskDnD();
+registerEnhancement({
+    selector: ".task-group > ul",
+    onattach: (group) => {
+        new Sortable(group, {
+            group: "tasks",
+            handle: ".grip",
+            animation: 150,
+            easing: "cubic-bezier(1, 0, 0, 1)",
+            onEnd: onTaskMove,
+        });
+    },
+});

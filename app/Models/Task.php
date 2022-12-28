@@ -22,10 +22,10 @@ class Task extends Model {
         'description',
         'edit_date',
         'completed',
+        'task_group_id',
+        'creator_id',
         'position'
     ];
-
-    protected $appends = ['description_formatted'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -39,6 +39,10 @@ class Task extends Model {
     protected $casts = [
         'completed' => 'boolean'
     ];
+
+    protected $appends = ['description_formatted'];
+
+    protected $with = ['tags', 'comments', 'creator', 'assignees'];
 
     public function project() {
         return $this->hasOneThrough(

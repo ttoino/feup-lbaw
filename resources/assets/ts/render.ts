@@ -14,6 +14,9 @@ const renderMethods: {
         el instanceof HTMLImageElement && (el.src = format(fmt, p)),
     href: (el, p, fmt = "{}") =>
         el instanceof HTMLAnchorElement && (el.href = format(fmt, p)),
+    value: (el, p) =>
+        (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) &&
+        (el.value = String(p)),
     attr: (el, p, ...attrs) =>
         attrs.forEach((a) => el.setAttribute(`data-${a}`, String(p))),
     "class-condition": (el, p, clas = "", flipped = "true") =>
@@ -99,14 +102,20 @@ renderMethods.list = (el, p, templateSelector) =>
 
 export const appendListItem = <T extends Record<string, any>>(
     templateSelector: string,
-    listSelector: string
+    listSelector: string,
+    first: boolean = false
 ) => {
     const list = document.querySelector<HTMLElement>(listSelector);
 
     const renderItem = renderTemplate(templateSelector);
 
     return (
-        list && renderItem && ((data: T) => list.appendChild(renderItem(data)))
+        list &&
+        renderItem &&
+        ((data: T) =>
+            first
+                ? list.insertBefore(renderItem(data), list.firstChild)
+                : list.appendChild(renderItem(data)))
     );
 };
 

@@ -23,18 +23,20 @@ class TaskGroupController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Project $project) {
+    public function store(Request $request) {
         $requestData = $request->all();
 
         $this->taskGroupCreationValidator($requestData)->validate();
-        
+
+        $project = Project::findOrFail($requestData['project_id']);
+
         $this->authorize('edit', $project);
         $this->authorize('create', [TaskGroup::class, $project]);
 
         $taskGroup = $this->createTaskGroup($requestData);
 
         return $request->wantsJson()
-            ? new JsonResponse([$taskGroup], 201)
+            ? new JsonResponse($taskGroup, 201)
             : redirect()->route('project', ['project' => $project]);
     }
 
@@ -48,7 +50,7 @@ class TaskGroupController extends Controller {
         $taskGroup->position = (TaskGroup::where('project_id', $taskGroup->project_id)->max('position') ?? 0) + 1;
         $taskGroup->save();
 
-        return $taskGroup;
+        return $taskGroup->fresh();
     }
 
     /**

@@ -2,8 +2,9 @@ import { getTask } from "../../api/task";
 import { Offcanvas } from "bootstrap";
 import { Task } from "types/task";
 import { ajaxNavigation, navigation } from "../../navigation";
-
-const projectId = document.location.pathname.split("/")[2];
+import { registerEnhancement } from "../../enhancements";
+import { renderTask } from "./render";
+import { projectId } from "../project";
 
 const taskOffcanvasEl = document.querySelector("#task-offcanvas");
 const taskOffcanvas =
@@ -16,22 +17,18 @@ const showBoard = navigation(
 );
 
 taskOffcanvasEl?.addEventListener("hide.bs.offcanvas", (e) => {
-    if (history.state.name != "project.board") showBoard();
+    if (history.state?.name != "project.board") showBoard();
 });
-
-const taskNameEl = document.querySelector<HTMLElement>("#task-name");
-const taskDescriptionEl =
-    document.querySelector<HTMLElement>("#task-description");
 
 const showTask = ajaxNavigation(
     "project.task",
     getTask,
-    ({ name, description }: Task) => {
+    (task: Task) => {
         taskOffcanvas?.show();
-        taskOffcanvasEl?.classList.remove("loading");
 
-        taskNameEl && (taskNameEl.innerText = name);
-        taskDescriptionEl && (taskDescriptionEl.innerHTML = description);
+        renderTask?.(task);
+
+        taskOffcanvasEl?.classList.remove("loading");
     },
     (e) => {
         taskOffcanvas?.show();
@@ -43,15 +40,18 @@ const showTask = ajaxNavigation(
     }
 );
 
-const tasks = document.querySelectorAll<HTMLElement>("[data-task-id]");
+registerEnhancement({
+    selector: ".task",
+    onattach: (task) => {
+        const taskId = task.dataset.taskId;
+        if (!taskId) return;
 
-tasks.forEach((task) => {
-    const { taskId } = task.dataset;
-    const a = task.querySelector("a");
+        const a = task.querySelector("a");
 
-    a?.addEventListener("click", (e) => {
-        e.preventDefault();
+        a?.addEventListener("click", (e) => {
+            e.preventDefault();
 
-        showTask(`/project/${projectId}/task/${taskId}`, taskId ?? "");
-    });
+            showTask(`/project/${projectId}/task/${taskId}`, taskId ?? "");
+        });
+    },
 });

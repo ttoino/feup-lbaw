@@ -31,6 +31,8 @@ class ThreadComment extends Model {
 
     protected $appends = ['content_formatted'];
 
+    protected $with = ['author'];
+
     public function thread() {
         return $this->belongsTo(
             Thread::class,

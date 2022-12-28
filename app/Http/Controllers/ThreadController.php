@@ -36,11 +36,13 @@ class ThreadController extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Project $project) {
+    public function store(Request $request) {
 
         $requestData = $request->all();
 
         $this->threadCreationValidator($requestData)->validate();
+
+        $project = Project::findOrFail($requestData['project_id']);
 
         $this->authorize('edit', $project);
         $this->authorize('create', [Thread::class, $project]);
@@ -62,7 +64,7 @@ class ThreadController extends Controller {
 
         $project->threads()->save($thread);
 
-        return $thread;
+        return $thread->fresh();
     }
 
     public function threadCreationValidator(array $data) {
@@ -81,8 +83,6 @@ class ThreadController extends Controller {
     public function show(Request $request, Project $project, Thread $thread) {
 
         $this->authorize('view', $thread);
-
-        $thread->load(['comments' => ['author'], 'author']);
 
         return $request->wantsJson()
             ? new JsonResponse($thread)

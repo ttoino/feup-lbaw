@@ -44,33 +44,32 @@ export const ajaxNavigation = <Data, Params extends Parameters<any>>(
     });
 
     return (newUrl: string, ...params: Params) => {
-        const r = fn(...params);
+        fn(...params)
+            .then(async (r) => {
+                const state: Route<any> = {
+                    name,
+                    state: "ok",
+                    data: await r.json(),
+                };
 
-        r.then(async (r) => {
-            const state: Route<any> = {
-                name,
-                state: "ok",
-                data: await r.json(),
-            };
+                if (history.state.name == name)
+                    history.replaceState(state, "", newUrl);
 
-            if (history.state.name == name)
-                history.replaceState(state, "", newUrl);
+                if (r.ok) ok(state.data);
+                else notOk(state.data);
+            })
+            .catch(async (r) => {
+                const state: Route<any> = {
+                    name,
+                    state: "not ok",
+                    data: await r.json(),
+                };
 
-            ok(state.data);
-        });
+                if (history.state.name == name)
+                    history.replaceState(state, "", newUrl);
 
-        r.catch(async (r) => {
-            const state: Route<any> = {
-                name,
-                state: "not ok",
-                data: await r.json(),
-            };
-
-            if (history.state.name == name)
-                history.replaceState(state, "", newUrl);
-
-            notOk(state.data);
-        });
+                notOk(state.data);
+            });
 
         history.pushState(
             {
