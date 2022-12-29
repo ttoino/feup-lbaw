@@ -30,10 +30,10 @@ Route::prefix('/user')->middleware('auth')->name('user.')->controller('UserContr
             Route::get('', 'edit')->name('edit');
             Route::post('', 'update')->name('edit-action');
         });
-
-        Route::get('/notifications', 'showNotifications')->name('notifications');
     });
 });
+
+Route::get('/notifications', 'UserController@showNotifications')->name('notifications');
 
 // Project 
 Route::prefix('/project')->middleware('auth')->name('project')->controller('ProjectController')->group(function () {

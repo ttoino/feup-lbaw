@@ -30,8 +30,9 @@ class UserController extends Controller {
             : view('pages.profile', ['user' => $user]);
     }
 
-    public function showNotifications(Request $request, User $user) {
-        $this->authorize('showNotifications', $user);
+    public function showNotifications(Request $request) {
+
+        $user = Auth::user();
         
         $notifications = Notification::where('notifiable_id', $user->id)->paginate(10);
 
