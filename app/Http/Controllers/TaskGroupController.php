@@ -91,6 +91,12 @@ class TaskGroupController extends Controller {
 
         if (($data['position'] ??= null) !== null)
             $taskGroup->position = $data['position'];
+        
+        if (($data['name'] ??= null) !== null)
+            $taskGroup->name = $data['name'];
+        
+        if (($data['position'] ??= null) !== null)
+            $taskGroup->description = $data['description'];
 
         $taskGroup->save();
         return $taskGroup;
