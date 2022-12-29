@@ -9,9 +9,15 @@
                 <i class="grip" style="cursor: grab"></i>
             @endif
 
-            <form action="" method="post">
-                <textarea class="auto-resize disabled" autocomplete="off" data-render-value="name"
+            <form class="edit-task-group-form">
+                <textarea class="auto-resize single-line" autocomplete="off"
+                    data-render-value="name" name="name" minlength="4" required
                     @if ($project->archived) disabled @endif>{{ $group->name }}</textarea>
+            </form>
+
+            <form class="delete-task-group-form">
+                <button type="submit" class="btn btn-outline-danger"><i
+                        class="bi bi-trash"></i></button>
             </form>
         </header>
 
@@ -19,18 +25,17 @@
 
         @if (!$project->archived)
             <form class="input-group new-task-form">
-                <input aria-label="Create Task Name" aria-describedby="task-name"
-                    class="form-control" id="name" type="text"
-                    name="name" placeholder="Create Task" minlength=4 required>
+                <textarea class="auto-resize single-line form-control" autocomplete="off"
+                    placeholder="Create Task" name="name" minlength="4" required></textarea>
                 <button class="btn btn-primary" type="submit"><i
                         class="bi bi-plus"></i></button>
             </form>
         @endif
     @else
-        <form class="input-group" id="new-task-group-form">
-            <input aria-label="Create Group Name" aria-describedby="group-name"
-                class="form-control" id="name" type="text" name="name"
-                placeholder="Create Group" minlength=4 required>
+        <form class="input-group needs-validation" id="new-task-group-form"
+            novalidate>
+            <textarea class="auto-resize single-line form-control" autocomplete="off"
+                placeholder="Create Group" name="name" minlength="4" required></textarea>
             <button class="btn btn-primary" type="submit"><i
                     class="bi bi-plus"></i></button>
         </form>

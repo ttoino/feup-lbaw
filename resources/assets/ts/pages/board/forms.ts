@@ -1,9 +1,14 @@
-import { newTaskGroup } from "../../api/task_group";
+import {
+    deleteTaskGroup,
+    editTaskGroup,
+    newTaskGroup,
+} from "../../api/task_group";
 import { ajaxForm } from "../../forms";
 import { registerEnhancement } from "../../enhancements";
 import { projectId } from "../project";
 import { appendTaskCard, appendTaskGroup } from "./render";
 import { newTask } from "../../api/task";
+import { render } from "../../render";
 
 registerEnhancement<HTMLFormElement>({
     selector: "form#new-task-group-form",
@@ -22,28 +27,55 @@ registerEnhancement<HTMLFormElement>({
     },
 });
 
-registerEnhancement<HTMLFormElement>({
-    selector: "form.new-task-form",
-    onattach: (form) => {
-        const taskGroupId = form.parentElement?.dataset.taskGroupId;
-
-        if (!taskGroupId) return;
+// NEW TASK
+registerEnhancement<HTMLElement>({
+    selector: ".task-group[data-task-group-id]",
+    onattach: (el) => {
+        const taskGroupId = parseInt(el.dataset.taskGroupId!);
+        console.log(taskGroupId);
 
         const appendTask = appendTaskCard(
             `.task-group[data-task-group-id="${taskGroupId}"] > ul`
         );
+        const createTaskForm =
+            el.querySelector<HTMLFormElement>("form.new-task-form");
+        createTaskForm &&
+            ajaxForm(
+                newTask,
+                createTaskForm,
+                { task_group_id: taskGroupId },
+                (task) => {
+                    appendTask?.(task);
+                },
+                (error) => {}
+            );
 
-        if (!appendTask) return;
-
-        ajaxForm(
-            newTask,
-            form,
-            { task_group_id: parseInt(taskGroupId) },
-            (task) => {
-                console.log(task);
-                appendTask(task);
-            },
-            (error) => {}
+        const editGroupForm = el.querySelector<HTMLFormElement>(
+            "form.edit-task-group-form"
         );
+        editGroupForm &&
+            ajaxForm(
+                editTaskGroup,
+                editGroupForm,
+                { id: taskGroupId },
+                (group) => {
+                    render(editGroupForm, group);
+                },
+                (error) => {}
+            );
+
+        const deleteGroupForm = el.querySelector<HTMLFormElement>(
+            "form.delete-task-group-form"
+        );
+        deleteGroupForm &&
+            ajaxForm(
+                deleteTaskGroup,
+                deleteGroupForm,
+                taskGroupId.toString(),
+                (task) => {
+                    el.remove();
+                },
+                (error) => {}
+            );
     },
 });

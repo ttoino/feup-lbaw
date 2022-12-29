@@ -10,9 +10,11 @@ registerEnhancement<HTMLTextAreaElement>({
     selector: "textarea.auto-resize",
     onattach: (e) => {
         e.addEventListener("input", oninput);
+        e.addEventListener("reset", oninput);
         oninput.call(e);
     },
     ondettach: (e) => {
         e.removeEventListener("input", oninput);
+        e.removeEventListener("reset", oninput);
     },
 });

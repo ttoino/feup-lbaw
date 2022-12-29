@@ -14,7 +14,11 @@ export const ajaxForm = <K, P>(
         console.log(data);
 
         try {
-            const response = await fn({ ...constantData, ...data });
+            const payload =
+                constantData instanceof Object
+                    ? { ...constantData, ...data }
+                    : constantData;
+            const response = await fn(payload);
 
             if (response.ok) {
                 ok(await response.json());

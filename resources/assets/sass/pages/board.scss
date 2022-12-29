@@ -20,7 +20,7 @@
             @extend .bi, .bi-grip-vertical;
         }
 
-        > form {
+        .edit-task-group-form {
             flex: 1;
             margin: -$input-padding-y;
 
@@ -39,6 +39,14 @@
                 &:not(:disabled):hover {
                     border: $input-border-width solid $input-border-color;
                 }
+            }
+        }
+
+        .delete-task-group-form {
+            display: contents;
+
+            button {
+                @extend .me-n2, .ms-1;
             }
         }
     }

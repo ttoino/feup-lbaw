@@ -11,3 +11,9 @@ export const repositionTaskGroup = (
 
 export const newTaskGroup = (group: TaskGroup) =>
     apiFetch<TaskGroup>(`/api/task-group/new`, "POST", group);
+
+export const editTaskGroup = (group: TaskGroup) =>
+    apiFetch<TaskGroup>(`/api/task-group/${group.id}`, "PUT", group);
+
+export const deleteTaskGroup = (taskGroupId: string) =>
+    apiFetch<TaskGroup>(`/api/task-group/${taskGroupId}`, "DELETE");

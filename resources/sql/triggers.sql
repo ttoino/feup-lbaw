@@ -23,6 +23,23 @@ CREATE TRIGGER reorder_task_groups
     WHEN (pg_trigger_depth() = 0)
     EXECUTE FUNCTION reorder_task_groups();
 
+CREATE OR REPLACE FUNCTION delete_task_group() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    UPDATE lbaw2265.task_group
+        SET position = position - 1
+        WHERE id <> OLD.id AND project_id = OLD.project_id AND position > OLD.position;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS delete_task_group ON lbaw2265.task_group;
+CREATE TRIGGER delete_task_group
+    AFTER DELETE ON lbaw2265.task_group
+    FOR EACH ROW
+    EXECUTE FUNCTION delete_task_group();
+
 -- TRIGGER02
 CREATE OR REPLACE FUNCTION reorder_tasks() RETURNS TRIGGER AS
 $BODY$
@@ -51,6 +68,23 @@ CREATE TRIGGER reorder_tasks
     FOR EACH ROW
     WHEN (pg_trigger_depth() = 0)
     EXECUTE FUNCTION reorder_tasks();
+
+CREATE OR REPLACE FUNCTION delete_task() RETURNS TRIGGER AS
+$BODY$
+BEGIN
+    UPDATE lbaw2265.task
+        SET position = position - 1
+        WHERE id <> OLD.id AND task_group_id = OLD.task_group_id AND position > OLD.position;
+    RETURN NEW;
+END
+$BODY$
+LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS delete_task ON lbaw2265.task;
+CREATE TRIGGER delete_task
+    AFTER DELETE ON lbaw2265.task
+    FOR EACH ROW
+    EXECUTE FUNCTION delete_task();
 
 -- TRIGGER03
 CREATE OR REPLACE FUNCTION invalid_task_tag() RETURNS TRIGGER AS
