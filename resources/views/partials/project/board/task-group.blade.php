@@ -15,7 +15,10 @@
                     @if ($project->archived) disabled @endif>{{ $group->name }}</textarea>
             </form>
 
-            <form class="delete-task-group-form">
+            <form @class([
+                'delete-task-group-form',
+                'd-none' => $group->tasks->count() || $project->archived,
+            ])>
                 <button type="submit" class="btn btn-outline-danger"><i
                         class="bi bi-trash"></i></button>
             </form>

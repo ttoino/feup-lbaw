@@ -77,5 +77,17 @@ registerEnhancement<HTMLElement>({
                 },
                 (error) => {}
             );
+
+        const taskList = el.querySelector(":scope > ul");
+        taskList &&
+            new MutationObserver(() => {
+                console.log(taskList.children.length);
+                deleteGroupForm?.classList.toggle(
+                    "d-none",
+                    taskList?.children.length !== 0
+                );
+            }).observe(taskList, {
+                childList: true,
+            });
     },
 });
