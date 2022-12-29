@@ -6,7 +6,7 @@
         .flex-shrink-0,
         .text-break;
 
-    width: map-get($map: $grid-breakpoints, $key: "sm") / 2;
+    width: map-get($map: $grid-breakpoints, $key: "sm") * 0.5;
 
     nav {
         @extend .nav, .nav-pills, .flex-column;
