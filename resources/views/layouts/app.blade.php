@@ -44,7 +44,7 @@
                             class="dropdown-item hstack gap-2">
                             <i class="bi bi-person-fill"></i> {{ Auth::user()->name }}
                         </a>
-                        <a href="#" class="dropdown-item hstack gap-2">
+                        <a href="{{ route('user.notifications', ['user' => Auth::user()]) }}" class="dropdown-item hstack gap-2">
                             <i class="bi bi-bell-fill"></i> Notifications
                         </a>
                         <a href="{{ route('logout') }}"

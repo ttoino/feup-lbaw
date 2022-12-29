@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Project;
 use App\Notifications\ProjectInvite;
+use App\Notifications\ProjectRemoved;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
@@ -80,6 +81,9 @@ class ProjectController extends Controller {
         $this->authorize('removeUser', [$project, $user]);
 
         $project->users()->detach($user);
+
+        $user->notify(new ProjectRemoved($project));
+
         return $request->wantsJson()
             ? new JsonResponse($project->toArray(), 200)
             : redirect()->route('project.list');

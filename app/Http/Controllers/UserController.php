@@ -12,6 +12,7 @@ use Illuminate\Validation\Rules\File;
 
 use App\Models\User;
 use App\Models\Project;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller {
@@ -27,6 +28,16 @@ class UserController extends Controller {
         return $request->wantsJson()
             ? new JsonResponse($user)
             : view('pages.profile', ['user' => $user]);
+    }
+
+    public function showNotifications(Request $request, User $user) {
+        $this->authorize('showNotifications', $user);
+        
+        $notifications = Notification::where('notifiable_id', $user->id)->paginate(10);
+
+        return $request->wantsJson()
+            ? new JsonResponse($notifications)
+            : view('pages.notifications', ['notifications' => $notifications]);
     }
 
     /**

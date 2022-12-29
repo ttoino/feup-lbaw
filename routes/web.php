@@ -30,6 +30,8 @@ Route::prefix('/user')->middleware('auth')->name('user.')->controller('UserContr
             Route::get('', 'edit')->name('edit');
             Route::post('', 'update')->name('edit-action');
         });
+
+        Route::get('/notifications', 'showNotifications')->name('notifications');
     });
 });
 

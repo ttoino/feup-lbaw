@@ -75,6 +75,13 @@ class UserPolicy
         return $this->allow();
     }
 
+    public function showNotifications(User $user, User $model) {
+        if (!$user->is_admin && $user->id !== $model->id){
+            return $this->deny('Only admins or the profile\'s owner can view this user\'s notifications');
+        }
+        return $this->allow();
+    }
+
     /**
      * Determine whether the user can delete the model.
      *
