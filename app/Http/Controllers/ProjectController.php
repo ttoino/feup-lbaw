@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Project;
 use App\Notifications\ProjectInvite;
 use App\Notifications\ProjectRemoved;
+use App\Notifications\ProjectArchived;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
@@ -261,6 +262,10 @@ class ProjectController extends Controller {
 
         $project->archived = true;
         $project->save();
+
+        foreach($project->users as $user){
+            $user->notify(new ProjectArchived($project));
+        }
 
         return $request->wantsJson()
             ? new JsonResponse($project->toArray(), 200)

@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Models\TaskGroup;
 use App\Models\TaskComment;
 use App\Models\Project;
+use App\Notifications\TaskCompleted;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -73,6 +74,10 @@ class TaskController extends Controller {
 
         $task->completed = true;
         $task->save();
+
+        foreach($task->assignees as $assignee){
+            $assignee->notify(new TaskCompleted($task));
+        }
 
         return new JsonResponse($task->toArray());
     }

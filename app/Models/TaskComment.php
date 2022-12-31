@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\TaskCommentCreated;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -29,6 +30,11 @@ class TaskComment extends Model {
     protected $hidden = [];
 
     protected $appends = ['content_formatted'];
+
+    protected $dispatchesEvents = [
+        'created' => TaskCommentCreated::class
+    ];
+
 
     public function task() {
         return $this->belongsTo(

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\ThreadCreated;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -33,6 +34,10 @@ class Thread extends Model {
     protected $appends = ['content_formatted'];
 
     protected $with = ['comments', 'author'];
+
+    protected $dispatchesEvents = [
+        'created' => ThreadCreated::class
+    ];
 
     public function project() {
         return $this->belongsTo(
