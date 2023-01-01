@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
 class ThreadCommented extends Notification {
-    public ThreadComment $comment;
+    public ThreadComment $thread_comment;
 
     /**
      * Create a new notification instance.
@@ -17,7 +17,7 @@ class ThreadCommented extends Notification {
      * @return void
      */
     public function __construct(ThreadComment $comment) {
-        $this->comment = $comment;
+        $this->thread_comment = $comment;
     }
 
     /**
@@ -41,8 +41,8 @@ class ThreadCommented extends Notification {
      */
     public function toMail($notifiable) {
         return (new MailMessage)
-                    ->line($this->comment->author()->name . "has commented on a thread you opened in " . $this->comment->thread->project->name . ".")
-                    ->action('View the thread', route('project.thread', ['project' => $this->comment->thread->project, 'thread' => $this->comment->thread]))
+                    ->line($this->thread_comment->author()->name . "has commented on a thread you opened in " . $this->thread_comment->thread->project->name . ".")
+                    ->action('View the thread', route('project.thread', ['project' => $this->thread_comment->thread->project, 'thread' => $this->thread_comment->thread]))
                     ->line('Thank you for using our application!');
     }
 
@@ -54,7 +54,7 @@ class ThreadCommented extends Notification {
      */
     public function toArray($notifiable) {
         return [
-            'comment' => $this->comment->id
+            'thread_comment' => $this->thread_comment->id
         ];
     }
 }
