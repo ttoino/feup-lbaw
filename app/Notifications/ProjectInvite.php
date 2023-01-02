@@ -57,7 +57,7 @@ class ProjectInvite extends Notification {
     public function toArray($notifiable) {
         return [
             'url' => $this->url,
-            'project' => $this->project->id
+            'project' => $this->project
         ];
     }
 }

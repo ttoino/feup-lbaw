@@ -54,7 +54,7 @@ class ThreadNew extends Notification {
      */
     public function toArray($notifiable) {
         return [
-            'thread' => $this->thread->id
+            'thread' => $this->thread
         ];
     }
 }

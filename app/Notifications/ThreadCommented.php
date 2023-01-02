@@ -54,7 +54,7 @@ class ThreadCommented extends Notification {
      */
     public function toArray($notifiable) {
         return [
-            'thread_comment' => $this->thread_comment->id
+            'thread_comment' => $this->thread_comment
         ];
     }
 }

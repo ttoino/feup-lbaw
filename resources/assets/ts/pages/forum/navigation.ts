@@ -5,6 +5,7 @@ import { ajaxNavigation, navigation } from "../../navigation";
 import { Offcanvas } from "bootstrap";
 import { renderThread, renderThreadComments } from "./render";
 import { projectId } from "../project";
+import { renderSingleton } from "../../render";
 
 const newThreadButton =
     document.querySelector<HTMLAnchorElement>("#new-thread-button");
@@ -65,6 +66,7 @@ const showThread = ajaxNavigation(
 
         console.debug(thread);
 
+        renderSingleton(`.thread[data-thread-id="${thread.id}"]`)?.(thread);
         renderThread?.(thread);
         renderThreadComments?.(thread.comments ?? []);
     },

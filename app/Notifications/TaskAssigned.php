@@ -56,8 +56,8 @@ class TaskAssigned extends Notification {
      */
     public function toArray($notifiable) {
         return [
-            'task' => $this->task->id,
-            'assigner' => $this->assigner->id,
+            'task' => $this->task,
+            'assigner' => $this->assigner,
         ];
     }
 }
