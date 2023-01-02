@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Casts\Datetime;
+use App\Casts\Markdown;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
@@ -37,10 +39,11 @@ class Task extends Model {
     ];
 
     protected $casts = [
-        'completed' => 'boolean'
+        'creation_date' => Datetime::class,
+        'edit_date' => Datetime::class,
+        'completed' => 'boolean',
+        'description' => Markdown::class
     ];
-
-    protected $appends = ['description_formatted'];
 
     protected $with = ['tags', 'comments', 'creator', 'assignees'];
 
@@ -63,7 +66,7 @@ class Task extends Model {
     }
 
     public function creator() {
-        return $this->belongsTo(User::class, 'creator_id');
+        return $this->belongsTo(User::class, 'creator_id')->withDefault(User::DELETED_USER);
     }
 
     public function comments() {
@@ -89,10 +92,6 @@ class Task extends Model {
             'task_id',
             'user_profile_id'
         );
-    }
-
-    public function descriptionFormatted(): Attribute {
-        return Attribute::make(fn($_, $attributes) => app(MarkdownRenderer::class)->toHtml($attributes['description'] ?? ""));
     }
 
     protected $table = 'task';

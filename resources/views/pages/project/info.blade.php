@@ -3,7 +3,8 @@
 @section('title', $project->name)
 
 @section('project-content')
-    <section style="overflow-x: auto;" class="flex-fill d-flex flex-row gap-3 p-5 align-items-start flex-fill">
+    <section style="overflow-x: auto;"
+        class="flex-fill d-flex flex-row gap-3 p-5 align-items-start flex-fill">
         <div class="col l-8">
             <section class="project-banner row">
                 <h2 class="h2">{{ $project->name }}</h2>
@@ -11,35 +12,39 @@
             </section>
             <section class="flex-fill d-flex flex-row gap-3">
                 <p><i class="bi bi-calendar mx-1"></i>Created
-                    @include('partials.datediff', [
-                        'date' => $project->creation_date,
-                    ])
+                    {{ $project->creation_date['diff'] }}
                 </p>
                 @if ($project->last_modification_date !== null)
                     <span>-</span>
-                    <p>Last edited @include('partials.datediff', [
-                        'date' => $project->last_modification_date,
-                    ])</p>
+                    <p>Last edited {{ $project->last_modification_date['diff'] }}
+                    </p>
                 @endif
             </section>
             <section class="flex-fill d-flex flex-row gap-3" style="max-width: 50%">
                 @if (Request::user()->id === $project->coordinator_id)
-                    <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#delete-project-modal">
+                    <button class="btn btn-outline-danger" data-bs-toggle="modal"
+                        data-bs-target="#delete-project-modal">
                         Delete project
                     </button>
 
                     <div class="modal fade" id="delete-project-modal" tabindex="-1"
-                        aria-labelledby="delete-project-modal-label" aria-hidden="true">
+                        aria-labelledby="delete-project-modal-label"
+                        aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content modal-body gap-3 align-items-center">
-                                <h3 class="modal-title fs-5" id="delete-project-modal-label">
+                            <div
+                                class="modal-content modal-body gap-3 align-items-center">
+                                <h3 class="modal-title fs-5"
+                                    id="delete-project-modal-label">
                                     Are you sure you want to delete this project?
                                 </h3>
                                 <div class="hstack gap-2 align-self-center">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <form method="POST" action="{{ route('project.delete', ['project' => $project]) }}">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancel</button>
+                                    <form method="POST"
+                                        action="{{ route('project.delete', ['project' => $project]) }}">
                                         @csrf
-                                        <button type="submit" class="btn btn-outline-danger">Confirm</button>
+                                        <button type="submit"
+                                            class="btn btn-outline-danger">Confirm</button>
                                     </form>
                                 </div>
                             </div>
@@ -56,11 +61,15 @@
                         project
                     </button>
 
-                    <div class="modal fade" id="archive-unarchive-project-modal" tabindex="-1"
-                        aria-labelledby="archive-unarchive-project-modal-label" aria-hidden="true">
+                    <div class="modal fade" id="archive-unarchive-project-modal"
+                        tabindex="-1"
+                        aria-labelledby="archive-unarchive-project-modal-label"
+                        aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content modal-body gap-3 align-items-center">
-                                <h3 class="modal-title fs-5" id="archive-unarchive-project-modal-label">
+                            <div
+                                class="modal-content modal-body gap-3 align-items-center">
+                                <h3 class="modal-title fs-5"
+                                    id="archive-unarchive-project-modal-label">
                                     Are you sure you want to
                                     @if ($project->archived)
                                         unarchive
@@ -70,7 +79,8 @@
                                     this project?
                                 </h3>
                                 <div class="hstack gap-2 align-self-center">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancel</button>
 
                                     @php
                                         if ($project->archived) {
@@ -79,31 +89,40 @@
                                             $route = 'project.archive';
                                         }
                                     @endphp
-                                    <form method="POST" action="{{ route($route, ['project' => $project]) }}">
+                                    <form method="POST"
+                                        action="{{ route($route, ['project' => $project]) }}">
                                         @csrf
-                                        <button type="submit" class="btn btn-outline-danger">Confirm</button>
+                                        <button type="submit"
+                                            class="btn btn-outline-danger">Confirm</button>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                 @else
-                    <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#leave-project-modal">
+                    <button class="btn btn-outline-danger" data-bs-toggle="modal"
+                        data-bs-target="#leave-project-modal">
                         Leave project
                     </button>
 
                     <div class="modal fade" id="leave-project-modal" tabindex="-1"
-                        aria-labelledby="leave-project-modal-label" aria-hidden="true">
+                        aria-labelledby="leave-project-modal-label"
+                        aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content modal-body gap-3 align-items-center">
-                                <h3 class="modal-title fs-5" id="leave-project-modal-label">
+                            <div
+                                class="modal-content modal-body gap-3 align-items-center">
+                                <h3 class="modal-title fs-5"
+                                    id="leave-project-modal-label">
                                     Are you sure you want to leave this project?
                                 </h3>
                                 <div class="hstack gap-2 align-self-center">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <form method="POST" action="{{ route('project.leave', ['project' => $project]) }}">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancel</button>
+                                    <form method="POST"
+                                        action="{{ route('project.leave', ['project' => $project]) }}">
                                         @csrf
-                                        <button type="submit" class="btn btn-outline-danger">Confirm</button>
+                                        <button type="submit"
+                                            class="btn btn-outline-danger">Confirm</button>
                                     </form>
                                 </div>
                             </div>

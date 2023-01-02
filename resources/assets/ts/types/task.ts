@@ -1,3 +1,4 @@
+import { Datetime, Markdown } from "./misc";
 import { Tag } from "./tag";
 import { TaskComment } from "./task_comment";
 import { User } from "./user";
@@ -5,9 +6,9 @@ import { User } from "./user";
 export interface Task {
     id: number;
     name: string;
-    description: string;
-    creation_date: Date;
-    edit_date: Date;
+    description: Markdown;
+    creation_date: Datetime;
+    edit_date: Datetime;
     completed: boolean;
     creator_id: number;
     position: number;

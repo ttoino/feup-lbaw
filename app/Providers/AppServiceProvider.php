@@ -28,14 +28,6 @@ class AppServiceProvider extends ServiceProvider {
     public function boot() {
         Paginator::useBootstrapFive();
 
-        Blade::directive('datediff', fn($expression) =>
-            "<?= \Carbon\Carbon::parse($expression)->diffForHumans(['aUnit' => true, 'short' => true, 'syntax' => \Carbon\CarbonInterface::DIFF_ABSOLUTE]) ?>"
-        );
-
-        Blade::directive('date', fn($expression) =>
-            "<?= \Carbon\Carbon::parse($expression)->isoFormat('MMM D Y, H:mm') ?>"
-        );
-
         Collection::macro('paginate', function ($perPage, $total = null, $page = null, $pageName = 'page') {
             $page = $page ?: LengthAwarePaginator::resolveCurrentPage($pageName);
 

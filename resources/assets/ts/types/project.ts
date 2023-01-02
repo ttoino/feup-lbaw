@@ -1,9 +1,11 @@
+import { Datetime, Markdown } from "./misc";
+
 export interface Project {
     id: number;
     name: string;
-    description: string;
-    creation_date: Date;
-    last_modification_date: Date;
+    description: Markdown;
+    creation_date: Datetime;
+    last_modification_date: Datetime;
     archived: boolean;
     coordinator_id: number;
 }

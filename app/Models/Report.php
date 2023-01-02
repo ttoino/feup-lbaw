@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\Datetime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,6 +26,10 @@ class Report extends Model {
      */
     protected $hidden = [];
 
+    protected $casts = [
+        'creation_date' => Datetime::class
+    ];
+
     public function project() {
         return $this->belongsTo(Project::class, 'project_id');
     }
@@ -34,7 +39,7 @@ class Report extends Model {
     }
 
     public function creator() {
-        return $this->belongsTo(User::class, 'creator_id');
+        return $this->belongsTo(User::class, 'creator_id')->withDefault(User::DELETED_USER);
     }
 
     protected $table = 'report';

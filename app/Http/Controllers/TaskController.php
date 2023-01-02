@@ -42,6 +42,7 @@ class TaskController extends Controller {
         $task->description = $data['description'] ?? '';
         $task->task_group_id = $data['task_group_id'];
         $task->position = (Task::where('task_group_id', $task->task_group_id)->max('position') ?? 0) + 1;
+        $task->creator_id = Auth::user()->id;
         $task->save();
 
         return $task->fresh();
@@ -148,15 +149,13 @@ class TaskController extends Controller {
         if (($data['position'] ??= null) !== null)
             $task->position = $data['position'];
 
-        if (($data['description'] ??= null) !== null)
+        if (($data['description'] ??= null) !== null) {
             $task->description = $data['description'];
+            $task->edit_date = now();
+        }
 
         if (($data['name'] ??= null) !== null)
             $task->name = $data['name'];
-
-        // need to do this since tasks don't have a creation date (yet)
-        if ($task->isDirty())
-            $task->edit_date = date('Y-m-d');
 
         $task->save();
 

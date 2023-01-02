@@ -42,13 +42,11 @@
             }
         }
 
-        .delete-task-group-form {
-            &:not(.d-none) {
-                display: contents;
-            }
+        .delete-task-group {
+            @extend .me-n2, .ms-1, .btn, .btn-outline-danger;
 
-            button {
-                @extend .me-n2, .ms-1;
+            &.d-none {
+                display: none !important;
             }
         }
     }
@@ -186,7 +184,7 @@
 
 #task-offcanvas,
 #new-task-offcanvas {
-    @extend .offcanvas, .offcanvas-end;
+    @extend .offcanvas, .offcanvas-end, .overflow-auto;
 
     flex: 1;
     width: 100%;
@@ -200,24 +198,23 @@
 }
 
 #task-offcanvas {
-    @extend .vstack, .gap-3, .p-3;
+    @extend .vstack;
 
-    header {
-        @extend .d-flex, .align-items-start, .justify-content-between, .gap-2;
+    #task,
+    .task-comment {
+        @extend .text-break, .p-3, .gap-2, .d-flex, .flex-column;
+
+        > * {
+            @extend .p-0;
+        }
     }
 
-    h3 {
+    .task-comment {
+        @extend .border-top;
+    }
+
+    .content :last-child {
         @extend .m-0;
-    }
-
-    #task-description {
-        :last-child {
-            @extend .m-0;
-        }
-
-        &:empty {
-            display: none;
-        }
     }
 
     .chip-search-form {
@@ -230,11 +227,11 @@
 
     #task-assignees,
     #task-comments {
-        display: contents;
+        @extend .list-unstyled, .m-0;
+    }
 
-        &[data-length="0"] {
-            display: none;
-        }
+    form {
+        @extend .p-3, .pt-0;
     }
 }
 

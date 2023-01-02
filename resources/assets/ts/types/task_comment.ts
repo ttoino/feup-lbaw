@@ -1,11 +1,12 @@
+import { Datetime, Markdown } from "./misc";
 import { Task } from "./task";
 import { User } from "./user";
 
 export interface TaskComment {
     id: number;
-    content: string;
-    creation_date: Date;
-    edit_date: Date;
+    content: Markdown;
+    creation_date: Datetime;
+    edit_date: Datetime;
 
     author_id: number;
     author?: User;

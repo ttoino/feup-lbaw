@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Events\UserCreated;
 use App\Events\UserDeleted;
 use App\Events\UserUpdated;
+use App\Listeners\CreateDefaultProfilePic;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -14,6 +15,12 @@ use Illuminate\Support\Facades\Log;
 
 class User extends Authenticatable {
     use Notifiable, HasFactory;
+
+    const DELETED_USER = [
+        'id' => 0,
+        'name' => 'Deleted user',
+        'email' => 'Deleted user'
+    ];
 
     // Don't add create and update timestamps in database.
     public $timestamps = false;
@@ -69,9 +76,15 @@ class User extends Authenticatable {
     }
 
     protected function profilePic(): Attribute {
-        return Attribute::make(fn($_, $attributes) => Storage::disk('public')->exists("users/{$attributes['id']}.webp")
-            ? Storage::url("public/users/{$attributes['id']}.webp")
-            : Storage::url("public/users/default_{$attributes['id']}.svg"));
+        return Attribute::make(function ($_, $attributes) {
+            if (Storage::exists("public/users/{$attributes['id']}.webp"))
+                return Storage::url("public/users/{$attributes['id']}.webp");
+
+            if (!Storage::exists("public/users/default_{$attributes['id']}.svg"))
+                (new CreateDefaultProfilePic())->handle(new UserUpdated($this));
+
+            return Storage::url("public/users/default_{$attributes['id']}.svg");
+        });
     }
 
     protected $table = 'user_profile';

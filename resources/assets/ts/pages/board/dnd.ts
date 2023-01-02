@@ -32,7 +32,6 @@ registerEnhancement({
 
                 await tryRequest(
                     repositionTaskGroup,
-                    "Could not change task group position!",
                     undefined,
                     taskGroupId,
                     newPosition
@@ -60,14 +59,7 @@ const onTaskMove = async (e: Sortable.SortableEvent) => {
         newPosition
     );
 
-    await tryRequest(
-        repositionTask,
-        "Could not change the task position!",
-        undefined,
-        taskId,
-        taskGroup,
-        newPosition
-    );
+    await tryRequest(repositionTask, undefined, taskId, taskGroup, newPosition);
 };
 
 registerEnhancement({

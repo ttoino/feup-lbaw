@@ -9,6 +9,7 @@ import { projectId } from "../project";
 import { appendTaskCard, appendTaskGroup } from "./render";
 import { newTask } from "../../api/task";
 import { render } from "../../render";
+import { tryRequest } from "../../api";
 
 registerEnhancement<HTMLFormElement>({
     selector: "form#new-task-group-form",
@@ -64,25 +65,25 @@ registerEnhancement<HTMLElement>({
                 (error) => {}
             );
 
-        const deleteGroupForm = el.querySelector<HTMLFormElement>(
-            "form.delete-task-group-form"
+        const deleteGroupButton = el.querySelector<HTMLButtonElement>(
+            "button.delete-task-group"
         );
-        deleteGroupForm &&
-            ajaxForm(
-                deleteTaskGroup,
-                deleteGroupForm,
-                taskGroupId.toString(),
-                (task) => {
-                    el.remove();
-                },
-                (error) => {}
-            );
+        deleteGroupButton?.addEventListener("click", (e) => {
+            if (
+                tryRequest(
+                    deleteTaskGroup,
+                    undefined,
+                    taskGroupId.toString()
+                ) !== null
+            )
+                el.remove();
+        });
 
         const taskList = el.querySelector(":scope > ul");
         taskList &&
             new MutationObserver(() => {
                 console.log(taskList.children.length);
-                deleteGroupForm?.classList.toggle(
+                deleteGroupButton?.classList.toggle(
                     "d-none",
                     taskList?.children.length !== 0
                 );

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Casts\Datetime;
+use App\Casts\Markdown;
 use App\Events\ThreadCommentCreated;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,8 +13,7 @@ use Spatie\LaravelMarkdown\MarkdownRenderer;
 class ThreadComment extends Model {
     use HasFactory;
 
-    const CREATED_AT = 'creation_date';
-    const UPDATED_AT = 'edit_date';
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -30,9 +31,13 @@ class ThreadComment extends Model {
      */
     protected $hidden = [];
 
-    protected $appends = ['content_formatted'];
-
     protected $with = ['author'];
+
+    protected $casts = [
+        'creation_date' => Datetime::class,
+        'edit_date' => Datetime::class,
+        'content' => Markdown::class
+    ];
 
     protected $dispatchesEvents = [
         'created' => ThreadCommentCreated::class
@@ -46,11 +51,7 @@ class ThreadComment extends Model {
     }
 
     public function author() {
-        return $this->belongsTo(User::class, 'author_id');
-    }
-
-    public function contentFormatted(): Attribute {
-        return Attribute::make(fn($_, $attributes) => app(MarkdownRenderer::class)->toHtml($attributes['content'] ?? ""));
+        return $this->belongsTo(User::class, 'author_id')->withDefault(User::DELETED_USER);
     }
 
     protected $table = 'thread_comment';

@@ -1,8 +1,5 @@
 <?php
 
-use League\CommonMark\Extension\CommonMark\Node\Block\Heading;
-use App\Renderer\HeadingRenderer;
-
 return [
     'code_highlighting' => [
         /*
@@ -72,11 +69,7 @@ return [
      * More info: https://commonmark.thephpleague.com/2.1/customization/rendering/
      */
     'block_renderers' => [
-        [
-            'class' => Heading::class,
-            'renderer' => new HeadingRenderer(),
-            'priority' => 1
-        ]
+        //
     ],
 
     /*

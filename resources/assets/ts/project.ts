@@ -10,14 +10,7 @@ const attachDeletionHandler = (project: HTMLLIElement) => {
         project.querySelector("button.project-delete");
 
     projectDeletionButton?.addEventListener("click", async () => {
-        if (
-            await tryRequest(
-                deleteProject,
-                "Could not delete project",
-                undefined,
-                projectId
-            )
-        )
+        if (await tryRequest(deleteProject, undefined, projectId))
             window.location.reload(); // this needs to be a reload because of the use of pagination
     });
 };
@@ -31,12 +24,7 @@ const attachFavoriteToggleHandler = (project: HTMLLIElement) => {
         project.querySelector("button.btn-outline.favorite-toggle");
 
     projectFavoriteToggleButton?.addEventListener("click", async () => {
-        const response = await tryRequest(
-            toggleFavorite,
-            `Could not toggle favorite status of project with id ${projectId}`,
-            undefined,
-            projectId
-        );
+        const response = await tryRequest(toggleFavorite, undefined, projectId);
 
         if (response === null) return;
 

@@ -1,10 +1,11 @@
+import { Datetime, Markdown } from "./misc";
 import { Task } from "./task";
 
 export interface TaskGroup {
     id: number;
     name: string;
-    description: string;
-    creation_date: Date;
+    description: Markdown;
+    creation_date: Datetime;
     position: number;
     project_id: number;
 

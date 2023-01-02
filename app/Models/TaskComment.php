@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Casts\Datetime;
+use App\Casts\Markdown;
 use App\Events\TaskCommentCreated;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -10,8 +12,8 @@ use Spatie\LaravelMarkdown\MarkdownRenderer;
 
 class TaskComment extends Model {
     use HasFactory;
-    const CREATED_AT = 'creation_date';
-    const UPDATED_AT = 'edit_date';
+
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -29,7 +31,11 @@ class TaskComment extends Model {
      */
     protected $hidden = [];
 
-    protected $appends = ['content_formatted'];
+    protected $casts = [
+        'creation_date' => Datetime::class,
+        'edit_date' => Datetime::class,
+        'content' => Markdown::class
+    ];
 
     protected $dispatchesEvents = [
         'created' => TaskCommentCreated::class
@@ -44,11 +50,7 @@ class TaskComment extends Model {
     }
 
     public function author() {
-        return $this->belongsTo(User::class, 'author_id');
-    }
-
-    public function contentFormatted(): Attribute {
-        return Attribute::make(fn($_, $attributes) => app(MarkdownRenderer::class)->toHtml($attributes['content'] ?? ""));
+        return $this->belongsTo(User::class, 'author_id')->withDefault(User::DELETED_USER);
     }
 
     protected $table = 'task_comment';

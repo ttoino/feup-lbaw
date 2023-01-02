@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\Datetime;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -28,6 +29,10 @@ class TaskGroup extends Model {
      * @var array
      */
     protected $hidden = [];
+
+    protected $casts = [
+        'creation_date' => Datetime::class
+    ];
 
     public function project() {
         return $this->belongsTo(Project::class, 'project_id');

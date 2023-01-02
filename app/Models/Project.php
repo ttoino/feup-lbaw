@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-
+use App\Casts\Datetime;
+use App\Casts\Markdown;
 use App\Events\ProjectDeleted;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -12,8 +13,7 @@ use Spatie\LaravelMarkdown\MarkdownRenderer;
 class Project extends Model {
     use HasFactory;
 
-    const CREATED_AT = 'creation_date';
-    const UPDATED_AT = 'last_modification_date';
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -36,7 +36,11 @@ class Project extends Model {
         'fts_search'
     ];
 
-    protected $appends = ['description_formatted'];
+    protected $casts = [
+        'creation_date' => Datetime::class,
+        'last_modification_date' => Datetime::class,
+        'description' => Markdown::class
+    ];
 
     protected $dispatchesEvents = [
         'deleted' => ProjectDeleted::class
@@ -87,10 +91,6 @@ class Project extends Model {
 
     public function reports() {
         return $this->hasMany(Report::class, 'project_id');
-    }
-
-    public function descriptionFormatted(): Attribute {
-        return Attribute::make(fn($_, $attributes) => app(MarkdownRenderer::class)->toHtml($attributes['description'] ?? ""));
     }
 
     protected $table = 'project';

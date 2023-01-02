@@ -15,16 +15,13 @@
                     @if ($project->archived) disabled @endif>{{ $group->name }}</textarea>
             </form>
 
-            <form @class([
-                'delete-task-group-form',
-                'd-none' => $group->tasks->count() || $project->archived,
-            ])>
-                <button type="submit" class="btn btn-outline-danger"><i
+            @if (!$project->archived)
+                <button type="button" @class(['delete-task-group', 'd-none' => $group->tasks->count()])><i
                         class="bi bi-trash"></i></button>
-            </form>
+            @endif
         </header>
 
-        <ul data-task-group-id="{{ $group->id }}">@each('partials.project.board.task', $group->tasks, 'task')</ul>
+        <ul>@each('partials.project.board.task', $group->tasks, 'task')</ul>
 
         @if (!$project->archived)
             <form class="input-group new-task-form">

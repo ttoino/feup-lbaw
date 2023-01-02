@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Casts\Datetime;
+use App\Casts\Markdown;
 use App\Events\ThreadCreated;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,8 +13,7 @@ use Spatie\LaravelMarkdown\MarkdownRenderer;
 class Thread extends Model {
     use HasFactory;
 
-    const CREATED_AT = 'creation_date';
-    const UPDATED_AT = 'edit_date';
+    public $timestamps = false;
 
     /**
      * The attributes that are mass assignable.
@@ -31,9 +32,13 @@ class Thread extends Model {
      */
     protected $hidden = [];
 
-    protected $appends = ['content_formatted'];
-
     protected $with = ['comments', 'author'];
+
+    protected $casts = [
+        'creation_date' => Datetime::class,
+        'edit_date' => Datetime::class,
+        'content' => Markdown::class
+    ];
 
     protected $dispatchesEvents = [
         'created' => ThreadCreated::class
@@ -41,24 +46,20 @@ class Thread extends Model {
 
     public function project() {
         return $this->belongsTo(
-            Project::class,
+                Project::class,
             'project_id'
         );
     }
 
     public function comments() {
         return $this->hasMany(
-            ThreadComment::class,
+                ThreadComment::class,
             'thread_id'
         );
     }
 
     public function author() {
-        return $this->belongsTo(User::class, 'author_id');
-    }
-
-    public function contentFormatted(): Attribute {
-        return Attribute::make(fn($_, $attributes) => app(MarkdownRenderer::class)->toHtml($attributes['content'] ?? ""));
+        return $this->belongsTo(User::class, 'author_id')->withDefault(User::DELETED_USER);
     }
 
     protected $table = 'thread';

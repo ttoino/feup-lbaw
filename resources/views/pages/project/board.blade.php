@@ -8,6 +8,7 @@
     <template id="assignee-template">@include('partials.project.board.task-assignee')</template>
     <template id="tag-template">@include('partials.project.board.task-tag')</template>
     <template id="task-template">@include('partials.project.board.task')</template>
+    <template id="task-comment-template">@include('partials.project.board.comment')</template>
     <template id="task-group-template">@include('partials.project.board.task-group', [
         'group' => new \App\Models\TaskGroup(),
         'project' => $project,
@@ -23,10 +24,10 @@
 
         @if (Auth::user()?->projects->contains($project) && !$project->archived)
             <a id="new-task-button" data-bs-toggle="offcanvas"
-                href="#new-task-offcanvas" role="button" @class([
+                href="#new-task-offcanvas" role="button"
+                @class([
                     'disabled' => $project->archived,
-                ])
-                aria-controls="new-task-offcanvas">
+                ]) aria-controls="new-task-offcanvas">
                 <i class="bi bi-plus"></i> Create task
             </a>
         @endif

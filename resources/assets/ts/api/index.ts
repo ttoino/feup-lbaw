@@ -48,7 +48,6 @@ export const apiFetch = <T>(
 
 export const tryRequest = async <K, Params extends Array<any>>(
     fn: (...params: Params) => ReturnType<typeof apiFetch<K>>,
-    notOk: string,
     error: string = "Request failed, are you online?",
     ...params: Params
 ): Promise<K | null> => {
@@ -56,14 +55,7 @@ export const tryRequest = async <K, Params extends Array<any>>(
         const response = await fn(...params);
 
         if (!response.ok) {
-            let message;
-            try {
-                const responseBody = await response.json();
-
-                message = responseBody.message ?? "";
-            } catch {
-                message = notOk;
-            }
+            const message = (await response.json()).message;
 
             showToast(message);
             return null;
