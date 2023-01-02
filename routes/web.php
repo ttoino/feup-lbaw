@@ -148,6 +148,10 @@ Route::prefix('/api')->name('api')->middleware('throttle')->group(function () {
                 // Route::post('', 'addProjectMember')->name('.add');
             });
 
+            Route::prefix('tags')->name('.tags')->group(function () {
+                Route::get('', 'getProjectTags');
+            });
+
             Route::prefix('/favorite')->name('.favorite')->group(function () {
                 Route::post('/toggle', 'toggleFavorite')->name('.toggle');
             });
@@ -178,12 +182,24 @@ Route::prefix('/api')->name('api')->middleware('throttle')->group(function () {
         Route::prefix('/{task}')->where(['task', '[0-9]+'])->group(function () {
 
             // this needs to be a separate function since this won't be wrapped in a project route group
-            Route::get('', 'showAPI')->name('');
+            Route::get('', 'show')->name('');
             Route::put('', 'update')->name('update');
             Route::delete('', 'destroy')->name('.delete');
 
             Route::put('/complete', 'complete')->name('.complete');
             Route::post('/reposition', 'update')->name('.reposition');
+        });
+    });
+
+    Route::prefix('/task-comment')->name('.task-comment')->controller('TaskCommentController')->group(function () {
+
+        Route::post('/new', 'store')->name('.new');
+        
+        Route::prefix('/{taskComment}')->where(['taskComment', '[0-9]+'])->group(function () {
+
+            Route::get('', 'show')->name('');
+            Route::put('', 'update')->name('.update');
+            Route::delete('', 'destroy')->name('.delete');
         });
     });
 
@@ -206,6 +222,18 @@ Route::prefix('/api')->name('api')->middleware('throttle')->group(function () {
         Route::post('/new', 'store')->name('.new');
         
         Route::prefix('/{thread}')->where(['thread', '[0-9]+'])->group(function () {
+
+            Route::get('', 'show')->name('');
+            Route::put('', 'update')->name('.update');
+            Route::delete('', 'destroy')->name('.delete');
+        });
+    });
+
+    Route::prefix('/thread-comment')->name('.thread-comment')->controller('ThreadCommentController')->group(function () {
+
+        Route::post('/new', 'store')->name('.new');
+        
+        Route::prefix('/{threadComment}')->where(['threadComment', '[0-9]+'])->group(function () {
 
             Route::get('', 'show')->name('');
             Route::put('', 'update')->name('.update');

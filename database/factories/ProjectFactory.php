@@ -24,9 +24,9 @@ class ProjectFactory extends Factory {
         return [
             'name' => $this->faker->company,
             'description' => $this->faker->optional(ProjectFactory::PROJECTS_WITH_DESCRIPTION_PERCENTAGE)->paragraph,
-            'creation_date' => $this->faker->dateTimeThisYear('-5 month'),
+            'creation_date' => $this->faker->dateTimeBetween('-5 months'),
             'last_modification_date' => function ($attributes) {
-                return $this->faker->optional(ProjectFactory::EDITED_PROJECT_PERCENTAGE)->dateTimeBetween($attributes['creation_date'], 'now');
+                return $this->faker->optional(ProjectFactory::EDITED_PROJECT_PERCENTAGE)->dateTimeBetween($attributes['creation_date']);
             },
             'archived' => false,
         ];

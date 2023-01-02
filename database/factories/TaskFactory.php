@@ -23,9 +23,9 @@ class TaskFactory extends Factory {
         return [
             'name' => $this->faker->sentence,
             'description' => $this->faker->optional(TaskFactory::TASKS_WITH_DESCRIPTION_PERCENTAGE)->paragraph,
-            'creation_date' => $this->faker->dateTimeThisYear('-5 month'),
+            'creation_date' => $this->faker->dateTimeBetween('-5 month'),
             'edit_date' => function ($attributes) {
-                return $this->faker->optional(TaskFactory::EDITED_TASK_PERCENTAGE)->dateTimeBetween($attributes['creation_date'], 'now');
+                return $this->faker->optional(TaskFactory::EDITED_TASK_PERCENTAGE)->dateTimeBetween($attributes['creation_date']);
             },
             'completed' => $this->faker->boolean()
         ];

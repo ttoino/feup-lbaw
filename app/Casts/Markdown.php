@@ -32,6 +32,6 @@ class Markdown implements CastsAttributes {
      * @return mixed
      */
     public function set($model, string $key, $value, array $attributes) {
-        return is_string($value) ? $value : $value['raw'];
+        return is_array($value) ? $value['raw'] : $value ;
     }
 }

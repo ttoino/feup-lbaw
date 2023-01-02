@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Log;
 class SendThreadCommented {
 
     public function handle(ThreadCommentEvent $event) {
-        $event->thread_comment->thread->author->notify(new ThreadCommented($event->thread_comment));  
+        $event->comment->thread->author->notify(new ThreadCommented($event->comment));  
     }
 }

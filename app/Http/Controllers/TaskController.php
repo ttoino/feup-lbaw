@@ -112,17 +112,15 @@ class TaskController extends Controller {
      */
     public function show(Request $request, Project $project, Task $task) {
 
+        $isApi = $request->expectsJson();
+
+        $project = $isApi ? $task->project : $project;
+
         $this->authorize('view', [$task, $project]);
 
-        return $request->expectsJson()
-            ? new JsonResponse($task->toArray())
+        return $isApi
+            ? new JsonResponse($task)
             : view('pages.project.task', ['task' => $task, 'project' => $project]);
-    }
-
-    public function showAPI(Request $request, Task $task) {
-        // $this->authorize('view', $task);
-
-        return new JsonResponse($task);
     }
 
     public function update(Request $request, Project $project, Task $task) {

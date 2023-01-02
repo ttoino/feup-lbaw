@@ -143,7 +143,7 @@ class ProjectPolicy
         if ($user->is_admin)
             return $this->deny('Admins cannot leave projects');
 
-        if ($user->id !== $project->coordinator_id)
+        if ($user->id === $project->coordinator_id)
             return $this->deny('The project\' coordinator cannot leave the project without appointing a new coordinator');
 
         if (!$project->users->contains($user))
@@ -158,6 +158,14 @@ class ProjectPolicy
             return $this->allow();
 
         return $this->deny('Only admins or project members can see the project\'s members');
+    }
+
+    public function getProjectTags(User $user, Project $project) {
+
+        if ($user->is_admin || $project->users->contains($user))
+            return $this->allow();
+
+        return $this->deny('Only admins or project members can see the project\'s tags');
     }
 
     /**

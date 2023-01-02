@@ -24,9 +24,9 @@ class ThreadFactory extends Factory {
         return [
             'title' => $this->faker->sentence(3),
             'content' => $this->faker->paragraph,
-            'creation_date' => $this->faker->dateTimeThisYear('-5 month'),
+            'creation_date' => $this->faker->dateTimeBetween('-5 month'),
             'edit_date' => function ($attributes) {
-                return $this->faker->optional(ThreadFactory::EDITED_THREAD_PERCENTAGE)->dateTimeBetween($attributes['creation_date'], 'now');
+                return $this->faker->optional(ThreadFactory::EDITED_THREAD_PERCENTAGE)->dateTimeBetween($attributes['creation_date']);
             },
         ];
     }

@@ -300,4 +300,12 @@ class ProjectController extends Controller {
 
         return new JsonResponse($members);
     }
+
+    public function getProjectTags(Request $request, Project $project) {
+        $this->authorize('getProjectTags', $project);
+
+        $tags = $project->tags()->cursorPaginate(10);
+
+        return new JsonResponse($tags);
+    }
 }
