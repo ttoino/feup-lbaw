@@ -1,11 +1,16 @@
 import { Toast } from "bootstrap";
+import { registerEnhancement } from "./enhancements";
+import { appendListItem } from "./render";
 
-const toastDiv = document.querySelector("#liveToast");
-const toast = toastDiv ? new Toast(toastDiv) : null;
+export const renderToast = appendListItem<{ text: string }>(
+    "#toast-template",
+    ".toast-container"
+);
 
-export const showToast = (text: string) => {
-    const body = toastDiv?.querySelector(".toast-body");
-    if (body) body.textContent = text;
-
-    toast?.show();
-};
+registerEnhancement({
+    selector: ".toast",
+    onattach: (el) => {
+        const toast = Toast.getOrCreateInstance(el).show();
+        el.addEventListener("hidden.bs.toast", (e) => el.remove());
+    },
+});

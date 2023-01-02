@@ -13,7 +13,7 @@ abstract class Notification extends BaseNotification {
 
     public function toDatabase($notifiable) {
         return [
-            'json' => json_encode($this->toArray($notifiable)),
+            'json' => $this->toArray($notifiable),
             'type' => get_class($this),
             'notifiable_id' => $notifiable->id
         ];

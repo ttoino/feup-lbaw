@@ -33,20 +33,20 @@
     @vite(['resources/assets/sass/app.scss', 'resources/assets/ts/app.ts'])
 
     @stack('templates')
+    <template id="toast-template">
+        <div class="toast d-flex align-items-center" role="alert"
+            aria-live="assertive" aria-atomic="true">
+            <div class="toast-body" data-render-text="text"></div>
+            <button type="button" class="btn-close m-3" data-bs-dismiss="toast"
+                aria-label="Close"></button>
+        </div>
+    </template>
 </head>
 
 <body class="h-100 d-flex flex-column @stack('body-classes')">
     @yield('body')
 
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="liveToast" class="toast" role="alert" aria-live="assertive"
-            aria-atomic="true">
-            <div class="d-flex align-items-center">
-                <div class="toast-body"></div>
-                <button type="button" class="btn-close m-3"
-                    data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-        </div>
     </div>
 </body>
 

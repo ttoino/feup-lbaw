@@ -1,9 +1,14 @@
-import Sortable from "sortablejs";
+import Sortable, { SortableEvent } from "sortablejs";
 
 import { registerEnhancement } from "../../enhancements";
 import { tryRequest } from "../../api";
 import { repositionTask } from "../../api/task";
 import { repositionTaskGroup } from "../../api/task_group";
+
+const undo = (e: SortableEvent) => {
+    e.item.remove();
+    e.from.insertBefore(e.item, e.from.children[e.oldIndex!]);
+};
 
 registerEnhancement({
     selector: ".project-board",
@@ -13,7 +18,7 @@ registerEnhancement({
             handle: ".task-group > header > .grip",
             animation: 150,
             easing: "ease-in-out",
-            draggable: ".task-group",
+            draggable: ".task-group[data-task-group-id]",
 
             onEnd: async (e) => {
                 const taskGroupId = e.item.dataset.taskGroupId;
@@ -30,18 +35,20 @@ registerEnhancement({
                     e
                 );
 
-                await tryRequest(
+                const result = await tryRequest(
                     repositionTaskGroup,
                     undefined,
                     taskGroupId,
                     newPosition
                 );
+
+                if (result === null) undo(e);
             },
         });
     },
 });
 
-const onTaskMove = async (e: Sortable.SortableEvent) => {
+const onTaskMove = async (e: SortableEvent) => {
     const taskId = e.item.dataset.taskId;
     if (!taskId) return;
 
@@ -59,7 +66,15 @@ const onTaskMove = async (e: Sortable.SortableEvent) => {
         newPosition
     );
 
-    await tryRequest(repositionTask, undefined, taskId, taskGroup, newPosition);
+    const result = await tryRequest(
+        repositionTask,
+        undefined,
+        taskId,
+        taskGroup,
+        newPosition
+    );
+
+    if (result === null) undo(e);
 };
 
 registerEnhancement({

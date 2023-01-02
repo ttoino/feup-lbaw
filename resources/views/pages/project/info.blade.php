@@ -7,16 +7,17 @@
         class="flex-fill d-flex flex-row gap-3 p-5 align-items-start flex-fill">
         <div class="col l-8">
             <section class="project-banner row">
-                <h2 class="h2">{{ $project->name }}</h2>
-                <p>{{ $project->description }}</p>
+                <h2 class="h1">{{ $project->name }}</h2>
+                <div>{!! $project->description['formatted'] !!}</div>
             </section>
             <section class="flex-fill d-flex flex-row gap-3">
                 <p><i class="bi bi-calendar mx-1"></i>Created
-                    {{ $project->creation_date['diff'] }}
+                    {{ $project->creation_date['long_diff'] }}
                 </p>
                 @if ($project->last_modification_date !== null)
                     <span>-</span>
-                    <p>Last edited {{ $project->last_modification_date['diff'] }}
+                    <p>Last edited
+                        {{ $project->last_modification_date['long_diff'] }}
                     </p>
                 @endif
             </section>
