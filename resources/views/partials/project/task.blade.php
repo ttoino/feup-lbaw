@@ -42,13 +42,11 @@
     @each('partials.project.board.comment', $task->comments, 'taskComment')
 </ul>
 
-<form method="POST" class="input-group"
-    action="{{ route('project.task.comment', ['project' => $project, 'task' => $task->id ?? 'task']) }}">
+<form id="new-comment-form" class="input-group">
     <textarea class="form-control auto-resize" name="content" required
         placeholder="New comment" @if ($project->archived) disabled @endif></textarea>
-
-    @csrf
-
+    <input type="hidden" name="task_id" value="{{ $task->id }}"
+        data-render-value="id">
     <button class="btn btn-primary" type="submit"
         @if ($project->archived) disabled @endif>
         <i class="bi bi-send"></i>

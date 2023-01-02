@@ -6,26 +6,49 @@ import {
 import { ajaxForm } from "../../forms";
 import { registerEnhancement } from "../../enhancements";
 import { projectId } from "../project";
-import { appendTaskCard, appendTaskGroup } from "./render";
+import { appendTaskCard, appendTaskComment, appendTaskGroup } from "./render";
 import { newTask } from "../../api/task";
 import { render } from "../../render";
 import { tryRequest } from "../../api";
+import { newTaskComment } from "../../api/task_comment";
 
 registerEnhancement<HTMLFormElement>({
     selector: "form#new-task-group-form",
-    onattach: (form) => {
-        console.log(form);
+    onattach: (form) =>
         ajaxForm(
             newTaskGroup,
             form,
             { project_id: parseInt(projectId) },
-            (group) => {
-                console.log(group);
-                appendTaskGroup(group);
-            },
+            (group) => appendTaskGroup(group),
             (error) => {}
-        );
-    },
+        ),
+});
+
+registerEnhancement<HTMLFormElement>({
+    selector: "form#new-comment-form",
+    onattach: (form) =>
+        ajaxForm(
+            newTaskComment,
+            form,
+            {},
+            (taskComment) => appendTaskComment?.(taskComment),
+            (error) => {}
+        ),
+});
+
+registerEnhancement<HTMLFormElement>({
+    selector: "form#new-task-form",
+    onattach: (form) =>
+        ajaxForm(
+            newTask,
+            form,
+            {},
+            (task) =>
+                appendTaskCard(
+                    `.task-group[data-task-group-id="${task.task_group_id}"] > ul`
+                )?.(task),
+            (error) => {}
+        ),
 });
 
 // NEW TASK

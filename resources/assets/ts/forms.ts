@@ -21,8 +21,8 @@ export const ajaxForm = <K, P>(
             const response = await fn(payload);
 
             if (response.ok) {
-                ok(await response.json());
                 form.reset();
+                ok(await response.json());
             } else notOk(await response.json());
         } catch {
             notOk();

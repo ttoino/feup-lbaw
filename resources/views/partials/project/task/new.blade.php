@@ -1,8 +1,4 @@
-<form method="POST"
-    action="{{ route('project.task.new', ['project' => $project]) }}"
-    class="needs-validation" novalidate>
-    @csrf
-
+<form id="new-task-form" class="needs-validation" novalidate>
     <div class="form-floating">
         <input aria-describedby="name-feedback" placeholder=""
             @class(['form-control', 'is-invalid' => $errors->has('name')]) id="name" type="text"

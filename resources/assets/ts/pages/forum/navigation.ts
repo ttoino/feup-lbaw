@@ -3,7 +3,11 @@ import { getThread } from "../../api/thread";
 import { registerEnhancement } from "../../enhancements";
 import { ajaxNavigation, navigation } from "../../navigation";
 import { Offcanvas } from "bootstrap";
-import { renderThread, renderThreadComments } from "./render";
+import {
+    renderThread,
+    renderThreadComments,
+    renderThreadListItem,
+} from "./render";
 import { projectId } from "../project";
 import { renderSingleton } from "../../render";
 
@@ -66,7 +70,7 @@ const showThread = ajaxNavigation(
 
         console.debug(thread);
 
-        renderSingleton(`.thread[data-thread-id="${thread.id}"]`)?.(thread);
+        renderThreadListItem(thread);
         renderThread?.(thread);
         renderThreadComments?.(thread.comments ?? []);
     },

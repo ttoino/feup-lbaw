@@ -3,13 +3,17 @@ import { registerEnhancement } from "../../enhancements";
 import { newThread } from "../../api/thread";
 import { projectId } from "../project";
 import { Route } from "../../navigation";
-import { appendThread, renderThread } from "./render";
+import {
+    appendThreadListItem,
+    appendThreadComment,
+    renderThread,
+} from "./render";
 import { showThreadOffcanvas } from "./navigation";
+import { newThreadComment } from "../../api/thread_comment";
 
 registerEnhancement<HTMLFormElement>({
     selector: "#new-thread-offcanvas > form",
     onattach: (form) => {
-        console.log(form);
         ajaxForm(
             newThread,
             form,
@@ -29,7 +33,22 @@ registerEnhancement<HTMLFormElement>({
 
                 showThreadOffcanvas();
                 renderThread?.(thread);
-                appendThread?.(thread);
+                appendThreadListItem?.(thread);
+            },
+            (error) => {}
+        );
+    },
+});
+
+registerEnhancement<HTMLFormElement>({
+    selector: "form#new-comment-form",
+    onattach: (form) => {
+        ajaxForm(
+            newThreadComment,
+            form,
+            {},
+            (threadComment) => {
+                appendThreadComment?.(threadComment);
             },
             (error) => {}
         );

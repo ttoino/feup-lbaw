@@ -18,10 +18,12 @@
     @each('partials.project.forum.comment', $thread->comments, 'threadComment')
 </ul>
 
-<form action="" method="post" class="input-group">
+<form id="new-comment-form" action="" method="post" class="input-group">
     <textarea name="content" id="thread-comment-content" placeholder="New comment"
         class="auto-resize form-control"
         @if ($project->archived) disabled @endif></textarea>
+    <input type="hidden" name="thread_id" value="{{ $thread->id }}"
+        data-render-value="id">
     <button class="btn btn-primary" type="submit"
         @if ($project->archived) disabled @endif>
         <i class="bi bi-send"></i>

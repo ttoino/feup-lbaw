@@ -1,4 +1,4 @@
-import { showToast } from "../toast";
+import { renderToast } from "../toast";
 
 const token =
     document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')
@@ -57,13 +57,13 @@ export const tryRequest = async <K, Params extends Array<any>>(
         if (!response.ok) {
             const message = (await response.json()).message;
 
-            showToast(message);
+            renderToast?.({ text: message });
             return null;
         }
 
         return await response.json();
     } catch {
-        showToast(error);
+        renderToast?.({ text: error });
         return null;
     }
 };

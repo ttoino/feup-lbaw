@@ -135,3 +135,10 @@ export const appendListItems = <T extends Record<string, any>>(
         ((data: Array<T>) => list.append(...data.map(renderItem)))
     );
 };
+
+export const renderMultiple =
+    <T extends Record<string, any>>(
+        ...fns: Array<((arg: T) => unknown) | null | undefined>
+    ) =>
+    (arg: T) =>
+        fns.map((fn) => fn?.(arg));

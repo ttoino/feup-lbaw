@@ -24,3 +24,8 @@ export const appendTaskGroup = (group: TaskGroup) => {
 
 export const appendTaskCard = (listSelector: string) =>
     appendListItem<Task>("#task-template", listSelector);
+
+export const appendTaskComment = appendListItem(
+    "#task-comment-template",
+    "#task-comments"
+);
