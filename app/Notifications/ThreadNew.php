@@ -28,7 +28,6 @@ class ThreadNew extends Notification {
      */
     public function via($notifiable) {
         return [
-            // 'mail',
             CustomDatabaseChannel::class
         ];
     }

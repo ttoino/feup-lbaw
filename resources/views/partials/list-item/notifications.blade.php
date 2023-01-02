@@ -24,6 +24,14 @@
                 </a>
             @break
 
+            @case('App\Notifications\ProjectDeleted')
+                <a href={{ route('project.list') }}>
+                    Project
+                    <strong>{{ $item->json['project_name'] }}</strong> has been
+                    deleted.
+                </a>
+            @break
+
             @case('App\Notifications\TaskCommented')
                 <a
                     href={{ route('project.task.info', ['project' => $item->json['comment']->task->project, 'task' => $item->json['comment']->task]) }}>

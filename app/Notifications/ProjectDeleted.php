@@ -26,7 +26,6 @@ class ProjectDeleted extends Notification {
      */
     public function via($notifiable) {
         return [
-            'mail',
             CustomDatabaseChannel::class
         ];
     }
@@ -51,7 +50,7 @@ class ProjectDeleted extends Notification {
      */
     public function toArray($notifiable) {
         return [
-            'project' => $this->project
+            'project_name' => $this->project->name
         ];
     }
 }

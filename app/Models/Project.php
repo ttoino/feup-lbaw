@@ -43,7 +43,7 @@ class Project extends Model {
     ];
 
     protected $dispatchesEvents = [
-        'deleted' => ProjectDeleted::class
+        'deleting' => ProjectDeleted::class
     ];
 
     public function coordinator() {
