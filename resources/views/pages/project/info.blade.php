@@ -2,139 +2,99 @@
 
 @section('title', $project->name)
 
+@push('main-classes', 'project-info-main ')
+
 @section('project-content')
-    <section style="overflow-x: auto;"
-        class="flex-fill d-flex flex-row gap-3 p-5 align-items-start flex-fill">
-        <div class="col l-8">
-            <section class="project-banner row">
-                <h2 class="h1">{{ $project->name }}</h2>
-                <div>{!! $project->description['formatted'] !!}</div>
-            </section>
-            <section class="flex-fill d-flex flex-row gap-3">
-                <p><i class="bi bi-calendar mx-1"></i>Created
-                    {{ $project->creation_date['long_diff'] }}
+    <section class="project-info">
+        <div class="left editable">
+            <header>
+                <h2 class="h1" data-render-text="name">{{ $project->name }}</h2>
+                <p>
+                    Created on
+                    <time data-render-datetime="creation_date.iso"
+                        data-render-text="creation_date.datetime"
+                        datetime="{{ $project->creation_date['iso'] }}">
+                        {{ $project->creation_date['datetime'] }}
+                    </time>
                 </p>
-                @if ($project->last_modification_date !== null)
-                    <span>-</span>
-                    <p>Last edited
+                <p>
+                    Last edited
+                    <time data-render-datetime="last_modification_date.iso"
+                        data-render-text="last_modification_date.long_diff"
+                        datetime="{{ $project->last_modification_date['iso'] }}">
                         {{ $project->last_modification_date['long_diff'] }}
-                    </p>
-                @endif
-            </section>
-            <section class="flex-fill d-flex flex-row gap-3">
-                @if (Request::user()->id === $project->coordinator_id)
-                    <button class="btn btn-outline-danger" data-bs-toggle="modal"
-                        data-bs-target="#delete-project-modal">
-                        <i class="bi bi-trash"></i>
-                        Delete project
+                    </time>
+                </p>
+            </header>
+            <div class="buttons">
+                @can('update', $project)
+                    <button id="edit-project-button" class="btn btn-outline-primary">
+                        <i class="bi bi-pencil"></i>
+                        Edit
                     </button>
+                @endcan
 
-                    <div class="modal fade" id="delete-project-modal" tabindex="-1"
-                        aria-labelledby="delete-project-modal-label"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div
-                                class="modal-content modal-body gap-3 align-items-center">
-                                <h3 class="modal-title fs-5"
-                                    id="delete-project-modal-label">
-                                    Are you sure you want to delete this project?
-                                </h3>
-                                <div class="hstack gap-2 align-self-center">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Cancel</button>
-                                    <form method="POST"
-                                        action="{{ route('project.delete', ['project' => $project]) }}">
-                                        @csrf
-                                        <button type="submit"
-                                            class="btn btn-outline-danger">Confirm</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button class="btn btn-outline-secondary" data-bs-toggle="modal"
-                        data-bs-target="#archive-unarchive-project-modal">
+                @can('archive', $project)
+                    <button id="archive-project-button"
+                        class="btn btn-outline-secondary">
                         <i class="bi bi-archive"></i>
-                        @if ($project->archived)
-                            Unarchive
-                        @else
-                            Archive
-                        @endif
-                        project
+                        Archive
                     </button>
+                @endcan
 
-                    <div class="modal fade" id="archive-unarchive-project-modal"
-                        tabindex="-1"
-                        aria-labelledby="archive-unarchive-project-modal-label"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div
-                                class="modal-content modal-body gap-3 align-items-center">
-                                <h3 class="modal-title fs-5"
-                                    id="archive-unarchive-project-modal-label">
-                                    Are you sure you want to
-                                    @if ($project->archived)
-                                        unarchive
-                                    @else
-                                        archive
-                                    @endif
-                                    this project?
-                                </h3>
-                                <div class="hstack gap-2 align-self-center">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Cancel</button>
+                @can('unarchive', $project)
+                    <button id="unarchive-project-button"
+                        class="btn btn-outline-secondary">
+                        <i class="bi bi-archive"></i>
+                        Unarchive
+                    </button>
+                @endcan
 
-                                    @php
-                                        if ($project->archived) {
-                                            $route = 'project.unarchive';
-                                        } else {
-                                            $route = 'project.archive';
-                                        }
-                                    @endphp
-                                    <form method="POST"
-                                        action="{{ route($route, ['project' => $project]) }}">
-                                        @csrf
-                                        <button type="submit"
-                                            class="btn btn-outline-danger">Confirm</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @else
-                    <button class="btn btn-outline-danger" data-bs-toggle="modal"
-                        data-bs-target="#leave-project-modal">
+                @can('delete', $project)
+                    <button id="delete-project-button" class="btn btn-outline-danger">
+                        <i class="bi bi-trash"></i>
+                        Delete
+                    </button>
+                @endcan
+
+                @can('leaveProject', $project)
+                    <button id="leave-project-button" class="btn btn-outline-danger">
+                        <i class="bi bi-box-arrow-right"></i>
                         Leave project
                     </button>
+                @endcan
+            </div>
+            <div class="description" data-render-html="description.formatted">
+                {!! $project->description['formatted'] !!}</div>
 
-                    <div class="modal fade" id="leave-project-modal" tabindex="-1"
-                        aria-labelledby="leave-project-modal-label"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div
-                                class="modal-content modal-body gap-3 align-items-center">
-                                <h3 class="modal-title fs-5"
-                                    id="leave-project-modal-label">
-                                    Are you sure you want to leave this project?
-                                </h3>
-                                <div class="hstack gap-2 align-self-center">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Cancel</button>
-                                    <form method="POST"
-                                        action="{{ route('project.leave', ['project' => $project]) }}">
-                                        @csrf
-                                        <button type="submit"
-                                            class="btn btn-outline-danger">Confirm</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
+            <form id="edit-project-form" class="edit needs-validation" novalidate>
+                <div class="form-floating">
+                    <input aria-describedby="name-feedback" placeholder=""
+                        data-render-value="name" class="form-control" id="name"
+                        type="text" name="name" value="{{ $project->name }}"
+                        minlength="6" maxlength="512" required autofocus>
+                    <label for="name" class="form-label">Name</label>
+                    <div class="invalid-feedback" id="name-feedback">
+                        Invalid name
                     </div>
-                @endif
-            </section>
+                </div>
+
+                <div class="form-floating">
+                    <textarea placeholder="" class="form-control auto-resize"
+                        data-render-value="description.raw" aria-describedby="description-feedback"
+                        id="description" name="description" minlength="6" maxlength="512" required>{{ $project->description['raw'] }}</textarea>
+                    <label for="description" class="form-label">Description</label>
+                    <div class="invalid-feedback" id="description-feedback">
+                        Invalid description
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Save changes
+                </button>
+            </form>
         </div>
-        <div class="col l-4">
+        <div class="right">
             <section class="user-list">
                 <h2 class="h2">Project members</h2>
                 @include('partials.paginated-list', [

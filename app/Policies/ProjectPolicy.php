@@ -7,8 +7,7 @@ use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
 
-class ProjectPolicy
-{
+class ProjectPolicy {
     use HandlesAuthorization;
 
     /**
@@ -30,7 +29,7 @@ class ProjectPolicy
     public function view(User $user, Project $project) {
         if (!$user->is_admin && !$project->users->contains($user))
             return $this->deny('Only admins or the project\'s members can view this project');
-        
+
         return $this->allow();
     }
 
@@ -62,7 +61,17 @@ class ProjectPolicy
 
         if (!$project->users->contains($user))
             return $this->deny('Only the project\'s members can edit this project');
-        
+
+        return $this->allow();
+    }
+
+    public function update(User $user, Project $project) {
+        if ($project->archived)
+            return $this->deny('Cannot update an archived project');
+
+        if ($project->coordinator_id != $user->id)
+            return $this->deny('Only the project\'s coordinator can edit this project');
+
         return $this->allow();
     }
 
@@ -75,8 +84,8 @@ class ProjectPolicy
      */
     public function delete(User $user, Project $project) {
         if (!$user->is_admin && $project->coordinator_id !== $user->id)
-            return $this->deny('Only admins the project\'s coordinator can delete this project');
-        
+            return $this->deny('Only admins or the project\'s coordinator can delete this project');
+
         return $this->allow();
     }
 
@@ -87,8 +96,7 @@ class ProjectPolicy
      * @param  \App\Models\Project  $project
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Project $project)
-    {
+    public function restore(User $user, Project $project) {
         //
     }
 
@@ -99,14 +107,14 @@ class ProjectPolicy
 
         if (!$project->users->contains($user))
             return $this->deny('Only the project\'s members can mark this project as favorite');
-        
+
         return $this->allow();
     }
 
     public function showAddUserPage(User $user, Project $project) {
         if ($user->id !== $project->coordinator_id)
             return $this->deny('Only the project\'s coordinator can see the \'Add User to Project\' page');
-        
+
         return $this->allow();
     }
 
@@ -148,7 +156,7 @@ class ProjectPolicy
 
         if (!$project->users->contains($user))
             return $this->deny('Only the project\'s members can leave the project');
-        
+
         return $this->allow();
     }
 
@@ -168,6 +176,26 @@ class ProjectPolicy
         return $this->deny('Only admins or project members can see the project\'s tags');
     }
 
+    public function archive(User $user, Project $project) {
+        if ($project->archived)
+            return $this->deny('Project is already archived');
+
+        if ($project->coordinator_id === $user->id)
+            return $this->allow();
+
+        return $this->deny('Only the project coordinator can archive it');
+    }
+
+    public function unarchive(User $user, Project $project) {
+        if (!$project->archived)
+            return $this->deny('Project is not archived');
+
+        if ($project->coordinator_id === $user->id)
+            return $this->allow();
+
+        return $this->deny('Only the project coordinator can unarchive it');
+    }
+
     /**
      * Determine whether the user can permanently delete the model.
      *
@@ -175,8 +203,7 @@ class ProjectPolicy
      * @param  \App\Models\Project  $project
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Project $project)
-    {
+    public function forceDelete(User $user, Project $project) {
         //
     }
 }

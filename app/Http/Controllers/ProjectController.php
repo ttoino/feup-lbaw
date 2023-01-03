@@ -182,16 +182,16 @@ class ProjectController extends Controller {
 
         if (($data['name'] ??= null) !== null)
             $project->name = $data['name'];
-        
+
         if (($data['archived'] ??= null) !== null)
             $project->archived = $data['archived'];
-        
+
         if (($data['description'] ??= null) !== null)
             $project->description = $data['description'];
-        
+
         if (($data['coordinator_id'] ??= null) !== null)
             $project->coordinator_id = $data['coordinator_id'];
-        
+
         $project->save();
 
         return $project;
@@ -219,7 +219,7 @@ class ProjectController extends Controller {
      */
     public function index() {
         $projects = Auth::user()->projects()->paginate(10);
-        
+
         return view('pages.project.list', ['projects' => $projects]);
     }
 
@@ -259,11 +259,12 @@ class ProjectController extends Controller {
     }
 
     public function archive(Request $request, Project $project) {
+        $this->authorize('archive', $project);
 
         $project->archived = true;
         $project->save();
 
-        foreach($project->users as $user){
+        foreach ($project->users as $user) {
             $user->notify(new ProjectArchived($project));
         }
 
@@ -273,6 +274,7 @@ class ProjectController extends Controller {
     }
 
     public function unarchive(Request $request, Project $project) {
+        $this->authorize('unarchive', $project);
 
         $project->archived = false;
         $project->save();

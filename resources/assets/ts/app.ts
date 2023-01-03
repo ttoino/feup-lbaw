@@ -12,6 +12,9 @@ if (window.location.pathname.match(/project\/\d+\/(board|task)/))
 if (window.location.pathname.match(/project\/\d+\/(forum|thread)/))
     import("./pages/forum");
 
+if (window.location.pathname.match(/project\/\d+\/info/))
+    import("./pages/info");
+
 // Enhancements
 import "./enhancements/autoresize";
 import "./enhancements/form";

@@ -9,6 +9,15 @@ export const toggleFavorite = (projectId: string) =>
         "POST"
     );
 
+export const archiveProject = (projectId: string) =>
+    apiFetch<Project>(`/api/project/${projectId}/archive`, "PUT");
+
+export const unarchiveProject = (projectId: string) =>
+    apiFetch<Project>(`/api/project/${projectId}/archive`, "DELETE");
+
+export const leaveProject = (projectId: string) =>
+    apiFetch<Project>(`/api/project/${projectId}/leave`, "POST");
+
 export const getProjectMembers = (projectId: string, cursor?: string) =>
     apiFetch<Paginator<User>>(`/api/project/${projectId}/members`);
 

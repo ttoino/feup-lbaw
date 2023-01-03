@@ -7,8 +7,7 @@ use App\Models\User;
 use App\Models\Project;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class ThreadPolicy
-{
+class ThreadPolicy {
     use HandlesAuthorization;
 
     /**
@@ -17,8 +16,7 @@ class ThreadPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user)
-    {
+    public function viewAny(User $user) {
         //
     }
 
@@ -32,7 +30,7 @@ class ThreadPolicy
     public function view(User $user, Thread $thread) {
         if (!$user->is_admin && $thread->author !== $user && !$thread->project->users->contains($user))
             return $this->deny('Only admins, the thread\'s author or a member of the thread\'s project can view this thread');
-        
+
         return $this->allow();
     }
 
@@ -40,7 +38,7 @@ class ThreadPolicy
 
         if (!$user->is_admin && !$project->users->contains($user))
             return $this->deny('Only admins or a member of the given project can view this thread');
-        
+
         return $this->allow();
     }
 
@@ -68,8 +66,7 @@ class ThreadPolicy
      * @param  \App\Models\Thread  $thread
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Thread $thread)
-    {
+    public function update(User $user, Thread $thread) {
         //
     }
 
@@ -80,8 +77,7 @@ class ThreadPolicy
      * @param  \App\Models\Thread  $thread
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Thread $thread)
-    {
+    public function delete(User $user, Thread $thread) {
         //
     }
 
@@ -92,8 +88,7 @@ class ThreadPolicy
      * @param  \App\Models\Thread  $thread
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Thread $thread)
-    {
+    public function restore(User $user, Thread $thread) {
         //
     }
 
@@ -104,8 +99,7 @@ class ThreadPolicy
      * @param  \App\Models\Thread  $thread
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Thread $thread)
-    {
+    public function forceDelete(User $user, Thread $thread) {
         //
     }
 }

@@ -1,0 +1,51 @@
+.project-info-main {
+    @extend .overflow-auto;
+}
+
+.project-info {
+    @extend .d-flex, .flex-column, .gap-3, .p-3;
+
+    flex: 1;
+
+    @include media-breakpoint-up(md) {
+        flex-direction: row;
+
+        .left,
+        .right {
+            margin: (-$spacer) (-$spacer * 0.5);
+            padding: $spacer $spacer * 0.5;
+
+            flex: 1;
+            overflow-y: auto;
+        }
+    }
+
+    .left,
+    .right {
+        @extend .d-flex, .flex-column, .gap-2;
+    }
+
+    .left {
+        header {
+            @extend .d-flex, .flex-column, .gap-1;
+
+            > * {
+                @extend .m-0;
+            }
+        }
+
+        .buttons {
+            @extend .d-flex, .flex-row, .gap-2, .flex-wrap;
+        }
+    }
+
+    .description {
+        > :last-child {
+            @extend .m-0;
+        }
+    }
+
+    #edit-project-form {
+        display: contents;
+    }
+}
