@@ -68,7 +68,7 @@ class User extends Authenticatable {
             'project_member',
             'user_profile_id',
             'project_id'
-        )->withPivot('is_favorite');
+        )->withPivot('is_favorite')->orderByPivot('is_favorite', 'desc');
     }
 
     public function reports() {
