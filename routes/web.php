@@ -30,8 +30,8 @@ Route::prefix('/user')->middleware('auth')->name('user.')->controller('UserContr
             Route::get('', 'edit')->name('edit');
             Route::post('', 'update')->name('edit-action');
         });
-        Route::prefix('/reportuser')->group(function () {
-            Route::get('', 'reportuser')->name('reportuser');
+        Route::prefix('/report')->group(function () {
+            Route::get('', 'report')->name('report');
             Route::post('', 'update')->name('report-action');
         });
         
@@ -48,16 +48,17 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
         Route::get('', 'create')->name('.new');
         Route::post('', 'store')->name('.new-action');
     });
-    // Report project
-    Route::prefix('/reportproject')->group(function () {
-        Route::get('', 'reportproject')->name('.reportproject');
-        Route::post('', 'update')->name('.report-action');
-    });
 
     // Project Search
     Route::get('/search', 'search')->name('.search');
 
     Route::prefix('/{project}')->where(['project', '[0-9]+'])->middleware('withOtherProjects')->group(function () {
+
+        // Report project
+        Route::prefix('/report')->group(function () {
+            Route::get('', 'report')->name('.report');
+            Route::post('', 'update')->name('.report-action');
+        });
 
         Route::redirect('', "/project/{project}/board")->name('');
 

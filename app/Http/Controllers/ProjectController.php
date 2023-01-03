@@ -60,6 +60,7 @@ class ProjectController extends Controller {
         $this->authorize('leaveProject', $project);
 
         $project->users()->detach($user);
+
         return $request->wantsJson()
             ? response()->json($project)
             : redirect()->route('project.list');
@@ -67,7 +68,7 @@ class ProjectController extends Controller {
 
     public function joinProject(Request $request, Project $project) {
 
-        // TODO: handle authorization with policies
+        $this->authorize('joinProject', $project);
 
         $user = User::findOrFail($request->query('user'));
 
@@ -90,6 +91,9 @@ class ProjectController extends Controller {
     }
 
     public function search(Request $request) {
+
+        // no need to authorize this request since it is a top-level one
+
         $searchTerm = $request->query('q') ?? '';
 
         $projects = $this->searchProjects($searchTerm)->withQueryString();
@@ -109,6 +113,9 @@ class ProjectController extends Controller {
     }
 
     public function create() {
+
+        $this->authorize('create', Project::class);
+
         return view('pages.project.new');
     }
 
@@ -163,6 +170,7 @@ class ProjectController extends Controller {
 
         $this->projectUpdateValidator($requestData)->validate();
 
+        // this is different than 'edit' in that only the project's coordinator can update the project's attributes
         $this->authorize('update', $project);
 
         $project = $this->updateProject($project, $requestData);
@@ -190,6 +198,9 @@ class ProjectController extends Controller {
 
         if (($data['coordinator_id'] ??= null) !== null)
             $project->coordinator_id = $data['coordinator_id'];
+
+        if ($project->isDirty())
+            $project->last_modification_date = now();
 
         $project->save();
 
@@ -244,7 +255,6 @@ class ProjectController extends Controller {
 
     public function toggleFavorite(Request $request, Project $project) {
 
-        // handle auth
         $this->authorize('toggleFavorite', $project);
 
         $member = $project->users()->get()->first(fn(User $user) => $user->id === Auth::user()->id);
@@ -323,17 +333,27 @@ class ProjectController extends Controller {
     public function getProjectTags(Request $request, Project $project) {
         $this->authorize('getProjectTags', $project);
 
-        $tags = $project->tags()->cursorPaginate(10);
+        $searchTerm = $request->query('q') ?? '';
+
+        $tags = $this->searchTags($project, $searchTerm)->withQueryString();
 
         return response()->json($tags);
     }
 
-    public function reportproject(Project $project){
-        //$this->authorize('showReportUser', $user);
-        
-        return view('pages.reportproject', ['project' => $project]);
-        
+    public function searchTags(Project $project, string $search) {
+        $members = $project->tags();
+
+        if (!empty($search)) {
+            $members = $members->where('title', 'like', '%' . ProjectController::escape_like($search) . '%');
+        }
+
+        return $members->cursorPaginate(10);
     }
 
+    public function report(Project $project) {
+        $this->authorize('report', $project);
+
+        return view('pages.reportproject', ['project' => $project]);
+    }
 
 }

@@ -46,6 +46,10 @@ class TaskPolicy {
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function create(User $user, TaskGroup $task_group) {
+
+        if ($user->is_admin)
+            return $this->deny('Admins cannot create tasks');
+
         if (!$task_group->project->users->contains($user))
             return $this->deny('Only members of the given group\'s project can create tasks');
 
@@ -60,6 +64,10 @@ class TaskPolicy {
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function edit(User $user, Task $task) {
+
+        if ($user->is_admin)
+            return $this->deny('Admins cannot edit tasks');
+
         if (!$task->project->users->contains($user))
             return $this->deny('Only members of the given task\'s project can update tasks');
 
@@ -74,6 +82,10 @@ class TaskPolicy {
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function delete(User $user, Task $task) {
+
+        if ($user->is_admin)
+            return $this->deny('Admins cannot delete tasks');
+
         if (!$task->project->users->contains($user))
             return $this->deny('Only members of the given task\'s project can delete tasks');
 

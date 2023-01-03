@@ -13,12 +13,11 @@
         <span class="text-warning">Archived</span>
     @endif
 
-    @if ($item->reports_count > 0)
-        <span class="text-danger" style="z-index: 5">
-            <a href={{ route('admin.reports.project', ['project' => $item]) }}>{{ $item->reports_count }}
-                Reports</a>
-        </span>
-    @endif
+    @can('admin-action')
+        <a href="{{ route('admin.reports.project', ['project' => $item]) }}"
+            class="btn btn-outline-secondary" style="z-index: 5">Reports
+            ({{ $item->reports->count() }})</a>
+    @endcan
 
     @can('toggleFavorite', $item)
         <button class="btn btn-outline-primary favorite-toggle" style="z-index: 5">
@@ -31,7 +30,8 @@
     @endcan
 
     @can('delete', $item)
-        <button class="btn btn-outline-danger" style="z-index: 5"><i
-                class="bi bi-trash3"></i></button>
+        <button class="btn btn-outline-danger delete-project" style="z-index: 5">
+            <i class="bi bi-trash"></i>
+        </button>
     @endcan
 </li>

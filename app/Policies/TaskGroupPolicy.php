@@ -43,6 +43,10 @@ class TaskGroupPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function create(User $user, Project $project) {
+
+        if ($user->is_admin)
+            return $this->deny('Admins cannot create task groups');
+
         if (!$project->users->contains($user))
             return $this->deny('Only members of this given project can create task groups');
         
@@ -57,6 +61,10 @@ class TaskGroupPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function update(User $user, TaskGroup $taskGroup) {
+
+        if ($user->is_admin)
+            return $this->deny('Admins cannot update task groups');
+            
         if (!$taskGroup->project->users->contains($user))
             return $this->deny('Only members of this group\'s project can update task groups');
         
@@ -71,6 +79,10 @@ class TaskGroupPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function delete(User $user, TaskGroup $taskGroup) {
+
+        if ($user->is_admin)
+            return $this->deny('Admins cannot delete task groups');
+
         if (!$taskGroup->project->users->contains($user))
             return $this->deny('Only members of this group\'s project can update task groups');
         
