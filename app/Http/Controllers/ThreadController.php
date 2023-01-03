@@ -126,7 +126,7 @@ class ThreadController extends Controller {
         if (($data['content'] ??= null) !== null)
             $thread->name = $data['content'];
 
-        if ($thread->dirty())
+        if ($thread->isDirty())
             $thread->edit_date = now();
 
         return $thread;
