@@ -76,8 +76,24 @@ class TaskController extends Controller {
         $task->completed = true;
         $task->save();
 
-        foreach($task->assignees as $assignee){
+        foreach ($task->assignees as $assignee) {
             $assignee->notify(new TaskCompleted($task));
+        }
+
+        return new JsonResponse($task->toArray());
+    }
+
+    public function incomplete(Task $task) {
+
+        $this->authorize('edit', $task->project);
+        $this->authorize('incompleteTask', $task);
+
+        $task->completed = false;
+        $task->save();
+
+        foreach ($task->assignees as $assignee) {
+            // TODO
+            // $assignee->notify(new TaskCompleted($task));
         }
 
         return new JsonResponse($task->toArray());

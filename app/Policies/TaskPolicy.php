@@ -8,8 +8,7 @@ use App\Models\TaskGroup;
 use App\Models\Project;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class TaskPolicy
-{
+class TaskPolicy {
     use HandlesAuthorization;
 
     /**
@@ -18,8 +17,7 @@ class TaskPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user)
-    {
+    public function viewAny(User $user) {
         //
     }
 
@@ -37,7 +35,7 @@ class TaskPolicy
 
         if (!$user->is_admin && !$task->project->users->contains($user))
             return $this->deny('Only admins or members of this task\'s project can view this task');
-        
+
         return $this->allow();
     }
 
@@ -50,7 +48,7 @@ class TaskPolicy
     public function create(User $user, TaskGroup $task_group) {
         if (!$task_group->project->users->contains($user))
             return $this->deny('Only members of the given group\'s project can create tasks');
-        
+
         return $this->allow();
     }
 
@@ -64,7 +62,7 @@ class TaskPolicy
     public function edit(User $user, Task $task) {
         if (!$task->project->users->contains($user))
             return $this->deny('Only members of the given task\'s project can update tasks');
-        
+
         return $this->allow();
     }
 
@@ -78,7 +76,7 @@ class TaskPolicy
     public function delete(User $user, Task $task) {
         if (!$task->project->users->contains($user))
             return $this->deny('Only members of the given task\'s project can delete tasks');
-        
+
         return $this->allow();
     }
 
@@ -89,8 +87,7 @@ class TaskPolicy
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Task $task)
-    {
+    public function restore(User $user, Task $task) {
         //
     }
 
@@ -101,8 +98,7 @@ class TaskPolicy
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Task $task)
-    {
+    public function forceDelete(User $user, Task $task) {
         //
     }
 
@@ -114,20 +110,31 @@ class TaskPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function completeTask(User $user, Task $task) {
-        
+
         if ($user->is_admin)
             return $this->deny('Admins cannot mark tasks as completed');
-        
+
         if (!$task->project->users->contains($user))
             return $this->deny('Only members of the task\'s project can mark it as completed');
-        
+
+        return $this->allow();
+    }
+
+    public function incompleteTask(User $user, Task $task) {
+
+        if ($user->is_admin)
+            return $this->deny('Admins cannot mark tasks as incomplete');
+
+        if (!$task->project->users->contains($user))
+            return $this->deny('Only members of the task\'s project can mark it as incomplete');
+
         return $this->allow();
     }
 
     public function search(User $user, Project $project) {
         if (!$user->is_admin && !$user->projects->contains($project))
             return $this->deny('Only admins or members of the given project can search tasks in it');
-        
+
         return $this->allow();
     }
 }

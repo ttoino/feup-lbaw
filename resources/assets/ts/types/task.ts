@@ -1,4 +1,4 @@
-import { Datetime, Markdown } from "./misc";
+import { Datetime, Markdown, Paginator } from "./misc";
 import { Tag } from "./tag";
 import { TaskComment } from "./task_comment";
 import { User } from "./user";
@@ -15,6 +15,6 @@ export interface Task {
     task_group_id: number;
 
     assignees?: Array<User>;
-    comments?: Array<TaskComment>;
+    comments?: Paginator<TaskComment>;
     tags?: Array<Tag>;
 }

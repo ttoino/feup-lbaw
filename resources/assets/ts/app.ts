@@ -6,10 +6,6 @@
 
 import "bootstrap";
 
-import "./task";
-import "./project";
-import "./user";
-
 if (window.location.pathname.match(/project\/\d+\/(board|task)/))
     import("./pages/board");
 

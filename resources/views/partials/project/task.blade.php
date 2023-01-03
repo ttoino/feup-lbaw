@@ -1,6 +1,7 @@
 @php($task ??= new \App\Models\Task())
 
-<article id="task">
+<article id="task" data-task-id="{{ $task->id }}"
+    data-render-attr="id,task-id">
     <header class="offcanvas-header">
         <h2 class="offcanvas-title" data-render-text="name">{{ $task->name }}
         </h2>
@@ -14,41 +15,54 @@
         'content' => 'description',
     ])
 
-    <form method="GET"
-        action="{{ route('project.task.search', ['project' => $project]) }}"
-        class="chip-search-form">
-        <input type="hidden" name="q">
-        <ul class="list-unstyled hstack gap-2"
-            data-render-attr="tags.length,length"
-            data-length="{{ $task->tags->count() }}">
-            @foreach ($task->tags as $tag)
-                <li class="p-1 rounded border"
-                    style="background: rgba({{ $tag->color }}, 30%); cursor: pointer; --bs-border-color: rgb({{ $tag->color }}); color: rgb({{ $tag->color }})">
-                    {{ $tag->title }}
-                </li>
-            @endforeach
-        </ul>
-    </form>
+    <ul class="tags" data-render-attr="tags.length,length"
+        data-render-list="tags,#tag-template"
+        data-length="{{ $task->tags->count() }}">
+        @each('partials.project.board.task-tag', $task->tags, 'tag')
+    </ul>
 
-    <h3 class="h5">Assignees</h3>
+    <ul class="assignees" data-render-attr="assignees.length,length"
+        data-render-list="assignees,#assignee-template"
+        data-length="{{ $task->assignees->count() }}">
+        @each('partials.project.board.task-assignee', $task->assignees, 'assignee')
+    </ul>
 
-    @include('partials.list', [
-        'paginator' => $task->assignees,
-        'itemView' => 'partials.list-item.user',
-    ])
+    @can('edit', $project)
+        <div class="hstack gap-2">
+            <button data-render-class-condition="completed,d-none"
+                id="complete-task-button" @class(['btn', 'btn-outline-secondary', 'd-none' => $task->completed])>
+                <i class="bi bi-check-lg"></i> Mark as completed
+            </button>
+            <button data-render-class-condition="completed,d-none,false"
+                id="incomplete-task-button" @class([
+                    'btn',
+                    'btn-outline-secondary',
+                    'd-none' => !$task->completed,
+                ])>
+                <i class="bi bi-x-lg"></i> Mark as incomplete
+            </button>
+            <button id="edit-task-button" class="btn btn-outline-primary">
+                <i class="bi bi-pencil"></i> Edit
+            </button>
+            <button id="delete-task-button" class="btn btn-outline-danger">
+                <i class="bi bi-trash"></i> Delete
+            </button>
+        </div>
+    @endcan
 </article>
 
 <ul id="task-comments" data-render-list="comments,#task-comment-template">
     @each('partials.project.board.comment', $task->comments, 'taskComment')
 </ul>
 
-<form id="new-comment-form" class="input-group">
-    <textarea class="form-control auto-resize" name="content" required
-        placeholder="New comment" @if ($project->archived) disabled @endif></textarea>
-    <input type="hidden" name="task_id" value="{{ $task->id }}"
-        data-render-value="id">
-    <button class="btn btn-primary" type="submit"
-        @if ($project->archived) disabled @endif>
-        <i class="bi bi-send"></i>
-    </button>
-</form>
+@can('edit', $project)
+    <form id="new-comment-form" class="input-group">
+        <textarea class="form-control auto-resize" name="content" required
+            placeholder="New comment"></textarea>
+        <input type="hidden" name="task_id" value="{{ $task->id }}"
+            data-render-value="id">
+        <button class="btn btn-primary" type="submit">
+            <i class="bi bi-send"></i>
+        </button>
+    </form>
+@endcan

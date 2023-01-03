@@ -31,6 +31,8 @@ class TaskComment extends Model {
      */
     protected $hidden = [];
 
+    protected $with = ['author'];
+
     protected $casts = [
         'creation_date' => Datetime::class,
         'edit_date' => Datetime::class,

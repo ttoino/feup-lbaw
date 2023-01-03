@@ -145,6 +145,7 @@ Route::prefix('/api')->name('api')->middleware('throttle')->group(function () {
 
             Route::prefix('/members')->name('.members')->group(function () {
                 Route::get('', 'getProjectMembers')->name('');
+                Route::delete('/{user}', 'removeUser')->name('.remove');
                 // Route::post('', 'addProjectMember')->name('.add');
             });
 
@@ -154,10 +155,6 @@ Route::prefix('/api')->name('api')->middleware('throttle')->group(function () {
 
             Route::prefix('/favorite')->name('.favorite')->group(function () {
                 Route::post('/toggle', 'toggleFavorite')->name('.toggle');
-            });
-
-            Route::prefix('/remove')->name('.remove')->group(function () {
-                Route::post('/{user}', 'removeUser')->name('.user');
             });
         });
     });
@@ -187,6 +184,7 @@ Route::prefix('/api')->name('api')->middleware('throttle')->group(function () {
             Route::delete('', 'destroy')->name('.delete');
 
             Route::put('/complete', 'complete')->name('.complete');
+            Route::delete('/complete', 'incomplete')->name('.incomplete');
             Route::post('/reposition', 'update')->name('.reposition');
         });
     });

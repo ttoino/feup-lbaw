@@ -4,6 +4,9 @@ import { apiFetch } from ".";
 export const completeTask = (taskId: string) =>
     apiFetch<Task>(`/api/task/${taskId}/complete`, "PUT");
 
+export const incompleteTask = (taskId: string) =>
+    apiFetch<Task>(`/api/task/${taskId}/complete`, "DELETE");
+
 export const repositionTask = (
     taskId: string,
     task_group_id: string,

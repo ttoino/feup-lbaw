@@ -21,10 +21,11 @@
                     </p>
                 @endif
             </section>
-            <section class="flex-fill d-flex flex-row gap-3" style="max-width: 50%">
+            <section class="flex-fill d-flex flex-row gap-3">
                 @if (Request::user()->id === $project->coordinator_id)
                     <button class="btn btn-outline-danger" data-bs-toggle="modal"
                         data-bs-target="#delete-project-modal">
+                        <i class="bi bi-trash"></i>
                         Delete project
                     </button>
 
@@ -54,6 +55,7 @@
 
                     <button class="btn btn-outline-secondary" data-bs-toggle="modal"
                         data-bs-target="#archive-unarchive-project-modal">
+                        <i class="bi bi-archive"></i>
                         @if ($project->archived)
                             Unarchive
                         @else

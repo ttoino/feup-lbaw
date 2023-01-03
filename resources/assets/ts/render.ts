@@ -21,10 +21,8 @@ const renderMethods: {
         attrs.forEach((a) => el.setAttribute(`data-${a}`, String(p))),
     "class-condition": (el, p, clas = "", flipped = "true") =>
         el.classList.toggle(clas, Boolean(p) === (flipped === "true")),
-    "css-var": (el, p, ...vars) => {
-        console.log(el, p, vars);
-        vars.forEach((v) => el.style.setProperty(`--${v}`, String(p)));
-    },
+    "css-var": (el, p, ...vars) =>
+        vars.forEach((v) => el.style.setProperty(`--${v}`, String(p))),
 };
 
 export const render = <T extends Record<string, any>>(
@@ -39,11 +37,11 @@ export const render = <T extends Record<string, any>>(
             const [prop, ...args] = place
                 .getAttribute(`data-render-${method}`)!
                 .split(",");
-            console.log(method, args);
             const value = prop
                 .split(".")
                 .reduce<any>((obj, key) => obj?.[key], data);
-            renderMethods[method](place, value, ...args);
+            if (value !== undefined)
+                renderMethods[method](place, value, ...args);
         };
 
         if (el.matches(selector)) apply(el);

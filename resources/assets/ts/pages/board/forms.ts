@@ -1,17 +1,13 @@
-import {
-    deleteTaskGroup,
-    editTaskGroup,
-    newTaskGroup,
-} from "../../api/task_group";
+import { editTaskGroup, newTaskGroup } from "../../api/task_group";
 import { ajaxForm } from "../../forms";
 import { registerEnhancement } from "../../enhancements";
 import { projectId } from "../project";
 import { appendTaskCard, appendTaskComment, appendTaskGroup } from "./render";
 import { newTask } from "../../api/task";
 import { render } from "../../render";
-import { tryRequest } from "../../api";
 import { newTaskComment } from "../../api/task_comment";
 
+// NEW TASK GROUP
 registerEnhancement<HTMLFormElement>({
     selector: "form#new-task-group-form",
     onattach: (form) =>
@@ -24,6 +20,7 @@ registerEnhancement<HTMLFormElement>({
         ),
 });
 
+// NEW TASK COMMENT
 registerEnhancement<HTMLFormElement>({
     selector: "form#new-comment-form",
     onattach: (form) =>
@@ -36,6 +33,7 @@ registerEnhancement<HTMLFormElement>({
         ),
 });
 
+// NEW TASK (ADVANCED)
 registerEnhancement<HTMLFormElement>({
     selector: "form#new-task-form",
     onattach: (form) =>
@@ -51,7 +49,7 @@ registerEnhancement<HTMLFormElement>({
         ),
 });
 
-// NEW TASK
+// NEW TASK, EDIT TASK GROUP
 registerEnhancement<HTMLElement>({
     selector: ".task-group[data-task-group-id]",
     onattach: (el) => {
@@ -87,31 +85,5 @@ registerEnhancement<HTMLElement>({
                 },
                 (error) => {}
             );
-
-        const deleteGroupButton = el.querySelector<HTMLButtonElement>(
-            "button.delete-task-group"
-        );
-        deleteGroupButton?.addEventListener("click", (e) => {
-            if (
-                tryRequest(
-                    deleteTaskGroup,
-                    undefined,
-                    taskGroupId.toString()
-                ) !== null
-            )
-                el.remove();
-        });
-
-        const taskList = el.querySelector(":scope > ul");
-        taskList &&
-            new MutationObserver(() => {
-                console.log(taskList.children.length);
-                deleteGroupButton?.classList.toggle(
-                    "d-none",
-                    taskList?.children.length !== 0
-                );
-            }).observe(taskList, {
-                childList: true,
-            });
     },
 });

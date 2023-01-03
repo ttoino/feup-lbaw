@@ -11,3 +11,8 @@ export interface Markdown {
     raw: string;
     formatted: string;
 }
+
+export interface Paginator<T> {
+    data: Array<T>;
+    next_cursor?: string;
+}

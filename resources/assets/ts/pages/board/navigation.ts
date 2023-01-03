@@ -10,7 +10,7 @@ const taskOffcanvasEl = document.querySelector("#task-offcanvas");
 const taskOffcanvas =
     taskOffcanvasEl && Offcanvas.getOrCreateInstance(taskOffcanvasEl);
 
-const showBoard = navigation(
+export const showBoard = navigation(
     "project.board",
     `/project/${projectId}/board`,
     () => taskOffcanvas?.hide()
@@ -46,7 +46,7 @@ registerEnhancement({
         const taskId = task.dataset.taskId;
         if (!taskId) return;
 
-        const a = task.querySelector("a");
+        const a = task.querySelector<HTMLAnchorElement>("a.stretched-link");
 
         a?.addEventListener("click", (e) => {
             e.preventDefault();

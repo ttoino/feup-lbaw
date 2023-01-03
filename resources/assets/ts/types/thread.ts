@@ -1,4 +1,4 @@
-import { Datetime, Markdown } from "./misc";
+import { Datetime, Markdown, Paginator } from "./misc";
 import { ThreadComment } from "./thread_comment";
 import { User } from "./user";
 
@@ -12,5 +12,5 @@ export interface Thread {
     project_id: number;
 
     author?: User;
-    comments?: Array<ThreadComment>;
+    comments?: Paginator<ThreadComment>;
 }

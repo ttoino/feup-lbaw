@@ -6,7 +6,9 @@
 @push('templates')
     <template id="tag-template">@include('partials.project.board.task-tag')</template>
     <template id="assignee-template">@include('partials.project.board.task-assignee')</template>
-    <template id="tag-template">@include('partials.project.board.task-tag')</template>
+    <template id="tag-template">@include('partials.project.board.task-tag', [
+        'project' => $project,
+    ])</template>
     <template id="task-template">@include('partials.project.board.task')</template>
     <template id="task-comment-template">@include('partials.project.board.comment')</template>
     <template id="task-group-template">@include('partials.project.board.task-group', [

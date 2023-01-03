@@ -4,6 +4,9 @@ import { Task } from "../../types/task";
 
 export const renderTask = renderSingleton<Task>("#task-offcanvas");
 
+export const renderTaskCard = (task: Task) =>
+    renderSingleton(`.task[data-task-id="${task.id}"]`)?.(task);
+
 export const renderTaskGroup = renderTemplate<TaskGroup>(
     "#task-group-template"
 );
