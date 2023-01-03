@@ -115,7 +115,7 @@ class ProjectController extends Controller {
             $userProjects = $userProjects->whereRaw('(fts_search @@ plainto_tsquery(\'english\', ?) OR project.name = ?)', [$searchTerm, $searchTerm])
                 ->orderByRaw('ts_rank(fts_search, plainto_tsquery(\'english\', ?)) DESC', [$searchTerm]);
 
-        return $userProjects->cursorPaginate(10);
+        return $userProjects->paginate(10);
     }
 
     public function create() {
