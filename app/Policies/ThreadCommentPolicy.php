@@ -18,6 +18,10 @@ class ThreadCommentPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function viewAny(User $user, Thread $thread) {
+
+        if ($user->us_admin)
+            return $this->allow();
+
         if (!$thread->project->users->contains($user))
             return $this->deny('You need to be a member of the thread\'s project in order to see its comments');
 
@@ -32,6 +36,10 @@ class ThreadCommentPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function view(User $user, ThreadComment $threadComment) {
+
+        if ($user->is_admin)
+            return $this->allow();
+
         if (!$threadComment->thread->project->users->contains($user))
             return $this->deny('You must be a member of this comment\'s thread\'s project to be able to see it');
     

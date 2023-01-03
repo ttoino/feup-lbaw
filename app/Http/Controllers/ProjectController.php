@@ -191,6 +191,9 @@ class ProjectController extends Controller {
         if (($data['coordinator_id'] ??= null) !== null)
             $project->coordinator_id = $data['coordinator_id'];
 
+        if ($project->isDirty())
+            $project->last_modification_date = now();
+
         $project->save();
 
         return $project;

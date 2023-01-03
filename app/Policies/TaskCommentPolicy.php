@@ -17,6 +17,10 @@ class TaskCommentPolicy {
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function viewAny(User $user, Task $task) {
+
+        if ($user->is_admin)
+            return $this->allow();
+
         if (!$task->project->users->contains($user))
             return $this->deny('You need to be a member of the task\'s project in order to see its comments');
 
@@ -31,6 +35,10 @@ class TaskCommentPolicy {
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function view(User $user, TaskComment $taskComment) {
+        
+        if ($user->is_admin)
+            return $this->allow();
+        
         if (!$taskComment->task->project->users->contains($user))
             return $this->deny('You must be a member of this comment\'s task\'s project to be able to see it');
 

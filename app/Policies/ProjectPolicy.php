@@ -56,6 +56,9 @@ class ProjectPolicy {
      */
     public function edit(User $user, Project $project) {
 
+        if ($user->is_admin)
+            return $this->deny('Admins cannot update projects');
+
         if ($project->archived)
             return $this->deny('Cannot update an archived project');
 
@@ -66,10 +69,14 @@ class ProjectPolicy {
     }
 
     public function update(User $user, Project $project) {
+
+        if ($user->is_admin)
+            return $this->deny('Admins cannot update projects');
+
         if ($project->archived)
             return $this->deny('Cannot update an archived project');
 
-        if ($project->coordinator_id != $user->id)
+        if ($project->coordinator_id !== $user->id)
             return $this->deny('Only the project\'s coordinator can edit this project');
 
         return $this->allow();
@@ -137,6 +144,9 @@ class ProjectPolicy {
         if ($user->id !== $project->coordinator_id)
             return $this->deny('Only the project\'s coordinator can remove users from this project');
 
+        if ($model->id === $project->coordinator_id)
+            return $this->deny('A project\'s coordinator cannot remove themselves');
+
         if ($project->archived)
             return $this->deny('Cannot remove users from an archived project');
 
@@ -180,20 +190,20 @@ class ProjectPolicy {
         if ($project->archived)
             return $this->deny('Project is already archived');
 
-        if ($project->coordinator_id === $user->id)
-            return $this->allow();
-
-        return $this->deny('Only the project coordinator can archive it');
+        if ($project->coordinator_id !== $user->id)
+            return $this->deny('Only the project coordinator can archive it');
+        
+        return $this->allow();
     }
 
     public function unarchive(User $user, Project $project) {
         if (!$project->archived)
             return $this->deny('Project is not archived');
 
-        if ($project->coordinator_id === $user->id)
-            return $this->allow();
-
-        return $this->deny('Only the project coordinator can unarchive it');
+        if ($project->coordinator_id !== $user->id)
+            return $this->deny('Only the project\'s coordinator can unarchive it');
+        
+        return $this->allow();
     }
 
     /**

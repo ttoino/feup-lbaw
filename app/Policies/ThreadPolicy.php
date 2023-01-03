@@ -28,18 +28,28 @@ class ThreadPolicy {
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function view(User $user, Thread $thread) {
-        if (!$user->is_admin && $thread->author !== $user && !$thread->project->users->contains($user))
-            return $this->deny('Only admins, the thread\'s author or a member of the thread\'s project can view this thread');
 
-        return $this->allow();
+        if ($user->is_admin)
+            return $this->allow();
+
+        if ($thread->author->id !== $user->id)
+            return $this->allow();
+
+        if ($thread->project->users->contains($user))
+            return $this->allow();
+        
+        return $this->deny('Only admins, the thread\'s author or a member of the thread\'s project can view this thread');
     }
 
     public function viewCreationForm(User $user, Project $project) {
 
-        if (!$user->is_admin && !$project->users->contains($user))
-            return $this->deny('Only admins or a member of the given project can view this thread');
+        if ($user->is_admin)
+            return $this->allow();
 
-        return $this->allow();
+        if ($project->users->contains($user))
+            return $this->allow();
+        
+        return $this->deny('Only admins or a member of the given project can view this thread');
     }
 
     /**
@@ -68,12 +78,12 @@ class ThreadPolicy {
      */
     public function update(User $user, Thread $thread) {
         if ($user->is_admin)
-        return $this->deny('Admins cannot edit threads');
+            return $this->deny('Admins cannot edit threads');
 
-    if ($user->id !== $thread->author_id)
-        return $this->deny('To edit a thread you must be its author');
+        if ($user->id !== $thread->author_id)
+            return $this->deny('To edit a thread you must be its author');
 
-    return $this->allow();
+        return $this->allow();
     }
 
     /**
