@@ -33,8 +33,8 @@ class UserController extends Controller {
     public function showNotifications(Request $request) {
 
         $user = Auth::user();
-        
-        $notifications = Notification::where('notifiable_id', $user->id)->paginate(10);
+
+        $notifications = $user->unreadNotifications->paginate(10);
 
         return $request->wantsJson()
             ? new JsonResponse($notifications)
@@ -127,18 +127,18 @@ class UserController extends Controller {
     }
 
     protected function userEditionValidator(array $data) {
-      return Validator::make($data, [
-          'name' => 'string|min:6|max:255',
-          'profile_picture' => [
-            File::image()
-              ->max(5*1024)
-          ],
-          'is_blocked' => 'boolean',
-          'is_admin' => 'boolean'
-      ]);
+        return Validator::make($data, [
+            'name' => 'string|min:6|max:255',
+            'profile_picture' => [
+                File::image()
+                    ->max(5 * 1024)
+            ],
+            'is_blocked' => 'boolean',
+            'is_admin' => 'boolean'
+        ]);
     }
 
-    public function edit(User $user) { 
+    public function edit(User $user) {
         $this->authorize('showProfileEditPage', $user);
 
         return view('pages.profile.edit', ['user' => $user]);
@@ -146,7 +146,7 @@ class UserController extends Controller {
 
     public function destroy(Request $request, User $user) {
         $this->authorize('delete', $user);
-        
+
         $user->delete();
 
         return $request->wantsJson()

@@ -64,7 +64,7 @@ class User extends Authenticatable {
 
     public function projects() {
         return $this->belongsToMany(
-            Project::class,
+                Project::class,
             'project_member',
             'user_profile_id',
             'project_id'
@@ -73,6 +73,10 @@ class User extends Authenticatable {
 
     public function reports() {
         return $this->hasMany(Report::class, 'user_profile_id');
+    }
+
+    public function notifications() {
+        return $this->hasMany(Notification::class, 'notifiable_id')->orderByDesc('creation_date');
     }
 
     protected function profilePic(): Attribute {

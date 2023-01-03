@@ -19,7 +19,7 @@ class NotificationJson implements CastsAttributes {
         return array_map(function ($val) {
             if (is_string($val) && str_starts_with($val, 'model:')) {
                 [$_, $model, $id] = explode(':', $val);
-                return $model::findOrFail($id);
+                return $model::find($id);
             }
 
             return $val;
