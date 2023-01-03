@@ -28,6 +28,9 @@ class UserPolicy {
      */
     public function view(User $user, User $model) {
 
+        if ($user->blocked)
+            $this->deny('Your user account has been blocked');  
+
         if ($user->is_admin)
             return $this->allow();
 
@@ -61,6 +64,9 @@ class UserPolicy {
      */
     public function update(User $user, User $model) {
 
+        if ($user->blocked)
+            $this->deny('Your user account has been blocked');  
+
         if ($user->is_admin)
             return $this->allow();
 
@@ -71,6 +77,10 @@ class UserPolicy {
     }
 
     public function showProfileEditPage(User $user, User $model) {
+
+        if ($user->blocked)
+            $this->deny('Your user account has been blocked');  
+
         if ($user->is_admin)
             return $this->allow();
 
@@ -81,6 +91,10 @@ class UserPolicy {
     }
 
     public function block(User $user, User $model) {
+
+        if ($user->blocked)
+            $this->deny('Your user account has been blocked');  
+
         if (!$user->is_admin)
             return $this->deny('Only admins can perform this action');
 
@@ -94,6 +108,10 @@ class UserPolicy {
     }
 
     public function unblock(User $user, User $model) {
+
+        if ($user->blocked)
+            $this->deny('Your user account has been blocked');  
+
         if (!$user->is_admin)
             return $this->deny('Only admins can perform this action');
 
@@ -116,6 +134,9 @@ class UserPolicy {
      */
     public function delete(User $user, User $model) {
 
+        if ($user->blocked)
+            $this->deny('Your user account has been blocked');  
+
         if ($model->is_admin)
             return $this->deny('Cannot delete admin accounts');
 
@@ -134,8 +155,11 @@ class UserPolicy {
 
     public function report(User $user, User $model) {
 
+        if ($user->blocked)
+            $this->deny('Your user account has been blocked'); 
+
         if ($user->id === $model->id)
-            return $this->deny('You cannot report yourself');
+            return $this->deny('You cannot report yourself'); 
 
         if ($user->is_admin)
             return $this->deny('Admins cannot report users');

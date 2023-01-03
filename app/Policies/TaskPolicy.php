@@ -30,6 +30,9 @@ class TaskPolicy {
      */
     public function view(User $user, Task $task, Project $project) {
 
+        if ($user->blocked)
+            $this->deny('Your user account has been blocked');  
+
         if ($project->id !== $task->project->id)
             return $this->deny('Task is not a child of the given project');
 
@@ -46,6 +49,9 @@ class TaskPolicy {
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function create(User $user, TaskGroup $task_group) {
+
+        if ($user->blocked)
+            $this->deny('Your user account has been blocked');  
 
         if ($user->is_admin)
             return $this->deny('Admins cannot create tasks');
@@ -65,11 +71,15 @@ class TaskPolicy {
      */
     public function edit(User $user, Task $task) {
 
+        if ($user->blocked)
+            $this->deny('Your user account has been blocked');  
+
         if ($user->is_admin)
             return $this->deny('Admins cannot edit tasks');
 
         if (!$task->project->users->contains($user))
             return $this->deny('Only members of the given task\'s project can update tasks');
+
 
         return $this->allow();
     }
@@ -82,6 +92,9 @@ class TaskPolicy {
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function delete(User $user, Task $task) {
+
+        if ($user->blocked)
+            $this->deny('Your user account has been blocked');  
 
         if ($user->is_admin)
             return $this->deny('Admins cannot delete tasks');
@@ -123,6 +136,9 @@ class TaskPolicy {
      */
     public function completeTask(User $user, Task $task) {
 
+        if ($user->blocked)
+            $this->deny('Your user account has been blocked');  
+
         if ($user->is_admin)
             return $this->deny('Admins cannot mark tasks as completed');
 
@@ -134,11 +150,25 @@ class TaskPolicy {
 
     public function incompleteTask(User $user, Task $task) {
 
+        if ($user->blocked)
+            $this->deny('Your user account has been blocked');  
+
         if ($user->is_admin)
             return $this->deny('Admins cannot mark tasks as incomplete');
 
         if (!$task->project->users->contains($user))
-            return $this->deny('Only members of the task\'s project can mark it as incomplete');
+            return $this->deny('Only members of the task\'s project can mark it as incomplete');  
+
+        return $this->allow();
+    }
+
+    public function search(User $user, Project $project) {
+
+        if ($user->blocked)
+            $this->deny('Your user account has been blocked');  
+
+        if (!$user->is_admin && !$user->projects->contains($project))
+            return $this->deny('Only admins or members of the given project can search tasks in it');   
 
         return $this->allow();
     }

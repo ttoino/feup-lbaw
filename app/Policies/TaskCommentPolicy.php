@@ -18,6 +18,9 @@ class TaskCommentPolicy {
      */
     public function viewAny(User $user, Task $task) {
 
+        if ($user->blocked)
+            $this->deny('Your user account has been blocked');  
+
         if ($user->is_admin)
             return $this->allow();
 
@@ -35,6 +38,9 @@ class TaskCommentPolicy {
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function view(User $user, TaskComment $taskComment) {
+
+        if ($user->blocked)
+            $this->deny('Your user account has been blocked');  
         
         if ($user->is_admin)
             return $this->allow();
@@ -52,6 +58,10 @@ class TaskCommentPolicy {
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function create(User $user, Task $task) {
+
+        if ($user->blocked)
+            $this->deny('Your user account has been blocked');  
+
         if ($user->is_admin)
             return $this->deny('Admins cannot create task comments');
 
@@ -69,6 +79,10 @@ class TaskCommentPolicy {
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function update(User $user, TaskComment $taskComment) {
+
+        if ($user->blocked)
+            $this->deny('Your user account has been blocked');  
+
         if ($user->is_admin)
             return $this->deny('Admins cannot update task comments');
 
@@ -86,6 +100,10 @@ class TaskCommentPolicy {
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function delete(User $user, TaskComment $taskComment) {
+
+        if ($user->blocked)
+            $this->deny('Your user account has been blocked');  
+
         if ($user->is_admin)
             return $this->deny('Admins cannot delete task comments');
 
