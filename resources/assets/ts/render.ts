@@ -86,8 +86,6 @@ export const renderList = <T extends Record<string, any>>(
 
     const renderItem = renderTemplate(templateSelector);
 
-    console.log(list, renderItem);
-
     return (
         list &&
         renderItem &&

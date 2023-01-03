@@ -1,3 +1,4 @@
+import { deleteTaskComment } from "../../api/task_comment";
 import { tryRequest } from "../../api";
 import { completeTask, deleteTask, incompleteTask } from "../../api/task";
 import { deleteTaskGroup } from "../../api/task_group";
@@ -15,7 +16,7 @@ registerEnhancement<HTMLElement>({
         const deleteGroupButton = el.querySelector<HTMLButtonElement>(
             "button.delete-task-group"
         );
-        deleteGroupButton?.addEventListener("click", (e) => {
+        deleteGroupButton?.addEventListener("click", () => {
             if (
                 tryRequest(
                     deleteTaskGroup,
@@ -40,58 +41,92 @@ registerEnhancement<HTMLElement>({
     },
 });
 
-// COMPLETE TASK
 registerEnhancement<HTMLElement>({
-    selector: "#complete-task-button",
-    onattach: (el) =>
-        el.addEventListener("click", async (e) => {
-            const taskId = el.parentElement?.parentElement?.dataset.taskId;
+    selector: "#task",
+    onattach: (task) => {
+        const taskId = () => task.dataset.taskId ?? "";
 
-            if (!taskId) return;
-
-            const result = await tryRequest(completeTask, undefined, taskId);
+        const completeTaskButton = task.querySelector<HTMLButtonElement>(
+            "#complete-task-button"
+        );
+        completeTaskButton?.addEventListener("click", async () => {
+            const result = await tryRequest(completeTask, undefined, taskId());
 
             if (result) {
                 renderTask?.(result);
                 renderTaskCard(result);
             }
-        }),
-});
+        });
 
-// INCOMPLETE TASK
-registerEnhancement<HTMLElement>({
-    selector: "#incomplete-task-button",
-    onattach: (el) =>
-        el.addEventListener("click", async (e) => {
-            const taskId = el.parentElement?.parentElement?.dataset.taskId;
-
-            if (!taskId) return;
-
-            const result = await tryRequest(incompleteTask, undefined, taskId);
+        const incompleteTaskButton = task.querySelector<HTMLButtonElement>(
+            "#incomplete-task-button"
+        );
+        incompleteTaskButton?.addEventListener("click", async () => {
+            const result = await tryRequest(
+                incompleteTask,
+                undefined,
+                taskId()
+            );
 
             if (result) {
                 renderTask?.(result);
                 renderTaskCard(result);
             }
-        }),
-});
+        });
 
-// DELETE TASK
-registerEnhancement<HTMLElement>({
-    selector: "#delete-task-button",
-    onattach: (el) =>
-        el.addEventListener("click", async (e) => {
-            const taskId = el.parentElement?.parentElement?.dataset.taskId;
-
-            if (!taskId) return;
-
-            const result = await tryRequest(deleteTask, undefined, taskId);
+        const deleteTaskButton = task.querySelector<HTMLButtonElement>(
+            "#delete-task-button"
+        );
+        deleteTaskButton?.addEventListener("click", async () => {
+            const result = await tryRequest(deleteTask, undefined, taskId());
 
             if (result) {
                 showBoard();
                 document
-                    .querySelector(`.task[data-task-id="${taskId}"]`)
+                    .querySelector(`.task[data-task-id="${taskId()}"]`)
                     ?.remove();
             }
-        }),
+        });
+
+        const editTaskButton =
+            task.querySelector<HTMLButtonElement>("#edit-task-button");
+        editTaskButton?.addEventListener("click", () =>
+            task.classList.add("editing")
+        );
+    },
+});
+
+registerEnhancement<HTMLElement>({
+    selector: ".task-comment",
+    onattach: (taskComment) => {
+        const taskCommentId = () => taskComment.dataset.taskCommentId ?? "";
+
+        const deleteTaskCommentButton =
+            taskComment.querySelector<HTMLButtonElement>(
+                ".delete-task-comment-button"
+            );
+        deleteTaskCommentButton?.addEventListener("click", async () => {
+            const result = await tryRequest(
+                deleteTaskComment,
+                undefined,
+                taskCommentId()
+            );
+
+            if (result) {
+                document
+                    .querySelector(
+                        `.task-comment[data-task-comment-id="${taskCommentId()}"]`
+                    )
+                    ?.remove();
+            }
+        });
+
+        const editTaskCommentButton =
+            taskComment.querySelector<HTMLButtonElement>(
+                ".edit-task-comment-button"
+            );
+        editTaskCommentButton?.addEventListener("click", () =>
+            taskComment.classList.add("editing")
+        );
+    },
 });

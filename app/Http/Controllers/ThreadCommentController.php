@@ -81,7 +81,7 @@ class ThreadCommentController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, ThreadComment $threadComment) {
-        
+
         $requestData = $request->all();
 
         $this->threadCommentEditionValidator($requestData)->validate();
@@ -108,7 +108,7 @@ class ThreadCommentController extends Controller {
         if (($data['content'] ??= null) !== null)
             $threadComment->content = $data['content'];
 
-        if ($threadComment->dirty())
+        if ($threadComment->isDirty())
             $threadComment->edit_date = now();
 
         $threadComment->save();
@@ -123,7 +123,7 @@ class ThreadCommentController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function destroy(ThreadComment $threadComment) {
-        
+
         $this->authorize('edit', $threadComment->thread->project);
         $this->authorize('delete', $threadComment);
 

@@ -8,6 +8,7 @@ use App\Events\TaskCommentCreated;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Auth;
 use Spatie\LaravelMarkdown\MarkdownRenderer;
 
 class TaskComment extends Model {
@@ -43,16 +44,21 @@ class TaskComment extends Model {
         'created' => TaskCommentCreated::class
     ];
 
+    protected $appends = ['editable'];
 
     public function task() {
         return $this->belongsTo(
-            Task::class,
+                Task::class,
             'task_id'
         );
     }
 
     public function author() {
         return $this->belongsTo(User::class, 'author_id')->withDefault(User::DELETED_USER);
+    }
+
+    protected function editable(): Attribute {
+        return Attribute::make(fn() => Auth::user()?->can('update', $this));
     }
 
     protected $table = 'task_comment';

@@ -219,6 +219,10 @@
         > * {
             @extend .p-0;
         }
+
+        .edit-task-comment-form {
+            display: contents;
+        }
     }
 
     .task-comment {
@@ -282,8 +286,12 @@
         @extend .list-unstyled, .m-0;
     }
 
-    form {
+    #new-comment-form {
         @extend .p-3, .pt-0;
+    }
+
+    #edit-task-form {
+        display: contents;
     }
 }
 

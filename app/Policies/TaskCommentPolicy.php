@@ -7,8 +7,7 @@ use App\Models\User;
 use App\Models\Task;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class TaskCommentPolicy
-{
+class TaskCommentPolicy {
     use HandlesAuthorization;
 
     /**
@@ -17,8 +16,7 @@ class TaskCommentPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user)
-    {
+    public function viewAny(User $user) {
         //
     }
 
@@ -32,7 +30,7 @@ class TaskCommentPolicy
     public function view(User $user, TaskComment $taskComment) {
         if (!$taskComment->task->project->users->contains($user))
             return $this->deny('You must be a member of this comment\'s task\'s project to be able to see it');
-    
+
         return $this->allow();
     }
 
@@ -82,7 +80,7 @@ class TaskCommentPolicy
 
         if ($taskComment->author->id !== $user->id)
             return $this->deny('You need to be this comment\'s author in order to delete it');
-    
+
         return $this->allow();
     }
 
@@ -93,8 +91,7 @@ class TaskCommentPolicy
      * @param  \App\Models\TaskComment  $TaskComment
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, TaskComment $TaskComment)
-    {
+    public function restore(User $user, TaskComment $TaskComment) {
         //
     }
 
@@ -105,8 +102,7 @@ class TaskCommentPolicy
      * @param  \App\Models\TaskComment  $TaskComment
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, TaskComment $TaskComment)
-    {
+    public function forceDelete(User $user, TaskComment $TaskComment) {
         //
     }
 }

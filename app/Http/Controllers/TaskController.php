@@ -179,7 +179,7 @@ class TaskController extends Controller {
     public function editTaskValidator(array $data) {
         return Validator::make($data, [
             'name' => 'string|min:4|max:255',
-            'description' => 'string|min:6|max:512',
+            'description' => 'nullable|string|min:6|max:512',
             'task_group_id' => 'integer',
             'position' => 'integer|min:0',
         ]);

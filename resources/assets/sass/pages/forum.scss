@@ -119,3 +119,11 @@
 .thread-comment {
     @extend .border-top;
 }
+
+#edit-thread-form {
+    display: contents;
+}
+
+.edit-thread-comment-form {
+    display: contents;
+}

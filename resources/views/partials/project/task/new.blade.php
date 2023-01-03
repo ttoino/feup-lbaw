@@ -1,49 +1,36 @@
 <form id="new-task-form" class="needs-validation" novalidate>
     <div class="form-floating">
-        <input aria-describedby="name-feedback" placeholder=""
-            @class(['form-control', 'is-invalid' => $errors->has('name')]) id="name" type="text"
-            name="name" value="{{ old('name') }}" minlength=4 maxlength=255
-            required autofocus>
-        <label for="name" class="form-label">Name</label>
-        <div id="name-feedback" class="invalid-feedback">
-            @error('name')
-                {{ $message }}
-            @else
-                Please enter a valid name.
-            @enderror
+        <input aria-describedby="new-task-name-feedback" placeholder=""
+            class="form-control" type="text" name="name" id="new-task-name"
+            value="{{ old('name') }}" minlength=4 maxlength=255 required>
+        <label for="new-task-name" class="form-label">Name</label>
+        <div id="new-task-name-feedback" class="invalid-feedback">
+            Please enter a valid name.
         </div>
     </div>
 
     <div class="form-floating">
-        <textarea placeholder="" style="height: 120px" @class(['form-control', 'is-invalid' => $errors->has('message')])
-            aria-describedby="description-feedback" id="description" name="description"
-            minlength=6 maxlength=512></textarea>
-        <label for="description" class="form-label">Description</label>
-        <div id="description-feedback" class="invalid-feedback">
-            @error('description')
-                {{ $message }}
-            @else
-                Please enter a valid description.
-            @enderror
+        <textarea placeholder="" class="form-control auto-resize"
+            aria-describedby="new-task-description-feedback" name="description"
+            id="new-task-description" minlength=6 maxlength=512></textarea>
+        <label for="new-task-description" class="form-label">Description</label>
+        <div id="new-task-description-feedback" class="invalid-feedback">
+            Please enter a valid description.
         </div>
     </div>
 
     <div class="form-floating">
         <select @class(['form-select', 'is-invalid' => $errors->has('task-group')])
             aria-describedby="task-group-feedback" name="task_group_id"
-            id="task_group" required>
+            id="new-task-task-group" required>
             @foreach ($project->taskGroups as $taskGroup)
                 <option value="{{ $taskGroup->id }}">
                     {{ $taskGroup->name }}</option>
             @endforeach
         </select>
-        <label for="description" class="form-label">Task Group</label>
-        <div id="task-group-feedback" class="invalid-feedback">
-            @error('task_group')
-                {{ $message }}
-            @else
-                Please select a valid task group.
-            @enderror
+        <label for="new-task-task-group" class="form-label">Task Group</label>
+        <div id="new-task-task-group-feedback" class="invalid-feedback">
+            Please select a valid task group.
         </div>
     </div>
 

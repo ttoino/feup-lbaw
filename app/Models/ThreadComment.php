@@ -8,6 +8,7 @@ use App\Events\ThreadCommentCreated;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Spatie\LaravelMarkdown\MarkdownRenderer;
 
 class ThreadComment extends Model {
@@ -43,15 +44,21 @@ class ThreadComment extends Model {
         'created' => ThreadCommentCreated::class
     ];
 
+    protected $appends = ['editable'];
+
     public function thread() {
         return $this->belongsTo(
-            Thread::class,
+                Thread::class,
             'thread_id'
         );
     }
 
     public function author() {
         return $this->belongsTo(User::class, 'author_id')->withDefault(User::DELETED_USER);
+    }
+
+    protected function editable(): Attribute {
+        return Attribute::make(fn() => Auth::user()?->can('update', $this));
     }
 
     protected $table = 'thread_comment';

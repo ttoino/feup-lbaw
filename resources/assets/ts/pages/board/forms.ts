@@ -2,10 +2,17 @@ import { editTaskGroup, newTaskGroup } from "../../api/task_group";
 import { ajaxForm } from "../../forms";
 import { registerEnhancement } from "../../enhancements";
 import { projectId } from "../project";
-import { appendTaskCard, appendTaskComment, appendTaskGroup } from "./render";
-import { newTask } from "../../api/task";
+import {
+    appendTaskCard,
+    appendTaskComment,
+    appendTaskGroup,
+    renderTask,
+    renderTaskCard,
+    renderTaskComment,
+} from "./render";
+import { editTask, newTask } from "../../api/task";
 import { render } from "../../render";
-import { newTaskComment } from "../../api/task_comment";
+import { editTaskComment, newTaskComment } from "../../api/task_comment";
 
 // NEW TASK GROUP
 registerEnhancement<HTMLFormElement>({
@@ -45,6 +52,43 @@ registerEnhancement<HTMLFormElement>({
                 appendTaskCard(
                     `.task-group[data-task-group-id="${task.task_group_id}"] > ul`
                 )?.(task),
+            (error) => {}
+        ),
+});
+
+// EDIT TASK
+registerEnhancement<HTMLFormElement>({
+    selector: "form#edit-task-form",
+    onattach: (form) =>
+        ajaxForm(
+            editTask,
+            form,
+            {},
+            (task) => {
+                renderTask?.(task);
+                renderTaskCard(task);
+                document.querySelector("#task")?.classList.remove("editing");
+            },
+            (error) => {}
+        ),
+});
+
+// EDIT TASK COMMENT
+registerEnhancement<HTMLFormElement>({
+    selector: "form.edit-task-comment-form",
+    onattach: (form) =>
+        ajaxForm(
+            editTaskComment,
+            form,
+            {},
+            (taskComment) => {
+                renderTaskComment?.(taskComment);
+                document
+                    .querySelector(
+                        `.task-comment[data-task-comment-id="${taskComment.id}"]`
+                    )
+                    ?.classList.remove("editing");
+            },
             (error) => {}
         ),
 });

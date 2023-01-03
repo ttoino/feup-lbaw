@@ -9,7 +9,6 @@ import {
     renderThreadListItem,
 } from "./render";
 import { projectId } from "../project";
-import { renderSingleton } from "../../render";
 
 const newThreadButton =
     document.querySelector<HTMLAnchorElement>("#new-thread-button");
@@ -22,7 +21,7 @@ const threadOffcanvasEl = document.querySelector("#thread-offcanvas");
 const threadOffcanvas =
     threadOffcanvasEl && Offcanvas.getOrCreateInstance(threadOffcanvasEl);
 
-const showForum = navigation(
+export const showForum = navigation(
     "project.forum",
     `/project/${projectId}/forum`,
     () => {

@@ -21,6 +21,11 @@ export const appendThreadListItem = appendListItem<Thread>(
 export const renderThreadListItem = (thread: Thread) =>
     renderSingleton(`.thread[data-thread-id="${thread.id}"]`)?.(thread);
 
+export const renderThreadComment = (threadComment: ThreadComment) =>
+    renderSingleton(
+        `.thread-comment[data-thread-comment-id="${threadComment.id}"]`
+    )?.(threadComment);
+
 export const renderThreadComments = renderList<ThreadComment>(
     "#thread-comment-template",
     "#thread-comments"

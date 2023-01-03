@@ -1,8 +1,18 @@
 import { TaskGroup } from "../../types/task_group";
-import { appendListItem, renderSingleton, renderTemplate } from "../../render";
+import {
+    appendListItem,
+    renderList,
+    renderMultiple,
+    renderSingleton,
+    renderTemplate,
+} from "../../render";
 import { Task } from "../../types/task";
+import { TaskComment } from "../../types/task_comment";
 
-export const renderTask = renderSingleton<Task>("#task-offcanvas");
+export const renderTask = renderMultiple(
+    renderSingleton<Task>("#task"),
+    renderSingleton<Task>("#new-comment-form")
+);
 
 export const renderTaskCard = (task: Task) =>
     renderSingleton(`.task[data-task-id="${task.id}"]`)?.(task);
@@ -28,7 +38,17 @@ export const appendTaskGroup = (group: TaskGroup) => {
 export const appendTaskCard = (listSelector: string) =>
     appendListItem<Task>("#task-template", listSelector);
 
+export const renderTaskComments = renderList<TaskComment>(
+    "#task-comment-template",
+    "#task-comments"
+);
+
 export const appendTaskComment = appendListItem(
     "#task-comment-template",
     "#task-comments"
 );
+
+export const renderTaskComment = (taskComment: TaskComment) =>
+    renderSingleton(
+        `.task-comment[data-task-comment-id="${taskComment.id}"]`
+    )?.(taskComment);

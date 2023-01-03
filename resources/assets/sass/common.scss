@@ -81,3 +81,17 @@ a {
         }
     }
 }
+
+.editable {
+    &:not(.editing) {
+        > .edit {
+            display: none !important;
+        }
+    }
+
+    &.editing {
+        > :not(.edit) {
+            display: none !important;
+        }
+    }
+}
