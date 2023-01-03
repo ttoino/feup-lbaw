@@ -17,7 +17,16 @@ class ThreadCommentController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request) {
-        //
+        
+        $threadId = $request->query('thread_id');
+
+        $thread = Thread::findOrFail($threadId);
+
+        $this->authorize('viewAny', [ThreadComment::class, $thread]);
+
+        $comments = ThreadComment::cursorPaginate(10);
+
+        return new JsonResponse($comments);
     }
 
     /**

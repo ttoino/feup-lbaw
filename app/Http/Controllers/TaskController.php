@@ -118,7 +118,7 @@ class TaskController extends Controller {
             $projectTasks = $projectTasks->whereRaw('(task.fts_search @@ plainto_tsquery(\'english\', ?) OR task.name = ?)', [$searchTerm, $searchTerm])
                 ->orderByRaw('ts_rank(task.fts_search, plainto_tsquery(\'english\', ?)) DESC', [$searchTerm]);
 
-        return $projectTasks->paginate(10);
+        return $projectTasks->cursorPaginate(10);
     }
 
     /**

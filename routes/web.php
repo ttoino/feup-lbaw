@@ -58,12 +58,8 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
 
         // This breaks the HTTP standard since a GET request is changing server state (a project's members). However this should only be changed if this application scales
         Route::get('/join', 'joinProject')->name('.join')->middleware('signed');
-        Route::post('/leave', 'leaveProject')->name('.leave');
         
         Route::post('/delete', 'destroy')->name('.delete');
-        
-        Route::post('/archive', 'archive')->name('.archive');
-        Route::post('/unarchive', 'unarchive')->name('.unarchive');
 
         Route::prefix('/task')->name('.task')->controller('TaskController')->group(function () {
             Route::post('/new', 'store')->name('.new');
@@ -104,12 +100,16 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
 // Admin
 Route::prefix('/admin')->middleware(['auth', 'isAdmin'])->name('admin')->controller('AdminController')->group(function () {
     Route::redirect('', '/admin/users')->name('');
+    
     Route::get('/users', 'listUsers')->name('.users');
+        
     Route::get('/projects', 'listProjects')->name('.projects');
+    
     Route::prefix('/create')->name('.create')->group(function () {
         Route::get('/user', 'showCreateUser')->name('.user');
         Route::post('/user', 'createUser')->name('.user-action');
     });
+    
     Route::prefix('/reports')->name('.reports')->group(function () {
         Route::get('/user/{user}', 'showUserReports')->name('.user');
         Route::get('/project/{project}', 'showProjectReports')->name('.project');
@@ -143,6 +143,13 @@ Route::prefix('/api')->name('api')->middleware('throttle')->group(function () {
 
             Route::put('', 'update')->name('.update');
 
+            Route::prefix('/archive')->group(function () {
+                Route::put('', 'archive')->name('.archive');
+                Route::delete('', 'unarchive')->name('.unarchive');
+            });
+
+            Route::post('/leave', 'leaveProject')->name('.leave');
+
             Route::prefix('/members')->name('.members')->group(function () {
                 Route::get('', 'getProjectMembers')->name('');
                 Route::delete('/{user}', 'removeUser')->name('.remove');
@@ -156,6 +163,8 @@ Route::prefix('/api')->name('api')->middleware('throttle')->group(function () {
             Route::prefix('/favorite')->name('.favorite')->group(function () {
                 Route::post('/toggle', 'toggleFavorite')->name('.toggle');
             });
+
+            Route::post('/invite', 'inviteUser')->name('.invite-user');
         });
     });
 
@@ -192,6 +201,7 @@ Route::prefix('/api')->name('api')->middleware('throttle')->group(function () {
     Route::prefix('/task-comment')->name('.task-comment')->controller('TaskCommentController')->group(function () {
 
         Route::post('/new', 'store')->name('.new');
+        Route::get('', 'index')->name('list');
         
         Route::prefix('/{taskComment}')->where(['taskComment', '[0-9]+'])->group(function () {
 
@@ -230,6 +240,7 @@ Route::prefix('/api')->name('api')->middleware('throttle')->group(function () {
     Route::prefix('/thread-comment')->name('.thread-comment')->controller('ThreadCommentController')->group(function () {
 
         Route::post('/new', 'store')->name('.new');
+        Route::get('', 'index')->name('list');
         
         Route::prefix('/{threadComment}')->where(['threadComment', '[0-9]+'])->group(function () {
 

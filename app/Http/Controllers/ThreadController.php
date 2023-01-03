@@ -90,16 +90,6 @@ class ThreadController extends Controller {
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Thread  $thread
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Thread $thread) {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -107,7 +97,38 @@ class ThreadController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Thread $thread) {
-        //
+        
+        $requestData = $request->all();
+        
+        $this->threadEditionValidator($requestData)->validate();
+
+        $this->authorize('edit', $thread->project);
+        $this->authorize('update', $thread);
+
+        $thread = $this->editThread($thread, $requestData);
+
+        return new JsonResponse($thread);
+    }
+
+    public function threadEditionValidator(array $data) {
+        return Validator::make($data, [
+            'title' => 'string|min:6|max:50',
+            'content' => 'string|min:6|max:512',
+        ]);
+    }
+
+    public function editThread(Thread $thread, array $data) {
+
+        if (($data['name'] ??= null) !== null)
+            $thread->name = $data['name'];
+            
+        if (($data['content'] ??= null) !== null)
+            $thread->name = $data['content'];
+
+        if ($thread->dirty())
+            $thread->edit_date = now();
+
+        return $thread;
     }
 
     /**
@@ -116,7 +137,13 @@ class ThreadController extends Controller {
      * @param  \App\Models\Thread  $thread
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Thread $thread) {
-        //
+    public function destroy(Request $request, Thread $thread) {
+
+        $this->authorize('edit', $thread->project);
+        $this->authorize('delete', $thread);
+
+        $thread->delete();
+
+        return new JsonResponse($thread);
     }
 }

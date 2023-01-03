@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Auth\Access\Response;
+use App\Models\User;
 
 class AuthServiceProvider extends ServiceProvider {
     /**
@@ -26,5 +28,12 @@ class AuthServiceProvider extends ServiceProvider {
      */
     public function boot() {
         $this->registerPolicies();
+
+        Gate::define('admin-action', function (User $user) {
+            if (!$user->is_admin)
+                return Response::deny('Only an admin can perform this action');
+
+            return Response::allow();
+        });
     }
 }

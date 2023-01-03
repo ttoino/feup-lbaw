@@ -17,9 +17,11 @@ class ThreadCommentPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user)
-    {
-        //
+    public function viewAny(User $user, Thread $thread) {
+        if (!$thread->project->users->contains($user))
+            return $this->deny('You need to be a member of the thread\'s project in order to see its comments');
+
+        return $this->allow();
     }
 
     /**

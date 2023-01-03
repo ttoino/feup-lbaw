@@ -17,7 +17,15 @@ class TaskCommentController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request) {
-        //
+        $taskId = $request->query('task_id');
+
+        $task = Task::findOrFail($taskId);
+
+        $this->authorize('viewAny', [TaskComment::class, $task]);
+
+        $comments = TaskComment::cursorPaginate(10);
+
+        return new JsonResponse($comments);
     }
 
     /**

@@ -106,7 +106,7 @@ class ProjectController extends Controller {
             $userProjects = $userProjects->whereRaw('(fts_search @@ plainto_tsquery(\'english\', ?) OR project.name = ?)', [$searchTerm, $searchTerm])
                 ->orderByRaw('ts_rank(fts_search, plainto_tsquery(\'english\', ?)) DESC', [$searchTerm]);
 
-        return $userProjects->paginate(10);
+        return $userProjects->cursorPaginate(10);
     }
 
     public function create() {
@@ -218,7 +218,7 @@ class ProjectController extends Controller {
      * @return Response
      */
     public function index() {
-        $projects = Auth::user()->projects()->paginate(10);
+        $projects = Auth::user()->projects()->cursroPaginate(10);
 
         return view('pages.project.list', ['projects' => $projects]);
     }
@@ -298,9 +298,29 @@ class ProjectController extends Controller {
 
         $this->authorize('getProjectMembers', $project);
 
-        $members = $project->users()->cursorPaginate(10);
+        $searchTerm = $request->query('q') ?? '';
+        
+        $members = $this->searchMembers($project, $searchTerm)->appends($request->query());
 
         return new JsonResponse($members);
+    }
+
+    public function searchMembers(Project $project, string $search) {
+        $members = $project->users();
+
+        if(!empty($search)) {
+            $members = $members->where('name', 'like', '%'.ProjectController::escape_like($search).'%');
+        }
+
+        return $members->cursorPaginate(10);
+    }
+
+    protected function escape_like(string $value, string $char = '\\') {
+        return str_replace(
+            [$char, '%', '_'],
+            [$char.$char, $char.'%', $char.'_'],
+            $value
+        );
     }
 
     public function getProjectTags(Request $request, Project $project) {

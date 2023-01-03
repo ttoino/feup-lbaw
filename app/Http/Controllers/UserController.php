@@ -34,7 +34,7 @@ class UserController extends Controller {
 
         $user = Auth::user();
 
-        $notifications = $user->unreadNotifications->paginate(10);
+        $notifications = $user->unreadNotifications->cursorPaginate(10);
 
         return $request->wantsJson()
             ? new JsonResponse($notifications)

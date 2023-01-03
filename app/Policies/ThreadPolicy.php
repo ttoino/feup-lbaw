@@ -67,7 +67,13 @@ class ThreadPolicy {
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function update(User $user, Thread $thread) {
-        //
+        if ($user->is_admin)
+        return $this->deny('Admins cannot edit threads');
+
+    if ($user->id !== $thread->author_id)
+        return $this->deny('To edit a thread you must be its author');
+
+    return $this->allow();
     }
 
     /**
@@ -78,7 +84,13 @@ class ThreadPolicy {
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function delete(User $user, Thread $thread) {
-        //
+        if ($user->is_admin)
+            return $this->deny('Admins cannot delete threads');
+
+        if ($user->id !== $thread->author_id)
+            return $this->deny('To delete a thread you must be its author');
+    
+        return $this->allow();
     }
 
     /**
