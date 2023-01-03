@@ -20,8 +20,8 @@
             </a>
             <time data-render-datetime="creation_date.iso"
                 data-render-text="creation_date.diff"
-                datetime="{{ $thread->creation_date['iso'] }}">
-                {{ $thread->creation_date['diff'] }}
+                datetime="{{ $thread->creation_date ? $thread->creation_date['iso'] : null }}">
+                {{ $thread->creation_date ? $thread->creation_date['diff'] : null }}
             </time>
         </div>
         <div>

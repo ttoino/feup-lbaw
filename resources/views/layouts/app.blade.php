@@ -37,10 +37,13 @@
                         <img width="40" height="40" alt="Profile picture"
                             src="{{ asset(Auth::user()->profile_pic) }}"
                             class="rounded-circle">
-                        <span style="padding: .375rem"
-                            class="position-absolute top-0 end-0 bg-danger rounded-circle">
-                            <span class="visually-hidden">New alerts</span>
-                        </span>
+                        @if (Auth::user()->unreadNotifications->count())
+                            <span style="padding: .375rem"
+                                class="position-absolute top-0 end-0 bg-danger rounded-circle">
+                                <span class="visually-hidden">Unread
+                                    notifications</span>
+                            </span>
+                        @endif
                     </a>
                     <nav class="dropdown-menu dropdown-menu-end shadow-sm"
                         style="min-width: 240px">

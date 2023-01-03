@@ -27,7 +27,7 @@ const showTask = ajaxNavigation(
         taskOffcanvas?.show();
 
         renderTask?.(task);
-        renderTaskComments(task.comments);
+        task.comments && renderTaskComments(task.comments);
 
         taskOffcanvasEl?.classList.remove("loading");
     },

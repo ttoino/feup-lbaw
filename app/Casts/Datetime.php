@@ -16,6 +16,9 @@ class Datetime implements CastsAttributes {
      * @return mixed
      */
     public function get($model, string $key, $value, array $attributes) {
+        if (is_null($value))
+            return $value;
+
         $carbon = Carbon::parse($value);
 
         return [

@@ -1,4 +1,4 @@
-<li
+<li data-notification-id="{{ $item->id }}"
     class="list-group-item list-group-item-action position-relative hstack gap-2">
     <div class="vstack flex-fill">
         @switch ($item->type)

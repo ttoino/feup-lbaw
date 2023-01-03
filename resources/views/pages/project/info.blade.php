@@ -21,8 +21,8 @@
                     Last edited
                     <time data-render-datetime="last_modification_date.iso"
                         data-render-text="last_modification_date.long_diff"
-                        datetime="{{ $project->last_modification_date['iso'] }}">
-                        {{ $project->last_modification_date['long_diff'] }}
+                        datetime="{{ $project->last_modification_date ? $project->last_modification_date['iso'] : '' }}">
+                        {{ $project->last_modification_date ? $project->last_modification_date['long_diff'] : 'never' }}
                     </time>
                 </p>
             </header>
@@ -63,6 +63,11 @@
                         Leave project
                     </button>
                 @endcan
+
+                <a href="{{ route('project.reportproject', ['project' => $project]) }}"
+                    class="btn btn-outline-danger">
+                    Report Project
+                </a>
             </div>
             <div class="description" data-render-html="description.formatted">
                 {!! $project->description['formatted'] !!}</div>
@@ -95,15 +100,6 @@
             </form>
         </div>
         <div class="right">
-                    
-                @endif
-            
-                <a href="{{ route('project.reportproject', ['project' => $project]) }}" class="btn btn-outline-danger">
-                         Report Project
-                </a>   
-        </div>
-        
-        <div class="col l-4">
             <section class="user-list">
                 <h2 class="h2">Project members</h2>
                 @include('partials.paginated-list', [

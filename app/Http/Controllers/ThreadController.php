@@ -98,9 +98,9 @@ class ThreadController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Thread $thread) {
-        
+
         $requestData = $request->all();
-        
+
         $this->threadEditionValidator($requestData)->validate();
 
         $this->authorize('edit', $thread->project);
@@ -122,7 +122,7 @@ class ThreadController extends Controller {
 
         if (($data['title'] ??= null) !== null)
             $thread->title = $data['title'];
-            
+
         if (($data['content'] ??= null) !== null)
             $thread->content = $data['content'];
 
@@ -131,7 +131,7 @@ class ThreadController extends Controller {
 
         $thread->save();
 
-        return $thread;
+        return $thread->fresh();
     }
 
     /**

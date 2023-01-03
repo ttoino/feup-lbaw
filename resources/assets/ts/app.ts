@@ -15,6 +15,9 @@ if (window.location.pathname.match(/project\/\d+\/(forum|thread)/))
 if (window.location.pathname.match(/project\/\d+\/info/))
     import("./pages/info");
 
+if (window.location.pathname.match(/notifications/))
+    import("./pages/notifications");
+
 // Enhancements
 import "./enhancements/autoresize";
 import "./enhancements/form";
