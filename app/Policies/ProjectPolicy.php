@@ -4,8 +4,8 @@ namespace App\Policies;
 
 use App\Models\Project;
 use App\Models\User;
+use App\Models\Notification;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Auth\Access\Response;
 
 class ProjectPolicy {
     use HandlesAuthorization;
@@ -113,7 +113,7 @@ class ProjectPolicy {
             return $this->deny('Admins cannot mark projects as favorites');
 
         if (!$project->users->contains($user))
-            return $this->deny('Only the project\'s members can mark this project as favorite');
+            return $this->deny('Only the project\'s members can mark or unmark this project as favorite');
 
         return $this->allow();
     }
@@ -204,6 +204,32 @@ class ProjectPolicy {
             return $this->deny('Only the project\'s coordinator can unarchive it');
         
         return $this->allow();
+    }
+
+    public function report(User $user, Project $project) {
+
+        if ($user->is_admin)
+            return $this->deny('Admins cannot report projects');
+
+        return $this->allow();
+    }
+
+    public function joinProject(User $user, Project $project) {
+
+        if ($user->is_admin)
+            return $this->deny('Admins cannot accept project invitations');
+
+        if($project->users->contains($user))
+            return $this->deny('You are already a member of this project');
+    
+        $projectInvite = Notification::where('type', 'App\Notifications\ProjectInvite')->where('notifiable_id', $user->id);
+    
+        $invitedToProject = $projectInvite->get()->reduce(fn (bool $carry, Notification $notification) => $carry || $notification->json['project']?->id === $project->id, false);
+
+        if ($invitedToProject)
+            return $this->allow();
+
+        return $this->deny('Cannot accept invitation for a project you were not invited for');
     }
 
     /**

@@ -132,6 +132,14 @@ class UserPolicy {
         return $this->allow();
     }
 
+    public function report(User $user, User $model) {
+
+        if ($user->is_admin)
+            return $this->deny('Admins cannot report users');
+
+        return $this->allow();
+    }
+
     /**
      * Determine whether the user can restore the model.
      *
