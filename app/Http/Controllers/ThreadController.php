@@ -120,14 +120,16 @@ class ThreadController extends Controller {
 
     public function editThread(Thread $thread, array $data) {
 
-        if (($data['name'] ??= null) !== null)
-            $thread->name = $data['name'];
+        if (($data['title'] ??= null) !== null)
+            $thread->title = $data['title'];
             
         if (($data['content'] ??= null) !== null)
-            $thread->name = $data['content'];
+            $thread->content = $data['content'];
 
         if ($thread->isDirty())
             $thread->edit_date = now();
+
+        $thread->save();
 
         return $thread;
     }
