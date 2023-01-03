@@ -1,7 +1,8 @@
 <li class="list-group-item list-group-item-action position-relative d-flex flex-row align-items-center gap-2"
     data-project-id="{{ $item->id }}">
     <div class="vstack flex-fill">
-        <a href="{{ route('project', ['project' => $item]) }}" class="stretched-link fw-bold">
+        <a href="{{ route('project', ['project' => $item]) }}"
+            class="stretched-link fw-bold">
             {{ $item->name }}
         </a>
         <span>Coordinator:
@@ -11,27 +12,26 @@
     @if ($item->archived)
         <span class="text-warning">Archived</span>
     @endif
-    @if (Auth::user()?->is_admin)
-        @if ($item->reports_count > 0)
-            <span class="text-danger" style="z-index: 5">
-                <a href={{route('admin.reports.project', ['project' => $item])}} >{{ $item->reports_count }} Reports</a>
-            </span>
-        @endif    
-        <button class="btn project-delete btn-outline-danger" style="z-index: 5"><i class="bi bi-trash3"></i></button>
-    @else
-        <button class="btn btn-outline favorite-toggle" style="z-index: 5">
-            @php
-                $isFavorite = $item->users()->get()->first(fn ($user) => $user->id === Auth::user()->id)->pivot->is_favorite;
-            @endphp
 
+    @if ($item->reports_count > 0)
+        <span class="text-danger" style="z-index: 5">
+            <a href={{ route('admin.reports.project', ['project' => $item]) }}>{{ $item->reports_count }}
+                Reports</a>
+        </span>
+    @endif
+
+    @can('toggleFavorite', $item)
+        <button class="btn btn-outline-primary favorite-toggle" style="z-index: 5">
             <i @class([
                 'bi',
-                'bi-heart' => !$isFavorite,
-                'bi-heart-fill' => $isFavorite,
+                'bi-heart' => !$item->pivot->is_favorite,
+                'bi-heart-fill' => $item->pivot->is_favorite,
             ])></i>
         </button>
-    @endif
-    @if (Auth::user() === $item->coordinator)
-        <button class="btn btn-outline-danger" style="z-index: 5"><i class="bi bi-trash3"></i></button>
-    @endif
+    @endcan
+
+    @can('delete', $item)
+        <button class="btn btn-outline-danger" style="z-index: 5"><i
+                class="bi bi-trash3"></i></button>
+    @endcan
 </li>

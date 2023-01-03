@@ -24,4 +24,5 @@ import "./enhancements/form";
 import "./enhancements/imageinput";
 import "./enhancements/passwordinput";
 import "./enhancements/singleline";
+import "./enhancements/togglefavorite";
 import "./enhancements/tooltip";
