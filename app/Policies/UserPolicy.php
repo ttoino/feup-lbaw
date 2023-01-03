@@ -75,6 +75,16 @@ class UserPolicy
         return $this->allow();
     }
 
+    public function block(User $user, User $model) {
+        if (!$user->is_admin){
+            return $this->deny('Only admins can perform this action');
+        }
+        if ($model->is_admin){
+            return $this->deny('This action can\'t be performed on admins');
+        }
+        return $this->allow();
+    }
+
 
     /**
      * Determine whether the user can delete the model.

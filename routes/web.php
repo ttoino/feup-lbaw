@@ -177,6 +177,10 @@ Route::prefix('/api')->name('api')->middleware('throttle')->group(function () {
 
             Route::put('', 'update')->name('.update');
 
+            Route::post('/block', 'block')->name('.block');
+
+            Route::post('/unblock', 'unblock')->name('.unblock');
+
             Route::get('', 'show')->name('');
         });
     });

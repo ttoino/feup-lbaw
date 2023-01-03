@@ -144,6 +144,28 @@ class UserController extends Controller {
         return view('pages.profile.edit', ['user' => $user]);
     }
 
+    public function block(Request $request, User $user) { 
+        $this->authorize('block', $user);
+
+        $user->blocked = true;
+        $user->save();
+
+        return $request->wantsJson()
+            ? new JsonResponse($user->toArray(), 200)
+            : redirect()->route('home');
+    }
+
+    public function unblock(Request $request, User $user) { 
+        $this->authorize('block', $user);
+
+        $user->blocked = false;
+        $user->save();
+
+        return $request->wantsJson()
+            ? new JsonResponse($user->toArray(), 200)
+            : redirect()->route('home');
+    }
+
     public function destroy(Request $request, User $user) {
         $this->authorize('delete', $user);
 

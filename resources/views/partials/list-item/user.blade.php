@@ -26,11 +26,17 @@
                     Reports</a>
             </span>
         @endif
-        <button class="btn user-delete btn-outline-danger" style="z-index: 5"><i
-                class="bi bi-trash3"></i></button>
+        @if(!$item->is_admin)
+            @if ($item->blocked)
+                <button class="btn user-unblock btn-outline-secondary" style="z-index: 5">Unblock</button>
+            @else
+                <button class="btn user-block btn-outline-secondary" style="z-index: 5">Block</button>
+            @endif
+            <button class="btn user-delete btn-outline-danger" style="z-index: 5"><i
+                    class="bi bi-trash3"></i></button>
+        @endif        
     @endif
 
-    {{-- TODO: This shoule be a new partial --}}
     @isset($project)
         @if (Auth::user() == $project->coordinator)
             <button class="btn user-remove btn-outline-danger" style="z-index: 5"><i

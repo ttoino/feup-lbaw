@@ -6,3 +6,9 @@ export const deleteUser = (userId: string) =>
 
 export const removeUser = (userId: string, projectId: string) =>
     apiFetch<User>(`/api/project/${projectId}/remove/${userId}`, "POST");
+
+export const blockUser = (userId: string) =>
+    apiFetch<User>(`/api/user/${userId}/block`, "POST");    
+
+export const unblockUser = (userId: string) =>
+    apiFetch<User>(`/api/user/${userId}/unblock`, "POST");       
