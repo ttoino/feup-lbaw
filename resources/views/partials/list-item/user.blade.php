@@ -1,6 +1,6 @@
 <li class="list-group-item list-group-item-action position-relative d-flex flex-row align-items-center gap-2"
-    data-user-id="{{ $item->id }}"
-    @isset($project) data-project-id="{{ $project->id }}" @endisset>
+    data-user-id="{{ $item->id }}">
+
     <img src="{{ asset($item->profile_pic) }}" alt="Profile picture" width="40"
         height="40" class="rounded-circle">
 
@@ -17,30 +17,44 @@
         @if ($item->is_admin)
             <span class="text-success">Admin</span>
         @endif
+
+        @if ($item->blocked)
+            <span class="text-danger">Blocked</span>
+        @endif
     </div>
 
-    @if (Auth::user()?->is_admin)
-        @if ($item->reports_count > 0)
-            <span class="text-danger" style="z-index: 5">
-                <a href="{{ route('admin.reports.user', ['user' => $item]) }}{{ $item->reports_count }}">
-                    Reports </a>
-            </span>
-        @endif
-        @if(!$item->is_admin)
-            @if ($item->blocked)
-                <button class="btn user-unblock btn-outline-secondary" style="z-index: 5">Unblock</button>
-            @else
-                <button class="btn user-block btn-outline-secondary" style="z-index: 5">Block</button>
-            @endif
-            <button class="btn user-delete btn-outline-danger" style="z-index: 5"><i
-                    class="bi bi-trash3"></i></button>
-        @endif        
-    @endif
+    @can('admin-action')
+        <a href="{{ route('admin.reports.user', ['user' => $item]) }}"
+            class="btn btn-outline-secondary" style="z-index: 5">Reports
+            ({{ $item->reports->count() }})</a>
+    @endcan
+
+    @can('block', $item)
+        <button class="btn btn-outline-secondary block-user"
+            style="z-index: 5">Block</button>
+    @endcan
+
+    @can('unblock', $item)
+        <button class="btn btn-outline-secondary unblock-user"
+            style="z-index: 5">Unblock</button>
+    @endcan
+
+    @can('report', $item)
+        <a href="{{ route('user.report', ['user' => $item]) }}"
+            class="btn btn-outline-danger report-user" style="z-index: 5">
+            Report
+        </a>
+    @endcan
+
+    @can('delete', $item)
+        <button class="btn btn-outline-danger delete-user" style="z-index: 5"><i
+                class="bi bi-trash3"></i></button>
+    @endcan
 
     @isset($project)
-        @if (Auth::user() == $project->coordinator)
-            <button class="btn user-remove btn-outline-danger" style="z-index: 5"><i
+        @can('removeUser', [$project, $item])
+            <button class="btn btn-outline-danger remove-user" style="z-index: 5"><i
                     class="bi bi-x-lg"></i></button>
-        @endif
+        @endcan
     @endisset
 </li>

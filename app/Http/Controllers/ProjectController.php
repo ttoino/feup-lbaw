@@ -328,12 +328,10 @@ class ProjectController extends Controller {
         return response()->json($tags);
     }
 
-    public function reportproject(Project $project){
-        //$this->authorize('showReportUser', $user);
-        
-        return view('pages.reportproject', ['project' => $project]);
-        
-    }
+    public function report(Project $project) {
+        $this->authorize('report', $project);
 
+        return view('pages.reportproject', ['project' => $project]);
+    }
 
 }

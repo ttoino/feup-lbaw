@@ -6,8 +6,7 @@ use App\Models\User;
 use App\Models\Project;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class UserPolicy
-{
+class UserPolicy {
     use HandlesAuthorization;
 
     /**
@@ -16,8 +15,7 @@ class UserPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user)
-    {
+    public function viewAny(User $user) {
         //
     }
 
@@ -29,7 +27,7 @@ class UserPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function view(User $user, User $model) {
-        
+
         if ($user->is_admin)
             return $this->allow();
 
@@ -37,10 +35,10 @@ class UserPolicy
             return $this->allow();
 
         $projectsInCommon = $user->projects->intersect($model->projects)->count() > 0;
-        
+
         if ($projectsInCommon)
             return $this->allow();
-            
+
         return $this->deny('Only admins, the profile\'s owner or users that share a project with the profile\'s owner can view this profile');
     }
 
@@ -62,25 +60,41 @@ class UserPolicy
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function update(User $user, User $model) {
-        if (!$user->is_admin && $user->id !== $model->id){
+        if (!$user->is_admin && $user->id !== $model->id) {
             return $this->deny('Only admins or the profile\'s owner can update this user profile');
         }
         return $this->allow();
     }
-    
+
     public function showProfileEditPage(User $user, User $model) {
-        if (!$user->is_admin && $user->id !== $model->id){
+        if (!$user->is_admin && $user->id !== $model->id) {
             return $this->deny('Only admins or the profile\'s owner can update this user profile');
         }
         return $this->allow();
     }
 
     public function block(User $user, User $model) {
-        if (!$user->is_admin){
+        if (!$user->is_admin) {
             return $this->deny('Only admins can perform this action');
         }
-        if ($model->is_admin){
+        if ($model->is_admin) {
             return $this->deny('This action can\'t be performed on admins');
+        }
+        if ($model->blocked) {
+            return $this->deny('User is already blocked');
+        }
+        return $this->allow();
+    }
+
+    public function unblock(User $user, User $model) {
+        if (!$user->is_admin) {
+            return $this->deny('Only admins can perform this action');
+        }
+        if ($model->is_admin) {
+            return $this->deny('This action can\'t be performed on admins');
+        }
+        if (!$model->blocked) {
+            return $this->deny('User is not blocked');
         }
         return $this->allow();
     }
@@ -102,10 +116,10 @@ class UserPolicy
         if (!$user->is_admin && $user->id !== $model->id) {
             return $this->deny('Only admins can delete accounts that belong to other users');
         }
-        
+
         $userProjects = Project::where('coordinator_id', $model->id);
 
-        $projectsHaveOtherMembers = $userProjects->get()->reduce(fn (bool $carry, Project $project) => $carry | ($project->users->count() > 1), false);
+        $projectsHaveOtherMembers = $userProjects->get()->reduce(fn(bool $carry, Project $project) => $carry | ($project->users->count() > 1), false);
 
         if ($userProjects->count() > 0 && $projectsHaveOtherMembers) {
             return $this->deny('Cannot delete coordinator account while new coordinators are not assigned for the user\'s projects');
@@ -121,8 +135,7 @@ class UserPolicy
      * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, User $model)
-    {
+    public function restore(User $user, User $model) {
         //
     }
 
@@ -133,8 +146,7 @@ class UserPolicy
      * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, User $model)
-    {
+    public function forceDelete(User $user, User $model) {
         //
     }
 }

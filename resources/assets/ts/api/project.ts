@@ -19,7 +19,9 @@ export const leaveProject = (projectId: string) =>
     apiFetch<Project>(`/api/project/${projectId}/leave`, "POST");
 
 export const getProjectMembers = (projectId: string, cursor?: string) =>
-    apiFetch<Paginator<User>>(`/api/project/${projectId}/members`);
+    apiFetch<Paginator<User>>(`/api/project/${projectId}/members`, "GET", {
+        cursor,
+    });
 
 export const removeProjectMember = (projectId: string, userId: string) =>
     apiFetch<Project>(

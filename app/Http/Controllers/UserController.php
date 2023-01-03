@@ -141,7 +141,7 @@ class UserController extends Controller {
         return response()->view('pages.profile.edit', ['user' => $user]);
     }
 
-    public function block(Request $request, User $user) { 
+    public function block(Request $request, User $user) {
         $this->authorize('block', $user);
 
         $user->blocked = true;
@@ -152,8 +152,8 @@ class UserController extends Controller {
             : redirect()->route('home');
     }
 
-    public function unblock(Request $request, User $user) { 
-        $this->authorize('block', $user);
+    public function unblock(Request $request, User $user) {
+        $this->authorize('unblock', $user);
 
         $user->blocked = false;
         $user->save();
@@ -163,14 +163,12 @@ class UserController extends Controller {
             : redirect()->route('home');
     }
 
-    public function reportuser(User $user){
-        $this->authorize('showReportUser', $user);
-        
-        return view('pages.reportuser', ['user' => $user]);
-        
-      }
+    public function report(User $user) {
+        $this->authorize('report', $user);
 
-    
+        return view('pages.reportuser', ['user' => $user]);
+    }
+
     public function destroy(Request $request, User $user) {
         $this->authorize('delete', $user);
 

@@ -5,32 +5,32 @@
 
     @isset($group)
         <header>
-            @if (!$project->archived)
+            @can('edit', $project)
                 <i class="grip" style="cursor: grab"></i>
-            @endif
+            @endcan
 
             <form class="edit-task-group-form">
                 <textarea class="auto-resize single-line" autocomplete="off"
                     data-render-value="name" name="name" minlength="4" required
-                    @if ($project->archived) disabled @endif>{{ $group->name }}</textarea>
+                    @cannot('edit', $project) disabled @endcannot>{{ $group->name }}</textarea>
             </form>
 
-            @if (!$project->archived)
+            @can('edit', $project)
                 <button type="button" @class(['delete-task-group', 'd-none' => $group->tasks->count()])><i
                         class="bi bi-trash"></i></button>
-            @endif
+            @endcan
         </header>
 
         <ul>@each('partials.project.board.task', $group->tasks, 'task')</ul>
 
-        @if (!$project->archived)
+        @can('edit', $project)
             <form class="input-group new-task-form">
                 <textarea class="auto-resize single-line form-control" autocomplete="off"
                     placeholder="Create Task" name="name" minlength="4" required></textarea>
                 <button class="btn btn-primary" type="submit"><i
                         class="bi bi-plus"></i></button>
             </form>
-        @endif
+        @endcan
     @else
         <form class="input-group needs-validation" id="new-task-group-form"
             novalidate>
