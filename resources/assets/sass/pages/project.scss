@@ -28,7 +28,7 @@
         }
 
         > a {
-            @extend .nav-link, .nav-item;
+            @extend .nav-link, .nav-item, .d-flex, .flex-row, .gap-2;
         }
     }
 }

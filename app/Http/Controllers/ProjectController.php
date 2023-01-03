@@ -90,17 +90,6 @@ class ProjectController extends Controller {
             : redirect()->route('project.list');
     }
 
-    public function search(Request $request) {
-
-        // no need to authorize this request since it is a top-level one
-
-        $searchTerm = $request->query('q') ?? '';
-
-        $projects = $this->searchProjects($searchTerm)->withQueryString();
-
-        return response()->view('pages.search.projects', ['projects' => $projects]);
-    }
-
     public function searchProjects(string $searchTerm) {
 
         $userProjects = Auth::user()->projects();
@@ -227,8 +216,10 @@ class ProjectController extends Controller {
      *
      * @return Response
      */
-    public function index() {
-        $projects = Auth::user()->projects()->cursorPaginate(10);
+    public function index(Request $request) {
+        $searchTerm = $request->query('q') ?? '';
+
+        $projects = $this->searchProjects($searchTerm)->withQueryString();
 
         return response()->view('pages.project.list', ['projects' => $projects]);
     }
@@ -250,7 +241,9 @@ class ProjectController extends Controller {
 
         $user->notify(new ProjectInvite($url, $project));
 
-        return redirect()->route('project', ['project' => $project]);
+        return request()->wantsJson()
+            ? response()->json()
+            : redirect()->route('project', ['project' => $project]);
     }
 
     public function toggleFavorite(Request $request, Project $project) {
@@ -309,7 +302,9 @@ class ProjectController extends Controller {
 
         $members = $this->searchMembers($project, $searchTerm)->withQueryString();
 
-        return response()->json($members);
+        return $request->wantsJson()
+            ? response()->json($members)
+            : response()->view('pages.project.members', ['project' => $project, 'members' => $members]);
     }
 
     public function searchMembers(Project $project, string $search) {
@@ -330,6 +325,30 @@ class ProjectController extends Controller {
         );
     }
 
+    public function getProjectTasks(Request $request, Project $project) {
+
+        $this->authorize('getProjectTasks', $project);
+
+        $searchTerm = $request->query('q') ?? '';
+
+        $tasks = $this->searchTasks($searchTerm, $project)->withQueryString();
+
+        return $request->wantsJson()
+            ? response()->json($tasks)
+            : response()->view('pages.project.tasks', ['tasks' => $tasks]);
+    }
+
+    public function searchTasks(string $searchTerm, Project $project) {
+
+        $projectTasks = $project->tasks();
+
+        if (!empty($searchTerm))
+            $projectTasks = $projectTasks->whereRaw('(task.fts_search @@ plainto_tsquery(\'english\', ?) OR task.name = ?)', [$searchTerm, $searchTerm])
+                ->orderByRaw('ts_rank(task.fts_search, plainto_tsquery(\'english\', ?)) DESC', [$searchTerm]);
+
+        return $projectTasks->cursorPaginate(10);
+    }
+
     public function getProjectTags(Request $request, Project $project) {
         $this->authorize('getProjectTags', $project);
 
@@ -337,7 +356,9 @@ class ProjectController extends Controller {
 
         $tags = $this->searchTags($project, $searchTerm)->withQueryString();
 
-        return response()->json($tags);
+        return $request->wantsJson()
+            ? response()->json($tags)
+            : response()->view('pages.project.tags', ['tags' => $tags]);
     }
 
     public function searchTags(Project $project, string $search) {

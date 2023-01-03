@@ -28,16 +28,18 @@ class Tag extends Model {
      */
     protected $hidden = [];
 
+    protected $appends = ['rgb_color'];
+
     public function project() {
         return $this->belongsTo(
-            Project::class,
+                Project::class,
             'project_id'
         );
     }
 
     public function tasks() {
         return $this->belongsToMany(
-            Task::class,
+                Task::class,
             'task_tag',
             'tag_id',
             'task_id'
@@ -45,7 +47,14 @@ class Tag extends Model {
     }
 
     protected function color(): Attribute {
-        return Attribute::make(fn($color) => ($color >> 16) . ', ' . (($color >> 8) & 255) . ', ' . ($color & 255));
+        return Attribute::make(fn($color) => sprintf('#%06x', $color));
+    }
+
+    protected function rgbColor(): Attribute {
+        return Attribute::make(function ($_, $a) {
+            $color = $a['color'] ?? 0;
+            ($color >> 16) . ', ' . (($color >> 8) & 255) . ', ' . ($color & 255);
+        });
     }
 
     protected $table = 'tag';

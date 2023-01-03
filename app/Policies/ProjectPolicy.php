@@ -186,13 +186,20 @@ class ProjectPolicy {
         return $this->deny('Only admins or project members can see the project\'s tags');
     }
 
+    public function getProjectTasks(User $user, Project $project) {
+        if (!$user->is_admin && !$user->projects->contains($project))
+            return $this->deny('Only admins or members of the given project can search tasks in it');
+
+        return $this->allow();
+    }
+
     public function archive(User $user, Project $project) {
         if ($project->archived)
             return $this->deny('Project is already archived');
 
         if ($project->coordinator_id !== $user->id)
             return $this->deny('Only the project coordinator can archive it');
-        
+
         return $this->allow();
     }
 
@@ -202,7 +209,7 @@ class ProjectPolicy {
 
         if ($project->coordinator_id !== $user->id)
             return $this->deny('Only the project\'s coordinator can unarchive it');
-        
+
         return $this->allow();
     }
 
@@ -219,12 +226,12 @@ class ProjectPolicy {
         if ($user->is_admin)
             return $this->deny('Admins cannot accept project invitations');
 
-        if($project->users->contains($user))
+        if ($project->users->contains($user))
             return $this->deny('You are already a member of this project');
-    
+
         $projectInvite = Notification::where('type', 'App\Notifications\ProjectInvite')->where('notifiable_id', $user->id);
-    
-        $invitedToProject = $projectInvite->get()->reduce(fn (bool $carry, Notification $notification) => $carry || $notification->json['project']?->id === $project->id, false);
+
+        $invitedToProject = $projectInvite->get()->reduce(fn(bool $carry, Notification $notification) => $carry || $notification->json['project']?->id === $project->id, false);
 
         if ($invitedToProject)
             return $this->allow();

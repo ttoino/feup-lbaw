@@ -1,3 +1,5 @@
 <ul class="list-group">
-    @each($itemView, $paginator, 'item')
+    @foreach ($paginator as $item)
+        @include($itemView, ['item' => $item])
+    @endforeach
 </ul>

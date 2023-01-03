@@ -9,7 +9,7 @@ import { registerEnhancement } from "../../enhancements";
 import { projectId } from "../project";
 
 registerEnhancement<HTMLElement>({
-    selector: ".project-info .left",
+    selector: ".project-info",
     onattach: (el) => {
         const editProjectButton = el.querySelector<HTMLButtonElement>(
             "#edit-project-button"

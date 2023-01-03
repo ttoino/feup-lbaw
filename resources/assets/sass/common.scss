@@ -95,3 +95,11 @@ a {
         }
     }
 }
+
+.narrow {
+    max-width: map-get($map: $grid-breakpoints, $key: md);
+}
+
+.pagination {
+    @extend .m-0;
+}

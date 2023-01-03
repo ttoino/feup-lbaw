@@ -9,5 +9,6 @@
             ? in_array($currentRouteName, $route)
             : $route === $currentRouteName,
     ])>
+    <i class="bi bi-{{ $icon }}"></i>
     {{ $label }}
 </a>

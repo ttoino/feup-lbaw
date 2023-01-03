@@ -1,8 +1,10 @@
-import { removeProjectMember } from "../api/project";
+import { inviteUser, removeProjectMember } from "../api/project";
 import { projectId } from "../pages/project";
 import { tryRequest } from "../api";
 import { blockUser, deleteUser, unblockUser } from "../api/user";
 import { registerEnhancement } from "../enhancements";
+import { ajaxForm } from "../forms";
+import { renderToast } from "../toast";
 
 registerEnhancement<HTMLElement>({
     selector: "[data-user-id]",
@@ -57,4 +59,18 @@ registerEnhancement<HTMLElement>({
             }
         });
     },
+});
+
+registerEnhancement<HTMLFormElement>({
+    selector: "form.invite-user-form",
+    onattach: (el) =>
+        ajaxForm(
+            inviteUser,
+            el,
+            { projectId: projectId },
+            () => {
+                renderToast({ text: "Invited user" });
+            },
+            (e) => {}
+        ),
 });

@@ -83,13 +83,13 @@ class UserPolicy {
     public function block(User $user, User $model) {
         if (!$user->is_admin)
             return $this->deny('Only admins can perform this action');
-        
+
         if ($model->is_admin)
             return $this->deny('This action can\'t be performed on admins');
-        
+
         if ($model->blocked)
             return $this->deny('User is already blocked');
-        
+
         return $this->allow();
     }
 
@@ -121,7 +121,7 @@ class UserPolicy {
 
         if (!$user->is_admin && $user->id !== $model->id)
             return $this->deny('Only admins can delete accounts that belong to other users');
-        
+
         $userProjects = Project::where('coordinator_id', $model->id);
 
         $projectsHaveOtherMembers = $userProjects->get()->reduce(fn(bool $carry, Project $project) => $carry | ($project->users->count() > 1), false);
@@ -133,6 +133,9 @@ class UserPolicy {
     }
 
     public function report(User $user, User $model) {
+
+        if ($user->id === $model->id)
+            return $this->deny('You cannot report yourself');
 
         if ($user->is_admin)
             return $this->deny('Admins cannot report users');

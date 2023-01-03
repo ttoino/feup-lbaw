@@ -48,7 +48,7 @@
 
     @can('delete', $item)
         <button class="btn btn-outline-danger delete-user" style="z-index: 5"><i
-                class="bi bi-trash3"></i></button>
+                class="bi bi-trash"></i></button>
     @endcan
 
     @isset($project)

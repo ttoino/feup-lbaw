@@ -142,11 +142,4 @@ class TaskPolicy {
 
         return $this->allow();
     }
-
-    public function search(User $user, Project $project) {
-        if (!$user->is_admin && !$user->projects->contains($project))
-            return $this->deny('Only admins or members of the given project can search tasks in it');
-
-        return $this->allow();
-    }
 }

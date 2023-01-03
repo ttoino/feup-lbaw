@@ -49,9 +49,6 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
         Route::post('', 'store')->name('.new-action');
     });
 
-    // Project Search
-    Route::get('/search', 'search')->name('.search');
-
     Route::prefix('/{project}')->where(['project', '[0-9]+'])->middleware('withOtherProjects')->group(function () {
 
         // Report project
@@ -63,8 +60,10 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
         Route::redirect('', "/project/{project}/board")->name('');
 
         Route::get('/info', 'showProjectInfo')->name('.info');
+        Route::get('/members', 'getProjectMembers')->name('.members');
+        Route::get('/tags', 'getProjectTags')->name('.tags');
         Route::get('/board', 'showProjectBoard')->name('.board');
-        Route::get('/timeline', 'showProjectTimeline')->name('.timeline');
+        Route::get('/tasks', 'getProjectTasks')->name('.tasks');
         Route::get('/forum', 'showProjectForum')->name('.forum');
 
         // This breaks the HTTP standard since a GET request is changing server state (a project's members). However this should only be changed if this application scales
@@ -73,37 +72,15 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
         Route::post('/delete', 'destroy')->name('.delete');
 
         Route::prefix('/task')->name('.task')->controller('TaskController')->group(function () {
-            Route::post('/new', 'store')->name('.new');
-
-            Route::get('search', 'search')->name('.search');
-
             Route::prefix('/{task}')->where(['task', '[0-9]+'])->scopeBindings()->group(function () {
                 Route::get('', 'show')->name('.info');
-                Route::post('', 'update')->name('.edit');
-
-                Route::post('/comment', 'createComment')->name('.comment');
             });
         });
 
         Route::prefix('/thread')->name('.thread')->controller('ThreadController')->group(function () {
-
-            Route::prefix('/new')->group(function () {
-                Route::get('', 'create')->name('.new');
-                Route::post('', 'store')->name('.new-action');
-            });
-
             Route::prefix('/{thread}')->where(['thread', '[0-9]+'])->scopeBindings()->group(function () {
                 Route::get('', 'show')->name('');
             });
-        });
-
-        Route::prefix('/task-group')->name('.task-group')->controller('TaskGroupController')->group(function () {
-            Route::post('new', 'store')->name('.new');
-        });
-
-        Route::prefix('/invite')->name('.user')->controller('ProjectController')->group(function () {
-            Route::get('', 'showInviteUserPage')->name('.invite');
-            Route::post('', 'inviteUser')->name('.invite-action');
         });
     });
 });
@@ -258,6 +235,18 @@ Route::prefix('/api')->name('api')->middleware('throttle')->group(function () {
         Route::get('', 'index')->name('list');
         
         Route::prefix('/{threadComment}')->where(['threadComment', '[0-9]+'])->group(function () {
+
+            Route::get('', 'show')->name('');
+            Route::put('', 'update')->name('.update');
+            Route::delete('', 'destroy')->name('.delete');
+        });
+    });
+
+    Route::prefix('/tag')->name('.tag')->controller('TagController')->group(function () {
+
+        Route::post('/new', 'store')->name('.new');
+        
+        Route::prefix('/{tag}')->where(['tag', '[0-9]+'])->group(function () {
 
             Route::get('', 'show')->name('');
             Route::put('', 'update')->name('.update');

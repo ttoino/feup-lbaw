@@ -6,7 +6,7 @@
 
 import "bootstrap";
 
-if (window.location.pathname.match(/project\/\d+\/(board|task)/))
+if (window.location.pathname.match(/project\/\d+\/(board|task\/\d+)/))
     import("./pages/board");
 
 if (window.location.pathname.match(/project\/\d+\/(forum|thread)/))
@@ -25,5 +25,6 @@ import "./enhancements/imageinput";
 import "./enhancements/passwordinput";
 import "./enhancements/singleline";
 import "./enhancements/project";
+import "./enhancements/tag";
 import "./enhancements/tooltip";
 import "./enhancements/user";

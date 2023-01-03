@@ -14,23 +14,6 @@
             </a>
 
             @auth
-                <form method="GET" action="{{ route('project.search') }}"
-                    class="input-group ms-auto d-none d-sm-flex" role="search"
-                    style="max-width: 360px">
-                    <input class="form-control" name="q" type="search"
-                        placeholder="Search projects" aria-label="Search"
-                        value="{{ Request::route()->getName() === 'project.search' ? Request::query('q', '') : '' }}">
-                    <button class="btn btn-outline-light" type="submit"><i
-                            class="bi bi-search"></i></button>
-                </form>
-
-                <button class="btn btn-outline-light d-block d-sm-none ms-auto"
-                    type="button" data-bs-toggle="collapse"
-                    data-bs-target="#searchbar-collapse" aria-controls="drawer"
-                    aria-expanded="false" aria-label="Toggle project drawer">
-                    <i class="bi bi-search"></i>
-                </button>
-
                 <div class="dropdown">
                     <a href="#" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false" class="position-relative d-block">
@@ -62,16 +45,6 @@
                         </a>
                     </nav>
                 </div>
-
-                <form method="GET" action="{{ route('project.search') }}"
-                    id="searchbar-collapse" role="search"
-                    class="input-group collapse navbar-collapse d-flex d-sm-none">
-                    <input class="form-control" name="q" type="search"
-                        placeholder="Search projects" aria-label="Search"
-                        value="{{ Request::route()->getName() === 'project.search' ? Request::query('q', '') : '' }}">
-                    <button class="btn btn-outline-light" type="submit"><i
-                            class="bi bi-search"></i></button>
-                </form>
             @endauth
 
             @guest

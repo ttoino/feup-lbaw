@@ -96,28 +96,6 @@ class TaskController extends Controller {
         return response()->json($task->toArray());
     }
 
-    public function search(Request $request, Project $project) {
-
-        $searchTerm = $request->query('q') ?? '';
-
-        $this->authorize('search', [Task::class, $project]);
-
-        $tasks = $this->searchTasks($searchTerm, $project);
-
-        return response()->view('pages.search.tasks', ['tasks' => $tasks->withQueryString()]);
-    }
-
-    public function searchTasks(string $searchTerm, Project $project) {
-
-        $projectTasks = $project->tasks();
-
-        if (!empty($searchTerm))
-            $projectTasks = $projectTasks->whereRaw('(task.fts_search @@ plainto_tsquery(\'english\', ?) OR task.name = ?)', [$searchTerm, $searchTerm])
-                ->orderByRaw('ts_rank(task.fts_search, plainto_tsquery(\'english\', ?)) DESC', [$searchTerm]);
-
-        return $projectTasks->cursorPaginate(10);
-    }
-
     /**
      * Display the specified resource.
      *
@@ -164,10 +142,10 @@ class TaskController extends Controller {
 
         if (($data['description'] ??= null) !== null)
             $task->description = $data['description'];
-        
+
         if (($data['name'] ??= null) !== null)
             $task->name = $data['name'];
-        
+
         if ($task->isDirty(['name', 'description']))
             $task->edit_date = now();
 

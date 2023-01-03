@@ -45,30 +45,15 @@
             </ul>
         </div>
 
-        <form method="GET"
-            action="{{ route('project.task.search', ['project' => $project]) }}"
-            class="input-group my-2" role="search">
-            <input class="form-control" name="q" type="search"
-                placeholder="Search tasks" aria-label="Search"
-                value="{{ Request::route()->getName() === 'project.task.search' ? Request::query('q', '') : '' }}">
-            <button class="btn btn-outline-primary" type="submit"><i
-                    class="bi bi-search"></i></button>
-        </form>
-
-        @foreach ([['label' => 'Info', 'route' => 'project.info'], ['label' => 'Board', 'route' => ['project.board', 'project.task.info']], ['label' => 'Forum', 'route' => ['project.forum', 'project.thread']]] as $item)
+        @foreach ([
+            ['icon' => 'info-circle', 'label' => 'Info', 'route' => 'project.info'],
+            ['icon' => 'people', 'label' => 'Members', 'route' => 'project.members'],
+            ['icon' => 'tags', 'label' => 'Tags', 'route' => 'project.tags'],
+            ['icon' => 'kanban', 'label' => 'Board', 'route' => ['project.board', 'project.task.info']],
+            ['icon' => 'list-check', 'label' => 'Tasks', 'route' => 'project.tasks'],
+            ['icon' => 'chat-left-text', 'label' => 'Forum', 'route' => ['project.forum', 'project.thread']]] as $item)
             @include('partials.project.drawer.item', $item)
         @endforeach
-
-        @if (Auth::user()->id == $project->coordinator_id)
-            <a href="{{ route('project.user.invite', ['project' => $project]) }}"
-                @class([
-                    'nav-link',
-                    'nav-item',
-                    'active' => Request::route()->getName() === 'project.user.add',
-                ])>
-                Invite User
-            </a>
-        @endif
 
     </nav>
 </aside>
