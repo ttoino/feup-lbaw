@@ -134,6 +134,8 @@ class TaskController extends Controller {
 
         $this->authorize('view', [$task, $project]);
 
+        $task->comments = $task->comments()->cursorPaginate(10);
+
         return $isApi
             ? new JsonResponse($task)
             : view('pages.project.task', ['task' => $task, 'project' => $project]);

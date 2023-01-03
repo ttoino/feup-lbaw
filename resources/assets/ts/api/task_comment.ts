@@ -1,5 +1,12 @@
+import { Paginator } from "../types/misc";
 import { apiFetch } from ".";
 import { TaskComment } from "../types/task_comment";
+
+export const getTaskComments = (taskId: string, cursor = "") =>
+    apiFetch<Paginator<TaskComment>>(`/api/task-comment/`, "GET", {
+        task_id: taskId,
+        cursor,
+    });
 
 export const getTaskComment = (taskCommentId: string) =>
     apiFetch<TaskComment>(`/api/task-comment/${taskCommentId}`);

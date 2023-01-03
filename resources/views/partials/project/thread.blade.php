@@ -58,21 +58,36 @@
 </article>
 
 <ul id="thread-comments">
-    @foreach ($thread->comments as $threadComment)
+    @foreach ($thread->comments ?? [] as $threadComment)
         @include('partials.project.forum.comment', [
             'threadComment' => $threadComment,
         ])
     @endforeach
 </ul>
 
-<form id="new-comment-form" action="" method="post" class="input-group">
-    <textarea name="content" id="thread-comment-content" placeholder="New comment"
-        class="auto-resize form-control"
-        @if ($project->archived) disabled @endif></textarea>
-    <input type="hidden" name="thread_id" value="{{ $thread->id }}"
-        data-render-value="id">
-    <button class="btn btn-primary" type="submit"
-        @if ($project->archived) disabled @endif>
-        <i class="bi bi-send"></i>
-    </button>
-</form>
+<button @class([
+    'btn',
+    'btn-primary',
+    'mx-auto',
+    'mb-3',
+    'd-none' =>
+        $thread->comments instanceof \Illuminate\Pagination\CursorPaginator &&
+        $thread->comments?->nextCursor() == null,
+]) id="load-comments-button"
+    data-render-class-condition="next_cursor,d-none,false"
+    data-next-cursor="{{ $thread->comments instanceof \Illuminate\Pagination\CursorPaginator ? $thread->comments?->nextCursor()?->encode() : '' }}"
+    data-render-attr="next_cursor,next-cursor">
+    Load more comments
+</button>
+
+@can('edit', $project)
+    <form id="new-comment-form" action="" method="post" class="input-group">
+        <textarea name="content" id="thread-comment-content" placeholder="New comment"
+            class="auto-resize form-control"></textarea>
+        <input type="hidden" name="thread_id" value="{{ $thread->id }}"
+            data-render-value="id">
+        <button class="btn btn-primary" type="submit">
+            <i class="bi bi-send"></i>
+        </button>
+    </form>
+@endcan

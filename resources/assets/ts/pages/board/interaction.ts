@@ -1,10 +1,10 @@
-import { deleteTaskComment } from "../../api/task_comment";
+import { deleteTaskComment, getTaskComments } from "../../api/task_comment";
 import { tryRequest } from "../../api";
 import { completeTask, deleteTask, incompleteTask } from "../../api/task";
 import { deleteTaskGroup } from "../../api/task_group";
 import { registerEnhancement } from "../../enhancements";
 import { showBoard } from "./navigation";
-import { renderTask, renderTaskCard } from "./render";
+import { appendTaskComments, renderTask, renderTaskCard } from "./render";
 
 // DELETE TASK GROUP
 registerEnhancement<HTMLElement>({
@@ -93,6 +93,24 @@ registerEnhancement<HTMLElement>({
         editTaskButton?.addEventListener("click", () =>
             task.classList.add("editing")
         );
+
+        const loadCommentsButton = document.querySelector<HTMLButtonElement>(
+            "#load-comments-button"
+        );
+        loadCommentsButton?.addEventListener("click", async () => {
+            const cursor = loadCommentsButton.dataset.nextCursor;
+
+            if (!cursor) return;
+
+            const result = await tryRequest(
+                getTaskComments,
+                undefined,
+                taskId(),
+                cursor
+            );
+
+            if (result) appendTaskComments(result);
+        });
     },
 });
 

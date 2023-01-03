@@ -1,11 +1,13 @@
 import { Thread } from "../../types/thread";
 import {
     appendListItem,
+    appendListItems,
     renderList,
     renderMultiple,
     renderSingleton,
 } from "../../render";
 import { ThreadComment } from "../../types/thread_comment";
+import { Paginator } from "../../types/misc";
 
 export const renderThread = renderMultiple(
     renderSingleton<Thread>("#thread"),
@@ -26,9 +28,24 @@ export const renderThreadComment = (threadComment: ThreadComment) =>
         `.thread-comment[data-thread-comment-id="${threadComment.id}"]`
     )?.(threadComment);
 
-export const renderThreadComments = renderList<ThreadComment>(
+const renderThreadCommentsList = renderList<ThreadComment>(
     "#thread-comment-template",
     "#thread-comments"
+);
+
+const appendThreadCommentsList = appendListItems<ThreadComment>(
+    "#thread-comment-template",
+    "#thread-comments"
+);
+
+export const renderThreadComments = renderMultiple<Paginator<ThreadComment>>(
+    renderSingleton("#load-comments-button"),
+    (p) => renderThreadCommentsList?.(p.data)
+);
+
+export const appendThreadComments = renderMultiple<Paginator<ThreadComment>>(
+    renderSingleton("#load-comments-button"),
+    (p) => appendThreadCommentsList?.(p.data)
 );
 
 export const appendThreadComment = appendListItem<ThreadComment>(

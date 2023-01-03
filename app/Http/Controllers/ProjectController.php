@@ -218,7 +218,7 @@ class ProjectController extends Controller {
      * @return Response
      */
     public function index() {
-        $projects = Auth::user()->projects()->cursroPaginate(10);
+        $projects = Auth::user()->projects()->cursorPaginate(10);
 
         return view('pages.project.list', ['projects' => $projects]);
     }
@@ -299,7 +299,7 @@ class ProjectController extends Controller {
         $this->authorize('getProjectMembers', $project);
 
         $searchTerm = $request->query('q') ?? '';
-        
+
         $members = $this->searchMembers($project, $searchTerm)->appends($request->query());
 
         return new JsonResponse($members);
@@ -308,8 +308,8 @@ class ProjectController extends Controller {
     public function searchMembers(Project $project, string $search) {
         $members = $project->users();
 
-        if(!empty($search)) {
-            $members = $members->where('name', 'like', '%'.ProjectController::escape_like($search).'%');
+        if (!empty($search)) {
+            $members = $members->where('name', 'like', '%' . ProjectController::escape_like($search) . '%');
         }
 
         return $members->cursorPaginate(10);
@@ -318,7 +318,7 @@ class ProjectController extends Controller {
     protected function escape_like(string $value, string $char = '\\') {
         return str_replace(
             [$char, '%', '_'],
-            [$char.$char, $char.'%', $char.'_'],
+            [$char . $char, $char . '%', $char . '_'],
             $value
         );
     }

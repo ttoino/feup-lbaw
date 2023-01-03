@@ -2,8 +2,11 @@ import { deleteThread } from "../../api/thread";
 import { tryRequest } from "../../api";
 import { registerEnhancement } from "../../enhancements";
 import { showForum } from "./navigation";
-import {} from "./render";
-import { deleteThreadComment } from "../../api/thread_comment";
+import { appendThreadComments } from "./render";
+import {
+    deleteThreadComment,
+    getThreadComments,
+} from "../../api/thread_comment";
 
 registerEnhancement<HTMLElement>({
     selector: "#thread",
@@ -34,6 +37,24 @@ registerEnhancement<HTMLElement>({
         editThreadButton?.addEventListener("click", () =>
             thread.classList.add("editing")
         );
+
+        const loadCommentsButton = document.querySelector<HTMLButtonElement>(
+            "#load-comments-button"
+        );
+        loadCommentsButton?.addEventListener("click", async () => {
+            const cursor = loadCommentsButton.dataset.nextCursor;
+
+            if (!cursor) return;
+
+            const result = await tryRequest(
+                getThreadComments,
+                undefined,
+                threadId(),
+                cursor
+            );
+
+            if (result) appendThreadComments(result);
+        });
     },
 });
 

@@ -1,6 +1,7 @@
 import { TaskGroup } from "../../types/task_group";
 import {
     appendListItem,
+    appendListItems,
     renderList,
     renderMultiple,
     renderSingleton,
@@ -8,6 +9,7 @@ import {
 } from "../../render";
 import { Task } from "../../types/task";
 import { TaskComment } from "../../types/task_comment";
+import { Paginator } from "../../types/misc";
 
 export const renderTask = renderMultiple(
     renderSingleton<Task>("#task"),
@@ -38,9 +40,24 @@ export const appendTaskGroup = (group: TaskGroup) => {
 export const appendTaskCard = (listSelector: string) =>
     appendListItem<Task>("#task-template", listSelector);
 
-export const renderTaskComments = renderList<TaskComment>(
+const renderTaskCommentsList = renderList<TaskComment>(
     "#task-comment-template",
     "#task-comments"
+);
+
+const appendTaskCommentsList = appendListItems<TaskComment>(
+    "#task-comment-template",
+    "#task-comments"
+);
+
+export const renderTaskComments = renderMultiple<Paginator<TaskComment>>(
+    renderSingleton("#load-comments-button"),
+    (p) => renderTaskCommentsList?.(p.data)
+);
+
+export const appendTaskComments = renderMultiple<Paginator<TaskComment>>(
+    renderSingleton("#load-comments-button"),
+    (p) => appendTaskCommentsList?.(p.data)
 );
 
 export const appendTaskComment = appendListItem(

@@ -3,7 +3,7 @@ import { Offcanvas } from "bootstrap";
 import { Task } from "types/task";
 import { ajaxNavigation, navigation } from "../../navigation";
 import { registerEnhancement } from "../../enhancements";
-import { renderTask } from "./render";
+import { renderTask, renderTaskComments } from "./render";
 import { projectId } from "../project";
 
 const taskOffcanvasEl = document.querySelector("#task-offcanvas");
@@ -27,6 +27,7 @@ const showTask = ajaxNavigation(
         taskOffcanvas?.show();
 
         renderTask?.(task);
+        renderTaskComments(task.comments);
 
         taskOffcanvasEl?.classList.remove("loading");
     },

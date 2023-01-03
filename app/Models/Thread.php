@@ -33,7 +33,7 @@ class Thread extends Model {
      */
     protected $hidden = [];
 
-    protected $with = ['comments', 'author'];
+    protected $with = ['author'];
 
     protected $casts = [
         'creation_date' => Datetime::class,

@@ -84,6 +84,8 @@ class ThreadController extends Controller {
 
         $this->authorize('view', $thread);
 
+        $thread->comments = $thread->comments()->cursorPaginate(10);
+
         return $request->wantsJson()
             ? new JsonResponse($thread)
             : view('pages.project.thread', ['project' => $project, 'thread' => $thread]);

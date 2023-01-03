@@ -33,6 +33,12 @@ export const apiFetch = <T>(
             body
         )}`
     );
+
+    if (method === "GET") {
+        url += "?" + new URLSearchParams(body);
+        body = undefined;
+    }
+
     return fetch(url, {
         ...options,
         method,
@@ -62,7 +68,8 @@ export const tryRequest = async <K, Params extends Array<any>>(
         }
 
         return await response.json();
-    } catch {
+    } catch (e) {
+        console.error(e);
         renderToast?.({ text: error });
         return null;
     }

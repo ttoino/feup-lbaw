@@ -45,12 +45,12 @@ class Task extends Model {
         'description' => Markdown::class
     ];
 
-    protected $with = ['tags', 'comments', 'creator', 'assignees'];
+    protected $with = ['tags', 'creator', 'assignees'];
 
     public function project() {
         return $this->hasOneThrough(
-            Project::class,
-            TaskGroup::class,
+                Project::class,
+                TaskGroup::class,
             'id',
             'id',
             'task_group_id',
@@ -60,7 +60,7 @@ class Task extends Model {
 
     public function taskGroup() {
         return $this->belongsTo(
-            TaskGroup::class,
+                TaskGroup::class,
             'task_group_id'
         );
     }
@@ -71,14 +71,14 @@ class Task extends Model {
 
     public function comments() {
         return $this->hasMany(
-            TaskComment::class,
+                TaskComment::class,
             'task_id'
         );
     }
 
     public function tags() {
         return $this->belongsToMany(
-            Tag::class,
+                Tag::class,
             'task_tag',
             'task_id',
             'tag_id'
@@ -87,7 +87,7 @@ class Task extends Model {
 
     public function assignees() {
         return $this->belongsToMany(
-            User::class,
+                User::class,
             'task_assignee',
             'task_id',
             'user_profile_id'

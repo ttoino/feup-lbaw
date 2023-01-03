@@ -82,9 +82,24 @@
     @endcan
 </article>
 
-<ul id="task-comments" data-render-list="comments,#task-comment-template">
+<ul id="task-comments">
     @each('partials.project.board.comment', $task->comments, 'taskComment')
 </ul>
+
+<button @class([
+    'btn',
+    'btn-primary',
+    'mx-auto',
+    'mb-3',
+    'd-none' =>
+        $task->comments instanceof \Illuminate\Pagination\CursorPaginator &&
+        $task->comments?->nextCursor() == null,
+]) id="load-comments-button"
+    data-render-class-condition="next_cursor,d-none,false"
+    data-next-cursor="{{ $task->comments instanceof \Illuminate\Pagination\CursorPaginator ? $task->comments?->nextCursor()?->encode() : '' }}"
+    data-render-attr="next_cursor,next-cursor">
+    Load more comments
+</button>
 
 @can('edit', $project)
     <form id="new-comment-form" class="input-group">
