@@ -53,7 +53,7 @@ class Tag extends Model {
     protected function rgbColor(): Attribute {
         return Attribute::make(function ($_, $a) {
             $color = $a['color'] ?? 0;
-            ($color >> 16) . ', ' . (($color >> 8) & 255) . ', ' . ($color & 255);
+            return ($color >> 16) . ', ' . (($color >> 8) & 255) . ', ' . ($color & 255);
         });
     }
 

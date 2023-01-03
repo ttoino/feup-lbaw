@@ -24,10 +24,7 @@ export const getProjectMembers = (projectId: string, cursor?: string) =>
     });
 
 export const removeProjectMember = (projectId: string, userId: string) =>
-    apiFetch<Project>(
-        `/api/project/${projectId}/members/remove/${userId}`,
-        "DELETE"
-    );
+    apiFetch<Project>(`/api/project/${projectId}/members/${userId}`, "DELETE");
 
 export const inviteUser = ({
     projectId,

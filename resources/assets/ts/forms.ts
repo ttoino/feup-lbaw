@@ -9,9 +9,16 @@ export const ajaxForm = <K, P>(
 ) => {
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const data = Object.fromEntries(new FormData(form)) as P;
+        let data: any = {};
+        const formData = new FormData(form);
 
-        console.log(data);
+        for (const key of formData.keys()) {
+            data[key.replace("[]", "")] = key.endsWith("[]")
+                ? formData.getAll(key)
+                : formData.get(key);
+        }
+
+        console.log(new FormData(form), data);
 
         try {
             const payload =

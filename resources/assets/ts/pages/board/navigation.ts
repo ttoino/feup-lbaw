@@ -26,6 +26,7 @@ const showTask = ajaxNavigation(
     (task: Task) => {
         taskOffcanvas?.show();
 
+        document.querySelector("#task")?.classList.remove("editing");
         renderTask?.(task);
         task.comments && renderTaskComments(task.comments);
 

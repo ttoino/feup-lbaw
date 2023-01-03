@@ -77,6 +77,40 @@
                 </div>
             </div>
 
+            <label class="d-flex flex-column gap-1">
+                Tags
+                <select @class(['form-select', 'is-invalid' => $errors->has('tags')])
+                    aria-describedby="new-task-tags-feedback" name="tags[]"
+                    id="new-task-tags" required multiple>
+                    @foreach ($project->tags as $tag)
+                        <option value="{{ $tag->id }}"
+                            @if ($task->tags->contains($tag)) selected="selected" @endif>
+                            {{ $tag->title }}
+                        </option>
+                    @endforeach
+                </select>
+                <div id="new-task-tags-feedback" class="invalid-feedback">
+                    Please select a valid set of tags.
+                </div>
+            </label>
+
+            <label class="d-flex flex-column gap-1">
+                Assignees
+                <select @class(['form-select', 'is-invalid' => $errors->has('assignees')])
+                    aria-describedby="new-task-assignees-feedback"
+                    name="assignees[]" id="new-task-assignees" required multiple>
+                    @foreach ($project->users as $user)
+                        <option value="{{ $user->id }}"
+                            @if ($task->assignees->contains($user)) selected="selected" @endif>
+                            {{ $user->name }}
+                        </option>
+                    @endforeach
+                </select>
+                <div id="new-task-assignees-feedback" class="invalid-feedback">
+                    Please select a valid set of assignees.
+                </div>
+            </label>
+
             <button type="submit" class="btn btn-primary">Save changes</button>
         </form>
     @endcan

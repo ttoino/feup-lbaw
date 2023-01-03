@@ -6,7 +6,10 @@ use App\Models\Task;
 use App\Models\TaskGroup;
 use App\Models\TaskComment;
 use App\Models\Project;
+use App\Models\Tag;
+use App\Models\User;
 use App\Notifications\TaskCompleted;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -40,7 +43,24 @@ class TaskController extends Controller {
         $task->task_group_id = $data['task_group_id'];
         $task->position = (Task::where('task_group_id', $task->task_group_id)->max('position') ?? 0) + 1;
         $task->creator_id = Auth::user()->id;
+
         $task->save();
+
+        try {
+            foreach ($data['tags'] ?? [] as $tagId) {
+                $tag = Tag::findOrFail($tagId);
+                $task->tags()->save($tag);
+            }
+
+            foreach ($data['assignees'] ?? [] as $assigneeId) {
+                $assignee = User::findOrFail($assigneeId);
+                $task->assignees()->save($assignee);
+            }
+        } catch (Exception $e) {
+            $task->delete();
+
+            throw $e;
+        }
 
         return $task->fresh();
     }
@@ -55,7 +75,9 @@ class TaskController extends Controller {
         return Validator::make($data, [
             'name' => 'required|string|min:4|max:255',
             'description' => 'nullable|string|min:6|max:512',
-            'task_group_id' => 'required|integer'
+            'task_group_id' => 'required|integer',
+            'assignees' => 'nullable|array|max:5',
+            'tags' => 'nullable|array|max:5',
         ]);
     }
 
@@ -146,12 +168,24 @@ class TaskController extends Controller {
         if (($data['name'] ??= null) !== null)
             $task->name = $data['name'];
 
+        $task->tags()->detach();
+        $task->assignees()->detach();
+        foreach ($data['tags'] ?? [] as $tagId) {
+            $tag = Tag::findOrFail($tagId);
+            $task->tags()->save($tag);
+        }
+
+        foreach ($data['assignees'] ?? [] as $assigneeId) {
+            $assignee = User::findOrFail($assigneeId);
+            $task->assignees()->save($assignee);
+        }
+
         if ($task->isDirty(['name', 'description']))
             $task->edit_date = now();
 
-        $task->save();
+        $task->push();
 
-        return $task;
+        return $task->fresh();
     }
 
     public function editTaskValidator(array $data) {
@@ -160,6 +194,8 @@ class TaskController extends Controller {
             'description' => 'nullable|string|min:6|max:512',
             'task_group_id' => 'integer',
             'position' => 'integer|min:0',
+            'assignees' => 'nullable|array|max:5',
+            'tags' => 'nullable|array|max:5',
         ]);
     }
 
