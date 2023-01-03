@@ -333,9 +333,21 @@ class ProjectController extends Controller {
     public function getProjectTags(Request $request, Project $project) {
         $this->authorize('getProjectTags', $project);
 
-        $tags = $project->tags()->cursorPaginate(10);
+        $searchTerm = $request->query('q') ?? '';
+
+        $tags = $this->searchTags($project, $searchTerm)->withQueryString();
 
         return response()->json($tags);
+    }
+
+    public function searchTags(Project $project, string $search) {
+        $members = $project->tags();
+
+        if (!empty($search)) {
+            $members = $members->where('title', 'like', '%' . ProjectController::escape_like($search) . '%');
+        }
+
+        return $members->cursorPaginate(10);
     }
 
     public function report(Project $project) {
