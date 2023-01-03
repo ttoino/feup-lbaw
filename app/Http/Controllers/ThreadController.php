@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Thread;
 use App\Models\Project;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -27,7 +26,7 @@ class ThreadController extends Controller {
     public function create(Request $request, Project $project) {
         $this->authorize('viewCreationForm', [Thread::class, $project]);
 
-        return view('pages.project.forum.new', ['project' => $project]);
+        return response()->view('pages.project.forum.new', ['project' => $project]);
     }
 
     /**
@@ -50,8 +49,8 @@ class ThreadController extends Controller {
         $thread = $this->createThread($requestData, $project);
 
         return $request->wantsJson()
-            ? new JsonResponse($thread->toArray(), 201)
-            : redirect(route('project.thread', ['project' => $project, 'thread' => $thread]));
+            ? response()->json($thread->toArray(), 201)
+            : redirect()->route('project.thread', ['project' => $project, 'thread' => $thread]);
     }
 
     public function createThread(array $data, Project $project) {
@@ -87,8 +86,8 @@ class ThreadController extends Controller {
         $thread->comments = $thread->comments()->cursorPaginate(10);
 
         return $request->wantsJson()
-            ? new JsonResponse($thread)
-            : view('pages.project.thread', ['project' => $project, 'thread' => $thread]);
+            ? response()->json($thread)
+            : response()->view('pages.project.thread', ['project' => $project, 'thread' => $thread]);
     }
 
     /**
@@ -109,7 +108,7 @@ class ThreadController extends Controller {
 
         $thread = $this->editThread($thread, $requestData);
 
-        return new JsonResponse($thread);
+        return response()->json($thread);
     }
 
     public function threadEditionValidator(array $data) {
@@ -121,14 +120,16 @@ class ThreadController extends Controller {
 
     public function editThread(Thread $thread, array $data) {
 
-        if (($data['name'] ??= null) !== null)
-            $thread->name = $data['name'];
+        if (($data['title'] ??= null) !== null)
+            $thread->title = $data['title'];
             
         if (($data['content'] ??= null) !== null)
-            $thread->name = $data['content'];
+            $thread->content = $data['content'];
 
-        if ($thread->dirty())
+        if ($thread->isDirty())
             $thread->edit_date = now();
+
+        $thread->save();
 
         return $thread;
     }
@@ -146,6 +147,6 @@ class ThreadController extends Controller {
 
         $thread->delete();
 
-        return new JsonResponse($thread);
+        return response()->json($thread);
     }
 }
