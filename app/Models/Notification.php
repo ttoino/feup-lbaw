@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+// Since we wanted to customize the behavior of Notifications, we needed to copy the whole model from the Laravel source code in order to perform modifications
 class Notification extends Model {
     public $timestamps = false;
 

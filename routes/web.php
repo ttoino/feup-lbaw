@@ -253,4 +253,14 @@ Route::prefix('/api')->name('api')->middleware('throttle')->group(function () {
             Route::delete('', 'destroy')->name('.delete');
         });
     });
+
+    Route::prefix('/notifications')->name('.notification')->controller('NotificationController')->group(function () {
+        Route::prefix('/{notification}')->group(function () {
+
+            Route::get('', 'show')->name('');
+
+            Route::put('/read', 'markAsRead')->name('.mark-read');
+            // Route::put('/unread', 'markAsUnread')->name('.mark-unread');
+        });
+    });
 });
