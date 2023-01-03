@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Files;
+use App\Models\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -163,10 +164,33 @@ class UserController extends Controller {
             : redirect()->route('home');
     }
 
-    public function report(User $user) {
+    public function showReportForm(User $user) {
         $this->authorize('report', $user);
 
         return view('pages.reportuser', ['user' => $user]);
+    }
+
+    public function report(Request $request, User $user) {
+        $requestData = $request->all();
+
+        $this->reportValidator($requestData);
+
+        $this->authorize('report', $user);
+
+        $report = new Report();
+
+        $report->reason = $requestData['reason'];
+        $report->user_profile_id = $user->id;
+        $report->creator_id = Auth::user()->id;
+        $report->save();
+
+        return redirect()->route('user.profile', ['user' => $user]);
+    }
+
+    protected function reportValidator(array $data) {
+        return Validator::make($data, [
+            'reason' => 'string|min:6|max:512'
+        ]);
     }
 
     public function destroy(Request $request, User $user) {

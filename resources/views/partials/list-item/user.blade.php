@@ -56,5 +56,11 @@
             <button class="btn btn-outline-danger remove-user" style="z-index: 5"><i
                     class="bi bi-x-lg"></i></button>
         @endcan
+
+        @can('setCoordinator', [$project, $item])
+            <button class="btn btn-outline-danger set-coordinator" style="z-index: 5">
+                Make coordinator
+            </button>
+        @endcan
     @endisset
 </li>

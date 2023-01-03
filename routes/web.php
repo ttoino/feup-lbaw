@@ -30,11 +30,11 @@ Route::prefix('/user')->middleware('auth')->name('user.')->controller('UserContr
             Route::get('', 'edit')->name('edit');
             Route::post('', 'update')->name('edit-action');
         });
+
         Route::prefix('/report')->group(function () {
-            Route::get('', 'report')->name('report');
-            Route::post('', 'update')->name('report-action');
+            Route::get('', 'showReportForm')->name('report');
+            Route::post('', 'report')->name('report-action');
         });
-        
     });
 });
 
@@ -53,8 +53,8 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
 
         // Report project
         Route::prefix('/report')->group(function () {
-            Route::get('', 'report')->name('.report');
-            Route::post('', 'update')->name('.report-action');
+            Route::get('', 'showReportForm')->name('.report');
+            Route::post('', 'report')->name('.report-action');
         });
 
         Route::redirect('', "/project/{project}/board")->name('');
@@ -153,6 +153,10 @@ Route::prefix('/api')->name('api')->middleware('throttle')->group(function () {
             });
 
             Route::post('/invite', 'inviteUser')->name('.invite-user');
+
+            Route::prefix('/coordinator')->name('.coordinator')->group(function () {
+                Route::put('', 'setCoordinator');
+            });
         });
     });
 

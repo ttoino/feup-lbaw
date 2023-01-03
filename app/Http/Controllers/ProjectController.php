@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Project;
+use App\Models\Report;
 use App\Notifications\ProjectInvite;
 use App\Notifications\ProjectRemoved;
 use App\Notifications\ProjectArchived;
@@ -88,6 +89,22 @@ class ProjectController extends Controller {
         return $request->wantsJson()
             ? response()->json($project)
             : redirect()->route('project.list');
+    }
+
+    public function setCoordinator(Request $request, Project $project) {
+        $requestData = $request->all();
+
+        $user = User::findOrFail($requestData['user']);
+
+        $this->authorize('setCoordinator', [$project, $user]);
+
+        $project->coordinator_id = $user;
+        $project->save();
+        $project = $project->fresh();
+
+        return $request->wantsJson()
+            ? response()->json($project)
+            : redirect()->route('project.members', ['project' => $project]);
     }
 
     public function searchProjects(string $searchTerm) {
@@ -371,10 +388,33 @@ class ProjectController extends Controller {
         return $members->cursorPaginate(10);
     }
 
-    public function report(Project $project) {
+    public function showReportForm(Project $project) {
         $this->authorize('report', $project);
 
         return view('pages.reportproject', ['project' => $project]);
+    }
+
+    public function report(Request $request, Project $project) {
+        $requestData = $request->all();
+
+        $this->reportValidator($requestData);
+
+        $this->authorize('report', $project);
+
+        $report = new Report();
+
+        $report->reason = $requestData['reason'];
+        $report->project_id = $project->id;
+        $report->creator_id = Auth::user()->id;
+        $report->save();
+
+        return redirect()->route('project', ['project' => $project]);
+    }
+
+    protected function reportValidator(array $data) {
+        return Validator::make($data, [
+            'reason' => 'string|min:6|max:512'
+        ]);
     }
 
 }

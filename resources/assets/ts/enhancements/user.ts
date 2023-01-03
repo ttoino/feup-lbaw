@@ -1,4 +1,8 @@
-import { inviteUser, removeProjectMember } from "../api/project";
+import {
+    inviteUser,
+    removeProjectMember,
+    setCoordinator,
+} from "../api/project";
 import { projectId } from "../pages/project";
 import { tryRequest } from "../api";
 import { blockUser, deleteUser, unblockUser } from "../api/user";
@@ -24,6 +28,22 @@ registerEnhancement<HTMLElement>({
 
             if (result) {
                 el.remove();
+            }
+        });
+
+        const setCoordinatorButton = el.querySelector<HTMLButtonElement>(
+            "button.set-coordinator"
+        );
+        setCoordinatorButton?.addEventListener("click", async () => {
+            const result = await tryRequest(
+                setCoordinator,
+                undefined,
+                projectId,
+                userId
+            );
+
+            if (result) {
+                window.location.reload();
             }
         });
 
