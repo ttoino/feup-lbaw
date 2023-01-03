@@ -3,7 +3,9 @@
 <article id="task" data-task-id="{{ $task->id }}" class="editable"
     data-render-attr="id,task-id">
     <header class="offcanvas-header">
-        <h2 class="offcanvas-title" data-render-text="name">{{ $task->name }}
+        <h2 class="offcanvas-title" data-render-text="name">{{ $task->name }} <i
+                @class(['bi', 'bi-check-lg', 'd-none' => !$task->completed])
+                data-render-class-condition="completed,d-none,false"></i>
         </h2>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
             aria-label="Close"></button>

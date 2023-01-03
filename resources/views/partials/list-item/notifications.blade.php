@@ -1,79 +1,72 @@
 <li
-    class="list-group-item list-group-item-action position-relative d-flex flex-row align-items-center gap-2">
-    <div class="hstack flex-fill justify-content-between">
+    class="list-group-item list-group-item-action position-relative hstack gap-2">
+    <div class="vstack flex-fill">
         @switch ($item->type)
             @case('App\Notifications\ProjectInvite')
-                <a href={{ url($item->json['url']) }}>You've been invited to join
-                    project
-                    <strong>{{ $item->json['project']->name }}</strong>. Click here
-                    to
-                    join.</a>
+                <a class="stretched-link" href={{ url($item->json['url']) }}>You've been
+                    invited to join
+                    <strong>{{ $item->json['project']?->name ?? 'Deleted project' }}</strong>
+                    <br> Click here
+                    to join.</a>
             @break
 
             @case('App\Notifications\ProjectRemoved')
-                <a href={{ route('project.list') }}> You were removed from project
-                    <strong>{{ $item->json['project']->name }}</strong>. </a>
+                <a class="stretched-link" href={{ route('project.list') }}>You were
+                    removed from
+                    <strong>{{ $item->json['project']?->name ?? 'Deleted project' }}</strong>
+                </a>
             @break
 
             @case('App\Notifications\ProjectArchived')
-                <a
-                    href={{ route('project.board', ['project' => $item->json['project']]) }}>
-                    Project
-                    <strong>{{ $item->json['project']->name }}</strong> has been
-                    archived.
+                <a class="stretched-link"
+                    href={{ route('project', ['project' => $item->json['project'] ?? 0]) }}>
+                    <strong>{{ $item->json['project']->name ?? 'Deleted project' }}</strong>
+                    has been archived.
                 </a>
             @break
 
             @case('App\Notifications\ProjectDeleted')
-                <a href={{ route('project.list') }}>
-                    Project
-                    <strong>{{ $item->json['project_name'] }}</strong> has been
-                    deleted.
-                </a>
+                <span href={{ route('project.list') }}>
+                    <strong>{{ $item->json['project_name'] }}</strong> has been deleted.
+                </span>
             @break
 
             @case('App\Notifications\TaskCommented')
-                <a
-                    href={{ route('project.task.info', ['project' => $item->json['comment']->task->project, 'task' => $item->json['comment']->task]) }}>
-                    {{ $item->json['comment']->author->name }} has commented on a
-                    task
-                    you're
-                    assigned to: "{{ $item->json['comment']->content }}" </a>
+                <a class="stretched-link"
+                    href={{ route('project.task.info', ['project' => $item->json['comment']?->task->project ?? 0, 'task' => $item->json['comment']?->task ?? 0]) }}>
+                    There's a new comment on a task you're assigned to
+                </a>
             @break
 
             @case('App\Notifications\TaskCompleted')
-                <a
-                    href={{ route('project.task.info', ['project' => $item->json['task']->project, 'task' => $item->json['task']]) }}>
-                    Task <strong>{{ $item->json['task']->name }}</strong> has been
-                    completed.
+                <a class="stretched-link"
+                    href={{ route('project.task.info', ['project' => $item->json['task']?->project ?? 0, 'task' => $item->json['task'] ?? 0]) }}>
+                    A task you're assigned to has been completed
                 </a>
             @break
 
             @case('App\Notifications\ThreadNew')
-                <a
-                    href={{ route('project.thread', ['project' => $item->json['thread']->project, 'thread' => $item->json['thread']]) }}>
-                    A new thread "{{ $item->json['thread']->title }}" has been
-                    opened by
-                    {{ $item->json['thread']->author->name }} on project
-                    <strong>{{ $item->json['thread']->project->name }}</strong>.
+                <a class="stretched-link"
+                    href={{ route('project.thread', ['project' => $item->json['thread']?->project ?? 0, 'thread' => $item->json['thread'] ?? 0]) }}>
+                    A new thread has been opened in
+                    <strong>{{ $item->json['thread']?->project->name ?? 'Deleted project' }}</strong>.
                 </a>
             @break
 
             @case('App\Notifications\ThreadCommented')
-                <a
-                    href={{ route('project.thread', ['project' => $item->json['thread_comment']->thread->project, 'thread' => $item->json['thread_comment']->thread]) }}>
-                    {{ $item->json['thread_comment']->author->name }} has commented
-                    on
-                    your
-                    thread {{ $item->json['thread_comment']->thread->title }}:
-                    "{{ $item->json['thread_comment']->content }}" </strong>. </a>
+                <a class="stretched-link"
+                    href={{ route('project.thread', ['project' => $item->json['thread_comment']?->thread->project ?? 0, 'thread' => $item->json['thread_comment']?->thread ?? 0]) }}>
+                    Theres a new comment on your thread
+                </a>
             @break
         @endswitch
-        <span class='align-self-center'>
-            <i class="bi bi-calendar mx-1"></i>
-            @include('partials.datediff', [
-                'date' => $item->creation_date,
-            ])
-        </span>
+        <time datetime="{{ $item->creation_date['iso'] }}">
+            {{ $item->creation_date['long_diff'] }}
+        </time>
     </div>
+    <button type="button" style="z-index: 100"
+        class="read-notification-button btn btn-outline-primary">
+        <i class="bi bi-check-lg"></i>
+        Mark as read
+    </button>
 </li>
