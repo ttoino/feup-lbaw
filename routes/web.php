@@ -30,6 +30,11 @@ Route::prefix('/user')->middleware('auth')->name('user.')->controller('UserContr
             Route::get('', 'edit')->name('edit');
             Route::post('', 'update')->name('edit-action');
         });
+        Route::prefix('/reportuser')->group(function () {
+            Route::get('', 'reportuser')->name('reportuser');
+            Route::post('', 'update')->name('report-action');
+        });
+        
     });
 });
 
@@ -42,6 +47,11 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
     Route::prefix('/new')->group(function () {
         Route::get('', 'create')->name('.new');
         Route::post('', 'store')->name('.new-action');
+    });
+    // Report project
+    Route::prefix('/reportproject')->group(function () {
+        Route::get('', 'reportproject')->name('.reportproject');
+        Route::post('', 'update')->name('.report-action');
     });
 
     // Project Search

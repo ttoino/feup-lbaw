@@ -22,8 +22,8 @@
     @if (Auth::user()?->is_admin)
         @if ($item->reports_count > 0)
             <span class="text-danger" style="z-index: 5">
-                <a href={{ route('admin.reports.user', ['user' => $item]) }}>{{ $item->reports_count }}
-                    Reports</a>
+                <a href="{{ route('admin.reports.user', ['user' => $item]) }}{{ $item->reports_count }}">
+                    Reports </a>
             </span>
         @endif
         @if(!$item->is_admin)

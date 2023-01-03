@@ -166,6 +166,14 @@ class UserController extends Controller {
             : redirect()->route('home');
     }
 
+    public function reportuser(User $user){
+        $this->authorize('showReportUser', $user);
+        
+        return view('pages.reportuser', ['user' => $user]);
+        
+      }
+
+    
     public function destroy(Request $request, User $user) {
         $this->authorize('delete', $user);
 

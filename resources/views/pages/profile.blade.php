@@ -18,7 +18,9 @@
             <a href="{{ route('user.edit', ['user' => $user]) }}" class="btn btn-primary">
                 <i class="bi bi-pencil"></i> Edit profile
             </a>
-
+            <a href="{{ route('user.reportuser', ['user' => $user]) }}" class="btn btn-outline-danger">
+                Report User
+            </a>
             <button class="btn btn-outline-danger" data-bs-toggle="modal"
                 data-bs-target="#delete-modal">
                 <i class="bi bi-trash3"></i> Delete account
