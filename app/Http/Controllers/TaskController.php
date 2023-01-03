@@ -7,12 +7,9 @@ use App\Models\TaskGroup;
 use App\Models\TaskComment;
 use App\Models\Project;
 use App\Notifications\TaskCompleted;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Spatie\LaravelMarkdown\MarkdownRenderer;
 
 class TaskController extends Controller {
 
@@ -30,7 +27,7 @@ class TaskController extends Controller {
         $task = $this->createTask($requestData);
 
         return $request->wantsJson()
-            ? new JsonResponse($task, 201)
+            ? response()->json($task, 201)
             : redirect()->route('project', ['project' => $project]);
     }
 
@@ -80,7 +77,7 @@ class TaskController extends Controller {
             $assignee->notify(new TaskCompleted($task));
         }
 
-        return new JsonResponse($task->toArray());
+        return response()->json($task->toArray());
     }
 
     public function incomplete(Task $task) {
@@ -96,7 +93,7 @@ class TaskController extends Controller {
             // $assignee->notify(new TaskCompleted($task));
         }
 
-        return new JsonResponse($task->toArray());
+        return response()->json($task->toArray());
     }
 
     public function search(Request $request, Project $project) {
@@ -107,7 +104,7 @@ class TaskController extends Controller {
 
         $tasks = $this->searchTasks($searchTerm, $project);
 
-        return view('pages.search.tasks', ['tasks' => $tasks->withQueryString()]);
+        return response()->view('pages.search.tasks', ['tasks' => $tasks->withQueryString()]);
     }
 
     public function searchTasks(string $searchTerm, Project $project) {
@@ -137,8 +134,8 @@ class TaskController extends Controller {
         $task->comments = $task->comments()->cursorPaginate(10);
 
         return $isApi
-            ? new JsonResponse($task)
-            : view('pages.project.task', ['task' => $task, 'project' => $project]);
+            ? response()->json($task)
+            : response()->view('pages.project.task', ['task' => $task, 'project' => $project]);
     }
 
     public function update(Request $request, Project $project, Task $task) {
@@ -153,7 +150,7 @@ class TaskController extends Controller {
         $task = $this->editTask($task, $requestData);
 
         return $request->wantsJson()
-            ? new JsonResponse($task->toArray(), 200)
+            ? response()->json($task->toArray(), 200)
             : redirect()->route('project.task.info', ['project' => $project, 'task' => $task]);
     }
 
@@ -165,13 +162,14 @@ class TaskController extends Controller {
         if (($data['position'] ??= null) !== null)
             $task->position = $data['position'];
 
-        if (($data['description'] ??= null) !== null) {
+        if (($data['description'] ??= null) !== null)
             $task->description = $data['description'];
-            $task->edit_date = now();
-        }
-
+        
         if (($data['name'] ??= null) !== null)
             $task->name = $data['name'];
+        
+        if ($task->isDirty(['name', 'description']))
+            $task->edit_date = now();
 
         $task->save();
 
@@ -200,7 +198,7 @@ class TaskController extends Controller {
         $task_comment->save();
 
         return $request->wantsJson()
-            ? new JsonResponse([$task_comment], 201)
+            ? response()->json([$task_comment], 201)
             : redirect()->route('project.task.info', ['project' => $project, 'task' => $task]);
     }
 
@@ -215,6 +213,6 @@ class TaskController extends Controller {
         $this->authorize('delete', $task);
         $task->delete();
 
-        return $task;
+        return response()->json($task);
     }
 }

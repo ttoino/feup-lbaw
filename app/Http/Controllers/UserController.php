@@ -4,15 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Files;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\Rules\File;
 
 use App\Models\User;
-use App\Models\Project;
-use App\Models\Notification;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller {
@@ -26,8 +23,8 @@ class UserController extends Controller {
         $this->authorize('view', $user);
 
         return $request->wantsJson()
-            ? new JsonResponse($user)
-            : view('pages.profile', ['user' => $user]);
+            ? response()->json($user)
+            : response()->view('pages.profile', ['user' => $user]);
     }
 
     public function showNotifications(Request $request) {
@@ -37,8 +34,8 @@ class UserController extends Controller {
         $notifications = $user->unreadNotifications()->cursorPaginate(10);
 
         return $request->wantsJson()
-            ? new JsonResponse($notifications)
-            : view('pages.notifications', ['notifications' => $notifications]);
+            ? response()->json($notifications)
+            : response()->view('pages.notifications', ['notifications' => $notifications]);
     }
 
     /**
@@ -55,7 +52,7 @@ class UserController extends Controller {
 
         $user = $this->storeUser($requestData);
 
-        return new JsonResponse($user->toArray(), 201);
+        return response()->json($user->toArray(), 201);
     }
 
     public function storeUser(array $data) {
@@ -97,7 +94,7 @@ class UserController extends Controller {
         $user = $this->updateUser($user, $requestData);
 
         return $request->wantsJson()
-            ? new JsonResponse($user->toArray(), 201)
+            ? response()->json($user->toArray(), 201)
             : redirect()->route('user.profile', ['user' => $user]);
     }
 
@@ -141,7 +138,7 @@ class UserController extends Controller {
     public function edit(User $user) {
         $this->authorize('showProfileEditPage', $user);
 
-        return view('pages.profile.edit', ['user' => $user]);
+        return response()->view('pages.profile.edit', ['user' => $user]);
     }
 
     public function block(Request $request, User $user) { 
@@ -151,7 +148,7 @@ class UserController extends Controller {
         $user->save();
 
         return $request->wantsJson()
-            ? new JsonResponse($user->toArray(), 200)
+            ? response()->json($user->toArray(), 200)
             : redirect()->route('home');
     }
 
@@ -162,7 +159,7 @@ class UserController extends Controller {
         $user->save();
 
         return $request->wantsJson()
-            ? new JsonResponse($user->toArray(), 200)
+            ? response()->json($user->toArray(), 200)
             : redirect()->route('home');
     }
 
@@ -172,7 +169,7 @@ class UserController extends Controller {
         $user->delete();
 
         return $request->wantsJson()
-            ? new JsonResponse($user->toArray(), 200)
+            ? response()->json($user->toArray(), 200)
             : redirect()->route('home');
     }
 }

@@ -8,7 +8,6 @@ use App\Notifications\ProjectInvite;
 use App\Notifications\ProjectRemoved;
 use App\Notifications\ProjectArchived;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
@@ -19,7 +18,7 @@ class ProjectController extends Controller {
     public function show(Project $project) {
         $this->authorize('view', $project);
 
-        return new JsonResponse($project->toArray());
+        return response()->json($project->toArray());
     }
 
     public function showProjectBoard(Request $request, Project $project) {
@@ -27,32 +26,32 @@ class ProjectController extends Controller {
         $this->authorize('view', $project);
 
         return $request->wantsJson()
-            ? new JsonResponse($project->toArray(), 200)
-            : view('pages.project.board', ['project' => $project]);
+            ? response()->json($project)
+            : response()->view('pages.project.board', ['project' => $project]);
     }
 
     public function showProjectInfo(Request $request, Project $project) {
         $this->authorize('view', $project);
 
         return $request->wantsJson()
-            ? new JsonResponse($project->toArray(), 200)
-            : view('pages.project.info', ['project' => $project]);
+            ? response()->json($project)
+            : response()->view('pages.project.info', ['project' => $project]);
     }
 
     public function showProjectTimeline(Request $request, Project $project) {
         $this->authorize('view', $project);
 
         return $request->wantsJson()
-            ? new JsonResponse($project->toArray(), 200)
-            : view('pages.project.tbd', ['project' => $project]);
+            ? response()->json($project)
+            : response()->view('pages.project.tbd', ['project' => $project]);
     }
 
     public function showProjectForum(Request $request, Project $project) {
         $this->authorize('view', $project);
 
         return $request->wantsJson()
-            ? new JsonResponse($project->toArray(), 200)
-            : view('pages.project.forum', ['project' => $project]);
+            ? response()->json($project)
+            : response()->view('pages.project.forum', ['project' => $project]);
     }
 
     public function leaveProject(Request $request, Project $project) {
@@ -62,7 +61,7 @@ class ProjectController extends Controller {
 
         $project->users()->detach($user);
         return $request->wantsJson()
-            ? new JsonResponse($project->toArray(), 200)
+            ? response()->json($project)
             : redirect()->route('project.list');
     }
 
@@ -86,7 +85,7 @@ class ProjectController extends Controller {
         $user->notify(new ProjectRemoved($project));
 
         return $request->wantsJson()
-            ? new JsonResponse($project->toArray(), 200)
+            ? response()->json($project)
             : redirect()->route('project.list');
     }
 
@@ -95,7 +94,7 @@ class ProjectController extends Controller {
 
         $projects = $this->searchProjects($searchTerm)->appends($request->query());
 
-        return view('pages.search.projects', ['projects' => $projects->withQueryString()]);
+        return response()->view('pages.search.projects', ['projects' => $projects->withQueryString()]);
     }
 
     public function searchProjects(string $searchTerm) {
@@ -123,7 +122,7 @@ class ProjectController extends Controller {
         $project = $this->createProject($requestData);
 
         return $request->wantsJson()
-            ? new JsonResponse($project->toArray(), 201)
+            ? response()->json($project, 201)
             : redirect()->route('project', ['project' => $project]);
     }
 
@@ -169,7 +168,7 @@ class ProjectController extends Controller {
         $project = $this->updateProject($project, $requestData);
 
         return $request->wantsJson()
-            ? new JsonResponse($project->toArray(), 200)
+            ? response()->json($project)
             : redirect()->route('project', ['project' => $project]);
     }
 
@@ -220,14 +219,14 @@ class ProjectController extends Controller {
     public function index() {
         $projects = Auth::user()->projects()->cursorPaginate(10);
 
-        return view('pages.project.list', ['projects' => $projects]);
+        return response()->view('pages.project.list', ['projects' => $projects]);
     }
 
     public function showInviteUserPage(Project $project) {
 
         $this->authorize('showAddUserPage', $project);
 
-        return view('pages.project.add', ['project' => $project]);
+        return response()->view('pages.project.add', ['project' => $project]);
     }
 
     public function inviteUser(Request $request, Project $project) {
@@ -239,8 +238,6 @@ class ProjectController extends Controller {
         $url = URL::signedRoute('project.join', ['project' => $project, 'user' => $user]);
 
         $user->notify(new ProjectInvite($url, $project));
-
-        // $project->users()->save($user);
 
         return redirect()->route('project', ['project' => $project]);
     }
@@ -255,7 +252,7 @@ class ProjectController extends Controller {
         $member->pivot->is_favorite = !$member->pivot->is_favorite;
         $member->pivot->save();
 
-        return new JsonResponse(['isFavorite' => $member->pivot->is_favorite], 200);
+        return response()->json(['isFavorite' => $member->pivot->is_favorite]);
     }
 
     public function archive(Request $request, Project $project) {
@@ -269,7 +266,7 @@ class ProjectController extends Controller {
         }
 
         return $request->wantsJson()
-            ? new JsonResponse($project->toArray(), 200)
+            ? response()->json($project)
             : redirect()->route('project.info', ['project' => $project]);
     }
 
@@ -280,7 +277,7 @@ class ProjectController extends Controller {
         $project->save();
 
         return $request->wantsJson()
-            ? new JsonResponse($project->toArray(), 200)
+            ? response()->json($project)
             : redirect()->route('project.info', ['project' => $project]);
     }
 
@@ -290,7 +287,7 @@ class ProjectController extends Controller {
         $project->delete();
 
         return $request->wantsJson()
-            ? new JsonResponse($project->toArray(), 200)
+            ? response()->json($project)
             : redirect()->route('project.list');
     }
 
@@ -302,7 +299,7 @@ class ProjectController extends Controller {
 
         $members = $this->searchMembers($project, $searchTerm)->appends($request->query());
 
-        return new JsonResponse($members);
+        return response()->json($members);
     }
 
     public function searchMembers(Project $project, string $search) {
@@ -328,6 +325,6 @@ class ProjectController extends Controller {
 
         $tags = $project->tags()->cursorPaginate(10);
 
-        return new JsonResponse($tags);
+        return response()->json($tags);
     }
 }

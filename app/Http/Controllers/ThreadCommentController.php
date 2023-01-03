@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\ThreadComment;
 use App\Models\Thread;
-use App\Models\User;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +24,7 @@ class ThreadCommentController extends Controller {
 
         $comments = ThreadComment::cursorPaginate(10);
 
-        return new JsonResponse($comments);
+        return response()->json($comments);
     }
 
     /**
@@ -46,7 +44,7 @@ class ThreadCommentController extends Controller {
 
         $threadComment = $this->createThreadComment($requestData);
 
-        return new JsonResponse($threadComment);
+        return response()->json($threadComment);
     }
 
     public function threadCommentCreationValidator(array $data) {
@@ -79,7 +77,7 @@ class ThreadCommentController extends Controller {
     public function show(Request $request, ThreadComment $threadComment) {
         $this->authorize('view', [$threadComment]);
 
-        return new JsonResponse($threadComment);
+        return response()->json($threadComment);
     }
 
     /**
@@ -102,7 +100,7 @@ class ThreadCommentController extends Controller {
 
         $threadComment = $this->updateThreadComment($threadComment, $requestData);
 
-        return new JsonResponse($threadComment);
+        return response()->json($threadComment);
 
     }
 
@@ -138,6 +136,6 @@ class ThreadCommentController extends Controller {
 
         $threadComment->delete();
 
-        return new JsonResponse($threadComment);
+        return response()->json($threadComment);
     }
 }

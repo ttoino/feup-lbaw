@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\TaskGroup;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
 
 class TaskGroupController extends Controller {
 
@@ -15,7 +13,7 @@ class TaskGroupController extends Controller {
 
         $this->authorize('view', $taskGroup);
 
-        return new JsonResponse($taskGroup);
+        return response()->json($taskGroup);
     }
 
     /**
@@ -36,7 +34,7 @@ class TaskGroupController extends Controller {
         $taskGroup = $this->createTaskGroup($requestData);
 
         return $request->wantsJson()
-            ? new JsonResponse($taskGroup, 201)
+            ? response()->json($taskGroup, 201)
             : redirect()->route('project', ['project' => $project]);
     }
 
@@ -78,7 +76,7 @@ class TaskGroupController extends Controller {
 
         $taskGroup = $this->updateTaskGroup($taskGroup, $requestData);
 
-        return new JsonResponse($taskGroup, 200);
+        return response()->json($taskGroup);
     }
 
     protected function taskGroupUpdateValidator(array $data) {
@@ -107,6 +105,6 @@ class TaskGroupController extends Controller {
         $this->authorize('delete', $taskGroup);
         $taskGroup->delete();
 
-        return $taskGroup;
+        return response()->json($taskGroup);
     }
 }

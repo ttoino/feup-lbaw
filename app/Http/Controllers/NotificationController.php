@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Notification;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-
 class NotificationController extends Controller
 {
     /**
@@ -38,7 +36,7 @@ class NotificationController extends Controller
 
         $this->authorize('view', $notification);
 
-        return new JsonResponse($notification);
+        return response()->json($notification);
     }
 
     /**
@@ -81,6 +79,6 @@ class NotificationController extends Controller
 
         $notification->markAsRead();
 
-        return new JsonResponse($notification);
+        return response()->json($notification);
     }
 }

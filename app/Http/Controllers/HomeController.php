@@ -13,6 +13,6 @@ class HomeController extends Controller {
         if (Auth::user())
             return redirect()->route('project.list');
 
-        return view('pages.home');
+        return response()->view('pages.home');
     }
 }

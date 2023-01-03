@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\TaskComment;
 use App\Models\Task;
-use App\Models\User;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +23,7 @@ class TaskCommentController extends Controller {
 
         $comments = TaskComment::cursorPaginate(10);
 
-        return new JsonResponse($comments);
+        return response()->json($comments);
     }
 
     /**
@@ -45,7 +43,7 @@ class TaskCommentController extends Controller {
 
         $taskComment = $this->createTaskComment($requestData);
 
-        return new JsonResponse($taskComment);
+        return response()->json($taskComment, 201);
     }
 
     public function taskCommentCreationValidator(array $data) {
@@ -78,7 +76,7 @@ class TaskCommentController extends Controller {
     public function show(Request $request, TaskComment $taskComment) {
         $this->authorize('view', [$taskComment]);
 
-        return new JsonResponse($taskComment);
+        return response()->json($taskComment);
     }
 
     /**
@@ -101,7 +99,7 @@ class TaskCommentController extends Controller {
 
         $taskComment = $this->updateTaskComment($taskComment, $requestData);
 
-        return new JsonResponse($taskComment);
+        return response()->json($taskComment);
 
     }
 
@@ -137,6 +135,6 @@ class TaskCommentController extends Controller {
 
         $taskComment->delete();
 
-        return new JsonResponse($taskComment);
+        return response()->json($taskComment);
     }
 }
