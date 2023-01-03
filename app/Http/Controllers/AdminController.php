@@ -16,7 +16,7 @@ class AdminController extends Controller {
 
         $searchTerm = $request->query('q') ?? '';
         
-        $users = $this->searchUsers($searchTerm)->appends($request->query());
+        $users = $this->searchUsers($searchTerm)->withQueryString();
 
         return $request->expectsJson()
             ? response()->json($users)
@@ -29,7 +29,7 @@ class AdminController extends Controller {
 
         $searchTerm = $request->query('q') ?? '';
 
-        $projects = $this->searchProjects($searchTerm)->appends($request->query());
+        $projects = $this->searchProjects($searchTerm)->withQueryString();
 
         return $request->expectsJson()
             ? response()->json($projects)

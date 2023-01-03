@@ -92,9 +92,9 @@ class ProjectController extends Controller {
     public function search(Request $request) {
         $searchTerm = $request->query('q') ?? '';
 
-        $projects = $this->searchProjects($searchTerm)->appends($request->query());
+        $projects = $this->searchProjects($searchTerm)->withQueryString();
 
-        return response()->view('pages.search.projects', ['projects' => $projects->withQueryString()]);
+        return response()->view('pages.search.projects', ['projects' => $projects]);
     }
 
     public function searchProjects(string $searchTerm) {
@@ -297,7 +297,7 @@ class ProjectController extends Controller {
 
         $searchTerm = $request->query('q') ?? '';
 
-        $members = $this->searchMembers($project, $searchTerm)->appends($request->query());
+        $members = $this->searchMembers($project, $searchTerm)->withQueryString();
 
         return response()->json($members);
     }
