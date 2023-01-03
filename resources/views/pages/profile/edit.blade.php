@@ -3,10 +3,9 @@
 @section('title', $user->name)
 
 @section('form')
-    <label class="image-input avatar big">
+    <label class="image-input align-self-center">
         <img src="{{ asset($user->profile_pic) }}" width=240 height=240
-            alt="{{ $user->name }}'s profile picture"
-            class="rounded-circle align-self-center">
+            alt="{{ $user->name }}'s profile picture" class="rounded-circle">
         <input class="visually-hidden" type="file" name="profile_picture"
             accept="image/*" value="">
     </label>
