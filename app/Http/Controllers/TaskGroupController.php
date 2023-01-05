@@ -43,7 +43,6 @@ class TaskGroupController extends Controller {
         $taskGroup = new TaskGroup();
 
         $taskGroup->name = $data['name'];
-        $taskGroup->description = $data['description'] ?? '';
         $taskGroup->project_id = $data['project_id'];
         $taskGroup->position = (TaskGroup::where('project_id', $taskGroup->project_id)->max('position') ?? 0) + 1;
         $taskGroup->save();
@@ -82,6 +81,8 @@ class TaskGroupController extends Controller {
     protected function taskGroupUpdateValidator(array $data) {
         return Validator::make($data, [
             'position' => 'integer|min:0',
+            'name' => 'string|min:4|max:255',
+            'description' => 'string|min:6|max:512',
         ]);
     }
 
@@ -93,7 +94,7 @@ class TaskGroupController extends Controller {
         if (($data['name'] ??= null) !== null)
             $taskGroup->name = $data['name'];
         
-        if (($data['position'] ??= null) !== null)
+        if (($data['description'] ??= null) !== null)
             $taskGroup->description = $data['description'];
 
         $taskGroup->save();
