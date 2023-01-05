@@ -143,11 +143,9 @@ class UserPolicy {
         if (!$user->is_admin && $user->id !== $model->id)
             return $this->deny('Only admins can delete accounts that belong to other users');
 
-        $userProjects = Project::where('coordinator_id', $model->id);
+        $userProjects = Project::where('coordinator_id', $model->id)->count();
 
-        $projectsHaveOtherMembers = $userProjects->get()->reduce(fn(bool $carry, Project $project) => $carry | ($project->users->count() > 1), false);
-
-        if ($userProjects->count() > 0 && $projectsHaveOtherMembers)
+        if ($userProjects > 0)
             return $this->deny('Cannot delete coordinator account while new coordinators are not assigned for the user\'s projects');
 
         return $this->allow();
