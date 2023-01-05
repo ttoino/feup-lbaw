@@ -81,7 +81,7 @@
                 Tags
                 <select @class(['form-select', 'is-invalid' => $errors->has('tags')])
                     aria-describedby="new-task-tags-feedback" name="tags[]"
-                    id="new-task-tags" required multiple>
+                    id="new-task-tags" multiple>
                     @foreach ($project->tags as $tag)
                         <option value="{{ $tag->id }}"
                             @if ($task->tags->contains($tag)) selected="selected" @endif>
@@ -98,7 +98,7 @@
                 Assignees
                 <select @class(['form-select', 'is-invalid' => $errors->has('assignees')])
                     aria-describedby="new-task-assignees-feedback"
-                    name="assignees[]" id="new-task-assignees" required multiple>
+                    name="assignees[]" id="new-task-assignees" multiple>
                     @foreach ($project->users as $user)
                         <option value="{{ $user->id }}"
                             @if ($task->assignees->contains($user)) selected="selected" @endif>
