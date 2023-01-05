@@ -29,8 +29,7 @@
         @endcan
 
         @can('delete', $user)
-            <button class="btn btn-outline-danger" data-bs-toggle="modal"
-                data-bs-target="#delete-modal">
+            <button class="btn btn-outline-danger delete-user">
                 <i class="bi bi-trash3"></i> Delete account
             </button>
         @endcan
