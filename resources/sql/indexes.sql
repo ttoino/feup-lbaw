@@ -71,6 +71,40 @@ BEGIN
     RETURN NEW;
 END $$
 LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION tag_fts_update() RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'UPDATE' THEN
+
+        UPDATE task AS t
+        SET fts_search=(
+            setweight(to_tsvector('english', t.name), 'A') || 
+            setweight(to_tsvector('english', COALESCE(t.description, '')), 'B') ||
+            setweight(to_tsvector('english', COALESCE((SELECT task_tag_names FROM fts_task_tag WHERE task_id = t.id), '')), 'C')
+        )
+        FROM task_tag AS tsk_tg
+        WHERE tsk_tg.task_id = t.id
+        AND tsk_tg.tag_id = NEW.id;
+
+        RETURN NEW;
+    END IF;
+    IF TG_OP = 'DELETE' THEN
+
+        UPDATE task AS t
+        SET fts_search=(
+            setweight(to_tsvector('english', t.name), 'A') || 
+            setweight(to_tsvector('english', COALESCE(t.description, '')), 'B') ||
+            setweight(to_tsvector('english', COALESCE((SELECT task_tag_names FROM fts_task_tag WHERE task_id = t.id), '')), 'C')
+        )
+        FROM task_tag AS tsk_tg 
+        WHERE tsk_tg.task_id = t.id
+        AND tsk_tg.tag_id = OLD.id;
+    
+        RETURN OLD;
+    END IF;
+
+END $$
+LANGUAGE plpgsql;
 --
 DROP TRIGGER IF EXISTS task_search_update ON task;
 CREATE TRIGGER task_search_update
@@ -83,6 +117,13 @@ CREATE TRIGGER task_tag_search_update
     AFTER INSERT OR DELETE ON task_tag
     FOR EACH ROW
     EXECUTE PROCEDURE task_tag_fts_update();
+
+DROP TRIGGER IF EXISTS tag_search_update ON tag;
+CREATE TRIGGER tag_search_update
+    AFTER UPDATE OR DELETE ON tag
+    FOR EACH ROW
+    EXECUTE PROCEDURE tag_fts_update();
+
 -- create index to make searches performant on the FTS auxiliary field
 CREATE INDEX task_fts_idx ON task USING GIN (fts_search);
 
@@ -111,11 +152,32 @@ BEGIN
     RETURN NEW;
 END $$
 LANGUAGE plpgsql;
+
+CREATE FUNCTION project_coordinator_search_update() RETURNS TRIGGER AS $$
+BEGIN
+
+    UPDATE project p
+    SET fts_search = (
+            setweight(to_tsvector('english', p.name), 'A') ||
+            setweight(to_tsvector('english', COALESCE(p.description, '')), 'B') ||
+            setweight(to_tsvector('english', NEW.name), 'C')
+        )
+    WHERE p.coordinator_id = NEW.id;
+
+    RETURN NEW;
+END $$
+LANGUAGE plpgsql;
 --
 DROP TRIGGER IF EXISTS project_search_update ON project;
 CREATE TRIGGER project_search_update
     BEFORE INSERT OR UPDATE ON project
     FOR EACH ROW
     EXECUTE PROCEDURE project_fts_update();
+
+DROP TRIGGER IF EXISTS project_coordinator_search_update ON project;
+CREATE TRIGGER project_coordinator_search_update
+    AFTER UPDATE ON user_profile
+    FOR EACH ROW
+    EXECUTE PROCEDURE project_coordinator_search_update();
 -- create index to make searches performant on the FTS auxiliary field
 CREATE INDEX project_fts_idx ON project USING GIN (fts_search);

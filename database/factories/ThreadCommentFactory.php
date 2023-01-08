@@ -5,6 +5,8 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+use App\Models\ThreadComment;
+
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ThreadComment>
  */
@@ -30,4 +32,6 @@ class ThreadCommentFactory extends Factory {
             fn ($sequence) => ['author_id' => $authors->random()]
         );
     }
+
+    protected $model = ThreadComment::class;
 }

@@ -7,8 +7,6 @@ use Illuminate\Database\Seeder;
 use App\Models\Project;
 use App\Models\Task;
 
-use Illuminate\Database\Eloquent\Factories\Sequence;
-
 class TaskSeeder extends Seeder {
 
     const MIN_TASKS_PER_GROUP = 1;
@@ -27,7 +25,7 @@ class TaskSeeder extends Seeder {
      */
     public function run() {
         
-        $faker = \Faker\Factory::create();
+        $faker = fake();
 
         $projects = Project::all();
 
@@ -66,8 +64,8 @@ class TaskSeeder extends Seeder {
                         'tags'
                     )
                     ->for($taskGroup)
+                    ->withCreators($projectMembers)
                     ->create();
-
             }
         }
     }

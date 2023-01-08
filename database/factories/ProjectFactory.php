@@ -41,9 +41,9 @@ class ProjectFactory extends Factory {
     }
 
     public function withCoordinators(Collection $coordinators) {
-        return $this->state(function ($attributes) use ($coordinators) {
-            return ['coordinator_id' => $coordinators->random()];
-        });
+        return $this->sequence(
+            fn () => ['coordinator_id' => $coordinators->random()]
+        );
     }
 
     public function withMembers(Collection $members, float $memberRatio) {

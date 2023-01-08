@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Collection;
 
 use App\Models\Task;
 
@@ -34,6 +35,12 @@ class TaskFactory extends Factory {
     public function withPosition() {
         return $this->sequence(
             fn($sequence) => ['position' => $sequence->index + 1]
+        );
+    }
+
+    public function withCreators(Collection $creators) {
+        return $this->sequence(
+            fn($sequence) => ['creator_id' => $creators->random()]
         );
     }
 

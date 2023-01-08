@@ -25,7 +25,8 @@ class ProjectSeeder extends Seeder {
         $coordinators = User::factory()
             ->sequence(
                 fn ($sequence) => ['email' => "coordinator$sequence->index@example.com"]
-            )->count(ProjectSeeder::COORDINATOR_COUNT)
+            )
+            ->count(ProjectSeeder::COORDINATOR_COUNT)
             ->create();
 
         $normalUsers = User::where('is_admin', '<>', 'true')->get()->diff($coordinators);
