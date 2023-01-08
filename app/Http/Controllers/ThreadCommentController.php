@@ -61,7 +61,6 @@ class ThreadCommentController extends Controller {
         $threadComment->content = $data['content'];
         $threadComment->author_id = Auth::user()->id;
         $threadComment->thread_id = $data['thread_id'];
-        $threadComment->creation_date = now();
 
         $threadComment->save();
 

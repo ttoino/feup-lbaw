@@ -30,7 +30,7 @@ class ThreadPolicy {
     public function view(User $user, Thread $thread) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');  
+            return $this->deny('Your user account has been blocked');  
 
         if ($user->is_admin)
             return $this->allow();
@@ -47,7 +47,7 @@ class ThreadPolicy {
     public function viewCreationForm(User $user, Project $project) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');  
+            return $this->deny('Your user account has been blocked');  
 
         if ($user->is_admin)
             return $this->allow();
@@ -67,7 +67,7 @@ class ThreadPolicy {
     public function create(User $user, Project $project) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');  
+            return $this->deny('Your user account has been blocked');  
 
         if ($user->is_admin)
             return $this->deny('Admins cannot create threads');
@@ -88,7 +88,7 @@ class ThreadPolicy {
     public function update(User $user, Thread $thread) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');  
+            return $this->deny('Your user account has been blocked');  
 
         if ($user->is_admin)
             return $this->deny('Admins cannot edit threads');
@@ -109,7 +109,7 @@ class ThreadPolicy {
     public function delete(User $user, Thread $thread) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');  
+            return $this->deny('Your user account has been blocked');  
 
         if ($user->is_admin)
             return $this->deny('Admins cannot delete threads');

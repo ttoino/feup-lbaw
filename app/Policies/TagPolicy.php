@@ -30,7 +30,7 @@ class TagPolicy {
     public function view(User $user, Tag $tag) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');
+            return $this->deny('Your user account has been blocked');
 
         if ($user->is_admin)
             return $this->allow();
@@ -50,7 +50,7 @@ class TagPolicy {
     public function create(User $user, Project $project) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');
+            return $this->deny('Your user account has been blocked');
 
         if ($user->is_admin)
             return $this->deny('Admins cannot create tags');
@@ -71,7 +71,7 @@ class TagPolicy {
     public function update(User $user, Tag $tag) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');
+            return $this->deny('Your user account has been blocked');
 
         if ($user->is_admin)
             return $this->deny('Admins cannot edit tags');
@@ -92,7 +92,7 @@ class TagPolicy {
     public function delete(User $user, Tag $tag) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');
+            return $this->deny('Your user account has been blocked');
             
         if ($user->is_admin)
             return $this->deny('Admins cannot delete tags');

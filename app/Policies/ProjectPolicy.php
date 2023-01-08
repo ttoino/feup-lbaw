@@ -28,9 +28,11 @@ class ProjectPolicy {
      */
     public function view(User $user, Project $project) {
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');
+            return $this->deny('Your user account has been blocked');
+
         if (!$user->is_admin && !$project->users->contains($user))
             return $this->deny('Only admins or the project\'s members can view this project');
+
         return $this->allow();
     }
 
@@ -43,7 +45,7 @@ class ProjectPolicy {
     public function create(User $user) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');
+            return $this->deny('Your user account has been blocked');
 
         if ($user->is_admin)
             return $this->deny('Admins cannot create projects');
@@ -61,7 +63,7 @@ class ProjectPolicy {
     public function edit(User $user, Project $project) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');
+            return $this->deny('Your user account has been blocked');
 
         if ($user->is_admin)
             return $this->deny('Admins cannot update projects');
@@ -78,7 +80,7 @@ class ProjectPolicy {
     public function update(User $user, Project $project) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');
+            return $this->deny('Your user account has been blocked');
 
         if ($user->is_admin)
             return $this->deny('Admins cannot update projects');
@@ -101,9 +103,11 @@ class ProjectPolicy {
      */
     public function delete(User $user, Project $project) {
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');
+            return $this->deny('Your user account has been blocked');
+
         if (!$user->is_admin && $project->coordinator_id !== $user->id)
             return $this->deny('Only admins or the project\'s coordinator can delete this project');
+
         return $this->allow();
     }
 
@@ -121,7 +125,7 @@ class ProjectPolicy {
     public function toggleFavorite(User $user, Project $project) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');
+            return $this->deny('Your user account has been blocked');
 
         if ($user->is_admin)
             return $this->deny('Admins cannot mark projects as favorites');
@@ -134,16 +138,18 @@ class ProjectPolicy {
 
     public function showAddUserPage(User $user, Project $project) {
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');
+            return $this->deny('Your user account has been blocked');
+
         if ($user->id !== $project->coordinator_id)
             return $this->deny('Only the project\'s coordinator can see the \'Add User to Project\' page');
+
         return $this->allow();
     }
 
     public function addUser(User $user, Project $project, User $model) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');
+            return $this->deny('Your user account has been blocked');
 
         if ($user->id !== $project->coordinator_id)
             return $this->deny('Only the project\'s coordinator can invite users to this project');
@@ -160,7 +166,7 @@ class ProjectPolicy {
     public function setCoordinator(User $user, Project $project, User $model) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');
+            return $this->deny('Your user account has been blocked');
 
         if ($user->id !== $project->coordinator_id)
             return $this->deny('Only the project\'s coordinator can change its coordinator');
@@ -177,7 +183,7 @@ class ProjectPolicy {
     public function removeUser(User $user, Project $project, User $model) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');
+            return $this->deny('Your user account has been blocked');
 
         if ($user->id !== $project->coordinator_id)
             return $this->deny('Only the project\'s coordinator can remove users from this project');
@@ -197,7 +203,7 @@ class ProjectPolicy {
     public function leaveProject(User $user, Project $project) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');
+            return $this->deny('Your user account has been blocked');
 
         if ($user->is_admin)
             return $this->deny('Admins cannot leave projects');
@@ -214,7 +220,7 @@ class ProjectPolicy {
     public function getProjectMembers(User $user, Project $project) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');
+            return $this->deny('Your user account has been blocked');
 
         if ($user->is_admin || $project->users->contains($user))
             return $this->allow();
@@ -225,7 +231,7 @@ class ProjectPolicy {
     public function getProjectTags(User $user, Project $project) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');
+            return $this->deny('Your user account has been blocked');
 
         if ($user->is_admin || $project->users->contains($user))
             return $this->allow();
@@ -236,7 +242,7 @@ class ProjectPolicy {
     public function getProjectTasks(User $user, Project $project) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');
+            return $this->deny('Your user account has been blocked');
 
         if (!$user->is_admin && !$user->projects->contains($project))
             return $this->deny('Only admins or members of the given project can search tasks in it');
@@ -247,7 +253,7 @@ class ProjectPolicy {
     public function archive(User $user, Project $project) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');
+            return $this->deny('Your user account has been blocked');
 
         if ($project->archived)
             return $this->deny('Project is already archived');
@@ -261,7 +267,7 @@ class ProjectPolicy {
     public function unarchive(User $user, Project $project) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');
+            return $this->deny('Your user account has been blocked');
 
         if (!$project->archived)
             return $this->deny('Project is not archived');
@@ -275,7 +281,7 @@ class ProjectPolicy {
     public function report(User $user, Project $project) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');
+            return $this->deny('Your user account has been blocked');
 
         if ($user->is_admin)
             return $this->deny('Admins cannot report projects');
@@ -286,7 +292,7 @@ class ProjectPolicy {
     public function joinProject(User $user, Project $project) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');
+            return $this->deny('Your user account has been blocked');
 
         if ($user->is_admin)
             return $this->deny('Admins cannot accept project invitations');

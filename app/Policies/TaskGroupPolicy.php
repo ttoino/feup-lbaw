@@ -32,7 +32,7 @@ class TaskGroupPolicy
     public function view(User $user, TaskGroup $taskGroup) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');  
+            return $this->deny('Your user account has been blocked');  
             
         if (!$user->is_admin && !$taskGroup->project->users->contains($user))
             return $this->deny('Only admins or members of this group\'s project can view info on this task group');
@@ -49,7 +49,7 @@ class TaskGroupPolicy
     public function create(User $user, Project $project) {
         
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');  
+            return $this->deny('Your user account has been blocked');  
 
         if ($user->is_admin)
             return $this->deny('Admins cannot create task groups');
@@ -70,7 +70,7 @@ class TaskGroupPolicy
     public function update(User $user, TaskGroup $taskGroup) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');  
+            return $this->deny('Your user account has been blocked');  
 
         if ($user->is_admin)
             return $this->deny('Admins cannot update task groups');
@@ -91,7 +91,7 @@ class TaskGroupPolicy
     public function delete(User $user, TaskGroup $taskGroup) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');  
+            return $this->deny('Your user account has been blocked');  
 
         if ($user->is_admin)
             return $this->deny('Admins cannot delete task groups');

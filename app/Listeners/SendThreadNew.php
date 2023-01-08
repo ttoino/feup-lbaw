@@ -2,13 +2,8 @@
 
 namespace App\Listeners;
 
-use App\Events\ThreadCreated;
 use App\Events\ThreadEvent;
 use App\Notifications\ThreadNew;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Log;
 
 class SendThreadNew {
 

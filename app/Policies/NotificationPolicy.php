@@ -30,9 +30,11 @@ class NotificationPolicy
      */
     public function view(User $user, Notification $notification) {
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');  
+            return $this->deny('Your user account has been blocked');  
+
         if ($user->id !== $notification->notifiable_id)
-            $this->deny('Only the notified user can see this notification');
+            return $this->deny('Only the notified user can see this notification');
+
         return $this->allow();
     }
 
@@ -97,9 +99,11 @@ class NotificationPolicy
 
     public function markRead(User $user, Notification $notification) {
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');  
+            return $this->deny('Your user account has been blocked');  
+
         if ($user->id !== $notification->notifiable_id)
-            $this->deny('Only the notified user can mark this notification as read');
+            return $this->deny('Only the notified user can mark this notification as read');
+
         return $this->allow();
     }
 }

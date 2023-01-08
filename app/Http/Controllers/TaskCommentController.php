@@ -60,7 +60,6 @@ class TaskCommentController extends Controller {
         $taskComment->content = $data['content'];
         $taskComment->author_id = Auth::user()->id;
         $taskComment->task_id = $data['task_id'];
-        $taskComment->creation_date = now();
 
         $taskComment->save();
 

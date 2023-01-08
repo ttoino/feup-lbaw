@@ -20,7 +20,7 @@ class ThreadCommentPolicy
     public function viewAny(User $user, Thread $thread) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');  
+            return $this->deny('Your user account has been blocked');  
 
         if ($user->us_admin)
             return $this->allow();
@@ -41,7 +41,7 @@ class ThreadCommentPolicy
     public function view(User $user, ThreadComment $threadComment) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');  
+            return $this->deny('Your user account has been blocked');  
 
         if ($user->is_admin)
             return $this->allow();
@@ -61,7 +61,7 @@ class ThreadCommentPolicy
     public function create(User $user, Thread $thread) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');  
+            return $this->deny('Your user account has been blocked');  
 
         if ($user->is_admin)
             return $this->deny('Admins cannot create thread comments');
@@ -82,7 +82,7 @@ class ThreadCommentPolicy
     public function update(User $user, ThreadComment $threadComment) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');  
+            return $this->deny('Your user account has been blocked');  
 
         if ($user->is_admin)
             return $this->deny('Admins cannot update thread comments');
@@ -103,7 +103,7 @@ class ThreadCommentPolicy
     public function delete(User $user, ThreadComment $threadComment) {
 
         if ($user->blocked)
-            $this->deny('Your user account has been blocked');  
+            return $this->deny('Your user account has been blocked');  
 
         if ($user->is_admin)
             return $this->deny('Admins cannot delete thread comments');

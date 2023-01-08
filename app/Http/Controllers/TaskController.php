@@ -110,11 +110,6 @@ class TaskController extends Controller {
         $task->completed = false;
         $task->save();
 
-        foreach ($task->assignees as $assignee) {
-            // TODO
-            // $assignee->notify(new TaskCompleted($task));
-        }
-
         return response()->json($task->toArray());
     }
 
@@ -150,7 +145,7 @@ class TaskController extends Controller {
         $task = $this->editTask($task, $requestData);
 
         return $request->wantsJson()
-            ? response()->json($task->toArray(), 200)
+            ? response()->json($task)
             : redirect()->route('project.task.info', ['project' => $project, 'task' => $task]);
     }
 
