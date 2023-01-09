@@ -183,3 +183,9 @@ CREATE TABLE task_tag (
     FOREIGN KEY (task_id) REFERENCES task ON DELETE CASCADE,
     FOREIGN KEY (tag_id) REFERENCES tag ON DELETE CASCADE
 );
+
+CREATE TABLE password_resets (
+    email VARCHAR(255) PRIMARY KEY,
+    token VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP CHECK (created_at <= CURRENT_TIMESTAMP)
+);

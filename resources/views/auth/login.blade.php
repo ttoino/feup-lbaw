@@ -5,7 +5,10 @@
 @section('form')
     <div class="form-floating">
         <input aria-describedby="email-feedback" placeholder=""
-            class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}"
+            @class([
+                'form-control',
+                'is-invalid' => $errors->has('email')
+            ])
             id="email" type="email" name="email" value="{{ old('email') }}"
             required autofocus>
         <label for="email" class="form-label">E-mail</label>
@@ -20,7 +23,10 @@
 
     <div class="form-floating input-group has-validation password-input">
         <input placeholder=""
-            class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}"
+            @class([
+                'form-control',
+                'is-invalid' => $errors->has('password')
+            ])
             aria-describedby="password-feedback" id="password" type="password"
             name="password" required>
         <label for="password" class="form-label">Password</label>
@@ -47,5 +53,9 @@
 
     <p class="text-center">Don't have an account?
         <a href="{{ route('register') }}" class="link-primary">Register</a>
+    </p>
+
+    <p class="text-center">Forgot your password?
+        <a href="{{ route('password.request') }}" class="link-primary">Click here to reset it</a>
     </p>
 @endsection

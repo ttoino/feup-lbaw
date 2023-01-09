@@ -234,6 +234,9 @@ class ProjectController extends Controller {
      * @return Response
      */
     public function index(Request $request) {
+
+        $this->authorize('viewAny', [Project::class]);
+
         $searchTerm = $request->query('q') ?? '';
 
         $projects = $this->searchProjects($searchTerm)->withQueryString();

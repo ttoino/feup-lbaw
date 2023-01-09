@@ -17,6 +17,11 @@ class ProjectPolicy {
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function viewAny(User $user) {
+
+        if ($user->blocked)
+            return $this->deny('Your user account has been blocked');
+
+        return $this->allow();
     }
 
     /**

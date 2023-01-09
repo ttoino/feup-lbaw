@@ -64,6 +64,7 @@ Route::prefix('/project')->middleware('auth')->name('project')->controller('Proj
         Route::get('/tags', 'getProjectTags')->name('.tags');
         Route::get('/board', 'showProjectBoard')->name('.board');
         Route::get('/tasks', 'getProjectTasks')->name('.tasks');
+        Route::get('/timeline', 'showProjectTimeline')->name('.timeline');
         Route::get('/forum', 'showProjectForum')->name('.forum');
 
         // This breaks the HTTP standard since a GET request is changing server state (a project's members). However this should only be changed if this application scales
@@ -116,6 +117,12 @@ Route::name('')->group(function () {
     Route::controller('Auth\RegisterController')->group(function () {
         Route::get('/register', 'showRegistrationForm')->name('register');
         Route::post('/register', 'register');
+    });
+    Route::controller('Auth\PasswordRecoveryController')->middleware('guest')->name('password')->group(function () {
+        Route::get('/recover-password', 'showPasswordRecoveryForm')->name('.request');
+        Route::post('/recover-password', 'sendPasswordRecoveryLink')->name('.request-action');
+        Route::get('/reset-password/{token}', 'showPasswordResetForm')->name('.reset');
+        Route::post('/reset-password', 'resetPassword')->name('.reset-action');
     });
 });
 
