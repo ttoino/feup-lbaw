@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Auth\Events\PasswordReset;
@@ -46,8 +47,7 @@ class PasswordRecoveryController extends Controller {
             function (User $user, string $password) {
                 $user->forceFill([
                     'password' => Hash::make($password)
-                ])
-                ->setRememberToken(Str::random(60));
+                ])->setRememberToken(Str::random(60));
                 
                 $user->save();
     
@@ -55,8 +55,12 @@ class PasswordRecoveryController extends Controller {
             }
         );
     
-        return $status === Password::PASSWORD_RESET
-                    ? redirect()->route('login')->with('status', __($status))
-                    : back()->withErrors(['email' => [__($status)]]);
+        if ($status === Password::PASSWORD_RESET) {
+            if (Auth::attempt($request->only('email', 'password'), true)) {
+                $request->session()->regenerate();
+    
+                return redirect()->intended();
+            } else return response()->route('home');
+        } else return back()->withErrors(['email' => [__($status)]]);
     }
 }
