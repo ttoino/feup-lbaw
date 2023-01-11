@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS
     task_tag
 CASCADE;
 
-DROP TYPE IF EXISTS TODAY, COLOR CASCADE;
+DROP TYPE IF EXISTS TODAY, COLOR, PROVIDER CASCADE;
 
 ------------------------------------------------------------
 -- Types
@@ -33,6 +33,8 @@ DROP TYPE IF EXISTS TODAY, COLOR CASCADE;
 CREATE DOMAIN TODAY AS TIMESTAMP DEFAULT CURRENT_TIMESTAMP CHECK (VALUE <= CURRENT_TIMESTAMP);
 
 CREATE DOMAIN COLOR AS INTEGER;
+
+CREATE DOMAIN PROVIDER AS TEXT CHECK (VALUE IN ('github', 'google'));
 
 ------------------------------------------------------------
 -- Tables
@@ -46,6 +48,15 @@ CREATE TABLE user_profile (
     blocked BOOLEAN NOT NULL DEFAULT false,
     is_admin BOOLEAN NOT NULL DEFAULT false,
     remember_token TEXT
+);
+
+CREATE TABLE oauth_user (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    provider_type PROVIDER NOT NULL,
+    provider_token TEXT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES user_profile ON DELETE CASCADE,
+    UNIQUE (provider_type, provider_token) DEFERRABLE INITIALLY DEFERRED
 );
 
 CREATE TABLE project (

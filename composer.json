@@ -13,9 +13,11 @@
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^3.0",
         "laravel/framework": "^9.0",
+        "laravel/socialite": "^5.5",
         "laravel/ui": "^4.0",
         "nesbot/carbon": "^2.63",
-        "spatie/laravel-markdown": "^2.2"
+        "spatie/laravel-markdown": "^2.2",
+        "symfony/polyfill-iconv": "^1.27"
     },
     "require-dev": {
         "spatie/laravel-ignition": "^1.0",

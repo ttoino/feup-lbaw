@@ -12,6 +12,8 @@
 */
 // Home
 
+use Laravel\Socialite\Facades\Socialite;
+use App\Http\Controllers\Auth\OAuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StaticController;
 
@@ -108,21 +110,26 @@ Route::prefix('/admin')->middleware(['auth', 'isAdmin'])->name('admin')->control
 Route::get('/dump', 'DebugController@dump');
 
 // Authentication
-Route::name('')->group(function () {
+Route::name('')->middleware('guest')->group(function () {
     Route::controller('Auth\LoginController')->group(function () {
         Route::get('/login', 'showLoginForm')->name('login');
         Route::post('/login', 'login');
-        Route::get('/logout', 'logout')->name('logout');
+        Route::get('/logout', 'logout')->withoutMiddleware('guest')->name('logout');
     });
     Route::controller('Auth\RegisterController')->group(function () {
         Route::get('/register', 'showRegistrationForm')->name('register');
         Route::post('/register', 'register');
     });
-    Route::controller('Auth\PasswordRecoveryController')->middleware('guest')->name('password')->group(function () {
+    Route::controller('Auth\PasswordRecoveryController')->name('password')->group(function () {
         Route::get('/recover-password', 'showPasswordRecoveryForm')->name('.request');
         Route::post('/recover-password', 'sendPasswordRecoveryLink')->name('.request-action');
         Route::get('/reset-password/{token}', 'showPasswordResetForm')->name('.reset');
         Route::post('/reset-password', 'resetPassword')->name('.reset-action');
+    });
+
+    Route::prefix('/oauth/{provider}')->whereIn('provider', OAuthController::PROVIDERS)->controller('Auth\OAuthController')->name('oauth')->group(function () {
+        Route::get('/redirect', 'redirectOAuth')->name('.redirect');
+        Route::get('/callback', 'handleOAuthCallback')->name('.callback');
     });
 });
 

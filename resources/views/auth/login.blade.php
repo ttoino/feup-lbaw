@@ -3,6 +3,11 @@
 @section('title', 'Login')
 
 @section('form')
+
+    <p class="text-center">Sign In with
+        <a href="{{ route('oauth.redirect', ['provider' => 'github']) }}" class="link-primary">Github</a>
+    </p>
+    
     <div class="form-floating">
         <input aria-describedby="email-feedback" placeholder=""
             @class([
