@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Blade;
 
 class AppServiceProvider extends ServiceProvider {
     /**

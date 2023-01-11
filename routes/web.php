@@ -12,10 +12,9 @@
 */
 // Home
 
-use Laravel\Socialite\Facades\Socialite;
-use App\Http\Controllers\Auth\OAuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StaticController;
+use App\Enums\ProviderType;
 
 Route::get('', 'HomeController@show')->name('home');
 
@@ -127,7 +126,7 @@ Route::name('')->middleware('guest')->group(function () {
         Route::post('/reset-password', 'resetPassword')->name('.reset-action');
     });
 
-    Route::prefix('/oauth/{provider}')->whereIn('provider', OAuthController::PROVIDERS)->controller('Auth\OAuthController')->name('oauth')->group(function () {
+    Route::prefix('/oauth/{provider}')->whereIn('provider', ProviderType::values())->controller('Auth\OAuthController')->name('oauth')->group(function () {
         Route::get('/redirect', 'redirectOAuth')->name('.redirect');
         Route::get('/callback', 'handleOAuthCallback')->name('.callback');
     });

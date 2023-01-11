@@ -73,7 +73,11 @@ class User extends Authenticatable {
     public function reports() {
         return $this->hasMany(Report::class, 'user_profile_id');
     }
-
+    
+    public function oAuthProfiles() {
+        return $this->hasMany(OAuthUser::class, 'user_id');
+    }
+    
     public function notifications() {
         return $this->hasMany(Notification::class, 'notifiable_id')->orderByDesc('creation_date');
     }

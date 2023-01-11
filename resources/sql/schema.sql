@@ -44,7 +44,7 @@ CREATE TABLE user_profile (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL,
+    password TEXT,
     blocked BOOLEAN NOT NULL DEFAULT false,
     is_admin BOOLEAN NOT NULL DEFAULT false,
     remember_token TEXT
@@ -55,6 +55,7 @@ CREATE TABLE oauth_user (
     user_id INTEGER NOT NULL,
     provider_type PROVIDER NOT NULL,
     provider_token TEXT NOT NULL,
+    provider_refresh_token TEXT,
     FOREIGN KEY (user_id) REFERENCES user_profile ON DELETE CASCADE,
     UNIQUE (provider_type, provider_token) DEFERRABLE INITIALLY DEFERRED
 );
