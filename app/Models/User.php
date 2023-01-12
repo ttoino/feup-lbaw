@@ -6,13 +6,14 @@ use App\Events\UserCreated;
 use App\Events\UserDeleted;
 use App\Events\UserUpdated;
 use App\Listeners\CreateDefaultProfilePic;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class User extends Authenticatable {
+class User extends Authenticatable implements MustVerifyEmail {
     use Notifiable, HasFactory;
 
     const DELETED_USER = [
