@@ -43,7 +43,7 @@ a {
 }
 
 #footer {
-    @extend .bg-light;
+    @extend .bg-body-tertiary;
 
     nav {
         @extend .nav, .justify-content-center;
