@@ -28,10 +28,14 @@
                 </p>
                 <div
                     class="hstack gap-4 mb-3 justify-content-center justify-content-md-start">
-                    <a href="{{ route('register') }}"
-                        class="btn btn-light">Register</a>
-                    <a href="{{ route('login') }}"
-                        class="btn btn-outline-light">Login</a>
+                    <x-button href="{{ route('register') }}" type="link"
+                        color="light">
+                        Register
+                    </x-button>
+                    <x-button href="{{ route('login') }}" type="link"
+                        color="light" outline>
+                        Login
+                    </x-button>
                 </div>
             </div>
         </div>

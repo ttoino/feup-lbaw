@@ -16,11 +16,7 @@ class EmailVerificationController extends Controller {
     public function verifyEmail(EmailVerificationRequest $request) {
         $request->fulfill();
 
-        // Auth::login($request->user(), true);
-
-        dd($request->user(), $request->user()->hasVerifiedEmail());
-
-        // return redirect()->route('home');
+        return redirect()->route('home');
     }
 
     public function sendNewVerificationEmail(Request $request) {

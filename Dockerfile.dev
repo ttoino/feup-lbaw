@@ -52,6 +52,8 @@ COPY --chown=www-data . .
 
 RUN rm .env*
 COPY --chown=www-data .env .env
+COPY --chown=www-data .env.dev .env.dev
+RUN cat .env.dev >> .env
 
 RUN composer dumpautoload
 

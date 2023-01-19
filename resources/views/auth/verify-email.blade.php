@@ -3,10 +3,13 @@
 @push('main-classes', 'align-items-center justify-content-center flex-column ')
 
 @section('content')
-    A confirmation email has been sent to the address you specified.
+    <p>A confirmation email has been sent to you.</p>
 
     <form action="{{ route('verification.send') }}" method="POST">
         @csrf
-        <input type="submit" class="btn btn-primary" value="Resend Verification Email">
+
+        <x-button type="submit">
+            Send again
+        </x-button>
     </form>
 @endsection

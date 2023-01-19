@@ -14,17 +14,12 @@ use App\Models\User;
 
 class OAuthController extends Controller {
 
-    public function redirectOAuth(Request $request) {
-        $provider = $request->route('provider');
-
+    public function redirectOAuth($provider) {
         return Socialite::driver($provider)->redirect();
     }
 
-    public function handleOAuthCallback(Request $request) {
-        $provider = $request->route('provider');
-
-        // FIXME: pretty sure this cannot be stateless but oh well
-        $oAuthUser = Socialite::driver($provider)->stateless()->user();
+    public function handleOAuthCallback($provider) {
+        $oAuthUser = Socialite::driver($provider)->user();
 
         $user = User::firstWhere('email', $oAuthUser->getEmail());
 
@@ -56,7 +51,6 @@ class OAuthController extends Controller {
         }
 
         Auth::login($user, true);
-        $request->session()->regenerate();
 
         return redirect()->route('home');
     }

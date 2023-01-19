@@ -4,63 +4,29 @@
 
 @section('form')
 
-    <p class="text-center">Sign In with
-        <a href="{{ route('oauth.redirect', ['provider' => 'github']) }}" class="link-primary">Github</a>
-    </p>
-    
-    <div class="form-floating">
-        <input aria-describedby="email-feedback" placeholder=""
-            @class([
-                'form-control',
-                'is-invalid' => $errors->has('email')
-            ])
-            id="email" type="email" name="email" value="{{ old('email') }}"
-            required autofocus>
-        <label for="email" class="form-label">E-mail</label>
-        <div class="invalid-feedback" id="email-feedback">
-            @error('email')
-                {{ $message }}
-            @else
-                Invalid email
-            @enderror
-        </div>
-    </div>
+    <x-form.textfield type="email" name="email" autocomplete="email" required autofocus>
+        Email
+    </x-form.textfield>
+    <x-form.textfield type="password" name="password" autocomplete="current-password" required>
+        Password
+    </x-form.textfield>
 
-    <div class="form-floating input-group has-validation password-input">
-        <input placeholder=""
-            @class([
-                'form-control',
-                'is-invalid' => $errors->has('password')
-            ])
-            aria-describedby="password-feedback" id="password" type="password"
-            name="password" required>
-        <label for="password" class="form-label">Password</label>
-        <button type="button" class="btn btn-outline-primary"><i
-                class="bi"></i></button>
-        <div class="invalid-feedback" id="password-feedback">
-            @error('password')
-                {{ $message }}
-            @else
-                Invalid password
-            @enderror
-        </div>
-    </div>
+    <x-form.check name="remember">Remember me</x-form.check>
 
-    <div class="form-check">
-        <input type="checkbox" class="form-check-input" name="remember"
-            id="remember" {{ old('remember') ? 'checked' : '' }}>
-        <label class="form-check-label" for="remember">Remember Me</label>
-    </div>
-
-    <button type="submit" class="btn btn-primary">
+    <x-button type="submit">
         Login
-    </button>
+    </x-button>
 
-    <p class="text-center">Don't have an account?
+    <x-button.gh/>
+    <x-button.google/>
+
+    <div class="text-center">
+        Don't have an account?
         <a href="{{ route('register') }}" class="link-primary">Register</a>
-    </p>
+    </div>
 
-    <p class="text-center">Forgot your password?
-        <a href="{{ route('password.request') }}" class="link-primary">Click here to reset it</a>
-    </p>
+    <div class="text-center">
+        Forgot your password?
+        <a href="{{ route('password.request') }}" class="link-primary">Reset it</a>
+    </div>
 @endsection

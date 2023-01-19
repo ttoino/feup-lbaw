@@ -5,58 +5,22 @@
 @section('action', route('password.reset-action'))
 
 @section('form')
-    <div class="form-floating">
-        <input aria-describedby="email-feedback" placeholder=""
-            class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" id="email" type="email" name="email"
-            value="{{ old('email', request()->query('email')) }}" required>
-        <label for="email" class="form-label">E-mail</label>
-        <div class="invalid-feedback" id="email-feedback">
-            @error('email')
-                {{ $message }}
-            @else
-                Invalid email
-            @enderror
-        </div>
-    </div>
+    <x-form.textfield type="email" name="email" autocomplete="email"
+        value="{{ request()->query('email') }}" required autofocus>
+        Email
+    </x-form.textfield>
 
-    <div class="form-floating input-group has-validation password-input">
-        <input placeholder="" class="form-control {{ $errors->has('new-password') ? 'is-invalid' : '' }}"
-            aria-describedby="new-password-feedback" id="new-password" type="password" name="password" required>
-        <label for="new-password" class="form-label">New Password</label>
-        <button type="button" class="btn btn-outline-primary"><i class="bi"></i></button>
-        <div class="invalid-feedback" id="new-password-feedback">
-            @error('new-password')
-                {{ $message }}
-            @else
-                Invalid new password
-            @enderror
-        </div>
-    </div>
+    <x-form.textfield type="password" name="password" autocomplete="new-password" required>
+        Password
+    </x-form.textfield>
 
-
-    <div class="form-floating input-group has-validation password-input">
-        <input placeholder="" class="form-control {{ $errors->has('password-confirm') ? 'is-invalid' : '' }}"
-            aria-describedby="password-confirm-feedback" id="password-confirm" type="password" name="password_confirmation"
-            required>
-        <label for="password-confirm" class="form-label">Confirm
-            new password</label>
-        <button type="button" class="btn btn-outline-primary"><i class="bi"></i></button>
-        <div class="invalid-feedback" id="password-confirm-feedback">
-            @error('password_confirmation')
-                {{ $message }}
-            @else
-                Invalid password confirmation
-            @enderror
-        </div>
-    </div>
+    <x-form.textfield type="password" name="password" autocomplete="new-password" required>
+        Confirm password
+    </x-form.textfield>
 
     <input type="hidden" name="token" value="{{ $token }}">
 
-    <button type="submit" class="btn btn-primary">
+    <x-button type="submit">
         Reset password
-    </button>
-
-    <p class="text-center">Already have an account?
-        <a class="link-primary" href="{{ route('login') }}">Login</a>
-    </p>
+    </x-button>
 @endsection

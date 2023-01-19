@@ -58,7 +58,9 @@ COPY --from=assets /var/www/public ./public
 COPY . .
 
 RUN rm .env*
-COPY .env.prod .env
+COPY .env .env
+COPY .env.prod .env.prod
+RUN cat .env.prod >> .env
 
 RUN composer dumpautoload
 RUN php artisan storage:link

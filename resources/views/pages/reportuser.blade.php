@@ -21,7 +21,7 @@
         </div>
     </div>
 
-    <button type="submit" class="btn btn-primary">
+    <x-button type="submit">
         Report
-    </button>
+    </x-button>
 @endsection
