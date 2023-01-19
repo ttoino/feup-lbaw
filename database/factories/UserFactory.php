@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class UserFactory extends Factory {
     /**
@@ -22,12 +23,11 @@ class UserFactory extends Factory {
         return [
             'name' => $this->faker->name,
             'email' => $this->faker->unique()->safeEmail,
-            // 'email_verified_at' => now(),
+            'email_verified_at' => null,
             'password' => '$2a$12$HXIQ3hqLzAE/t6Z4.aL1Ne75CR26WL7JESGTuaKmiUF78ZPA13d9e', // password123
             'is_admin' => false,
-            'blocked' => false
-            // 'remember_token' => Str::random(10),
-
+            'blocked' => false,
+            'remember_token' => Str::random(10)
         ];
     }
 
@@ -40,6 +40,14 @@ class UserFactory extends Factory {
         return $this->state(function (array $attributes) {
             return [
                 'is_admin' => true,
+            ];
+        });
+    }
+
+    public function verified() {
+        return $this->state(function (array $attributes) {
+            return [
+                'email_verified_at' => now(),
             ];
         });
     }

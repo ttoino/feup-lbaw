@@ -19,16 +19,16 @@ class UserSeeder extends Seeder {
      * @return void
      */
     public function run() {
-        User::factory()->admin()->state(new Sequence(
+        User::factory()->admin()->verified()->state(new Sequence(
             fn ($sequence) => [ 'email' => "admin$sequence->index@example.com" ]
         ))->count(UserSeeder::ADMIN_COUNT)->create();
         
-        User::factory()->count(UserSeeder::NORMAL_COUNT)->state(new Sequence(
+        User::factory()->verified()->state(new Sequence(
             fn ($sequence) => [ 'email' => "user$sequence->index@example.com" ]
-        ))->create();
+        ))->count(UserSeeder::NORMAL_COUNT)->create();
 
-        User::factory()->blocked()->count(UserSeeder::BLOCKED_COUNT)->state(new Sequence(
+        User::factory()->blocked()->verified()->state(new Sequence(
             fn ($sequence) => [ 'email' => "blocked$sequence->index@example.com" ]
-        ))->create();
+        ))->count(UserSeeder::BLOCKED_COUNT)->create();
     }
 }

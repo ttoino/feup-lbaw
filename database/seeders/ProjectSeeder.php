@@ -26,6 +26,7 @@ class ProjectSeeder extends Seeder {
             ->sequence(
                 fn ($sequence) => ['email' => "coordinator$sequence->index@example.com"]
             )
+            ->verified()
             ->count(ProjectSeeder::COORDINATOR_COUNT)
             ->create();
 
