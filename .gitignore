@@ -6,7 +6,7 @@
 /public/fonts/vendor/**
 /storage/*.key
 /vendor
-.env.prod
+.env.*
 .phpunit.result.cache
 docker-compose.override.yml
 Homestead.json
