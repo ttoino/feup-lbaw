@@ -1,7 +1,7 @@
 @props(['body-class' => '', 'main-class' => ''])
 
 <x-layout.no-bar :$body-class>
-    <x-navbar/>
+    <x-navbar />
 
     <main class="d-flex flex-fill {{ $mainClasses }}">
         {{ $slot }}

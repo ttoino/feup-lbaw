@@ -10,16 +10,14 @@
             <h2 class="h1" data-render-text="name">{{ $project->name }}</h2>
             <p>
                 Created on
-                <time data-render-datetime="creation_date.iso"
-                    data-render-text="creation_date.datetime"
+                <time data-render-datetime="creation_date.iso" data-render-text="creation_date.datetime"
                     datetime="{{ $project->creation_date['iso'] }}">
                     {{ $project->creation_date['datetime'] }}
                 </time>
             </p>
             <p>
                 Last edited
-                <time data-render-datetime="last_modification_date.iso"
-                    data-render-text="last_modification_date.long_diff"
+                <time data-render-datetime="last_modification_date.iso" data-render-text="last_modification_date.long_diff"
                     datetime="{{ $project->last_modification_date ? $project->last_modification_date['iso'] : '' }}">
                     {{ $project->last_modification_date ? $project->last_modification_date['long_diff'] : 'never' }}
                 </time>
@@ -62,8 +60,7 @@
             @endcan
 
             @can('report', $project)
-                <a href="{{ route('project.report', ['project' => $project]) }}"
-                    class="btn btn-outline-danger">
+                <a href="{{ route('project.report', ['project' => $project]) }}" class="btn btn-outline-danger">
                     Report Project
                 </a>
             @endcan
@@ -73,10 +70,9 @@
 
         <form id="edit-project-form" class="edit needs-validation" novalidate>
             <div class="form-floating">
-                <input aria-describedby="name-feedback" placeholder=""
-                    data-render-value="name" class="form-control" id="name"
-                    type="text" name="name" value="{{ $project->name }}"
-                    minlength="6" maxlength="512" required autofocus>
+                <input aria-describedby="name-feedback" placeholder="" data-render-value="name" class="form-control"
+                    id="name" type="text" name="name" value="{{ $project->name }}" minlength="6" maxlength="512"
+                    required autofocus>
                 <label for="name" class="form-label">Name</label>
                 <div class="invalid-feedback" id="name-feedback">
                     Invalid name
@@ -84,9 +80,8 @@
             </div>
 
             <div class="form-floating">
-                <textarea placeholder="" class="form-control auto-resize"
-                    data-render-value="description.raw" aria-describedby="description-feedback"
-                    id="description" name="description" minlength="6" maxlength="512" required>{{ $project->description['raw'] }}</textarea>
+                <textarea placeholder="" class="form-control auto-resize" data-render-value="description.raw"
+                    aria-describedby="description-feedback" id="description" name="description" minlength="6" maxlength="512" required>{{ $project->description['raw'] }}</textarea>
                 <label for="description" class="form-label">Description</label>
                 <div class="invalid-feedback" id="description-feedback">
                     Invalid description

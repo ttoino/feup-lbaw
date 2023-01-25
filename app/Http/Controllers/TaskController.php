@@ -202,7 +202,7 @@ class TaskController extends Controller {
         $task_comment = new TaskComment();
 
         $task_comment->content = $data['content'];
-        $task_comment->author_id = Auth::user()->id;
+        $task_comment->author_id = $request->user()->id;
         $task_comment->task_id = $task->id;
         $task_comment->save();
 

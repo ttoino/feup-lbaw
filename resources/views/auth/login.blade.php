@@ -17,8 +17,8 @@
         Login
     </x-button>
 
-    <x-button.gh/>
-    <x-button.google/>
+    <x-button.gh />
+    <x-button.google />
 
     <div class="text-center">
         Don't have an account?

@@ -17,8 +17,7 @@
     <section class="forum-threads">
         @if (Auth::user()?->projects->contains($project) && !$project->archived)
             <header>
-                <a id="new-thread-button" href="#new-thread-offcanvas" role="button"
-                    @class(['btn', 'btn-primary'])>
+                <a id="new-thread-button" href="#new-thread-offcanvas" role="button" @class(['btn', 'btn-primary'])>
                     <i class="bi bi-plus"></i>New Thread
                 </a>
             </header>
@@ -44,8 +43,7 @@
                 <h2 class="offcanvas-title h4" id="new-thread-offcanvas-title">
                     New thread
                 </h2>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-                    data-bs-target="#new-thread-offcanvas"
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#new-thread-offcanvas"
                     aria-label="Close"></button>
             </header>
             @include('partials.project.forum.new-thread')

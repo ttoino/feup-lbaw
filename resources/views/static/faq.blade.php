@@ -16,8 +16,8 @@
             <div class=question><strong>How do I create a project?</strong></div>
             <div class=answer>To create a project, you must have an account on the
                 platform.
-                You can easily start a new project, all you have to do is go to <a
-                    href={{ route('project.list') }} class='text-primary'>your
+                You can easily start a new project, all you have to do is go to <a href={{ route('project.list') }}
+                    class='text-primary'>your
                     projects</a> and fill the form with essential
                 information about it. Afterwards, you can edit it and organize it
                 your

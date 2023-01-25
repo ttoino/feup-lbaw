@@ -2,10 +2,7 @@
 
 namespace App\Notifications;
 
-use App\Models\ProjectInvitation;
 use App\Models\Project;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
 class ProjectInvite extends Notification {
@@ -45,7 +42,7 @@ class ProjectInvite extends Notification {
         return (new MailMessage)
                     ->line("You've been invited to join " . $this->project->name . ".")
                     ->action('Join this project', url($this->url))
-                    ->line('Thank you for using our application!');
+                    ->line('If you think this was not intended for you or if you do not have interest in joining this project, please ignore this message.');
     }
 
     /**

@@ -1,16 +1,20 @@
 @props(['name', 'type' => 'text'])
 @php($id ??= $name)
 
-<div @class(['form-floating', 'input-group has-validation password-input' => $type == 'password'])>
-    <input {{ $attributes->merge([
+<div @class([
+    'form-floating',
+    'input-group has-validation password-input' => $type == 'password',
+])>
+    <input
+        {{ $attributes->merge([
             'class' => 'form-control',
             'placeholder' => '',
             'name' => $name,
             'id' => $id,
-            'type' => $type
+            'type' => $type,
         ]) }}
         aria-describedby="{{ $id }}-feedback">
-    <label for="{{ $id }}" class="form-label">{{$slot}}</label>
+    <label for="{{ $id }}" class="form-label">{{ $slot }}</label>
     @if ($type == 'password')
         <x-button outline icon />
     @endif

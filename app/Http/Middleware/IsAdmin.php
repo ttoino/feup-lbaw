@@ -6,8 +6,10 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class IsAdmin
-{
+/**
+ * Checks if the given user is an admin.
+ */
+class IsAdmin {
     /**
      * Handle an incoming request.
      *
@@ -15,9 +17,8 @@ class IsAdmin
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next)
-    {
-        if (!Auth::user()?->is_admin) {
+    public function handle(Request $request, Closure $next) {
+        if (!$request->user()?->is_admin) {
             return abort(403, 'User must be an admin');
         }
 

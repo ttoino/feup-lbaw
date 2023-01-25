@@ -18,8 +18,7 @@
             @break
 
             @case('App\Notifications\ProjectArchived')
-                <a class="stretched-link"
-                    href={{ route('project', ['project' => $item->json['project'] ?? 0]) }}>
+                <a class="stretched-link" href={{ route('project', ['project' => $item->json['project'] ?? 0]) }}>
                     <strong>{{ $item->json['project']->name ?? 'Deleted project' }}</strong>
                     has been archived.
                 </a>
@@ -64,8 +63,7 @@
             {{ $item->creation_date['long_diff'] }}
         </time>
     </div>
-    <button type="button" style="z-index: 100"
-        class="read-notification-button btn btn-outline-primary">
+    <button type="button" style="z-index: 100" class="read-notification-button btn btn-outline-primary">
         <i class="bi bi-check-lg"></i>
         Mark as read
     </button>

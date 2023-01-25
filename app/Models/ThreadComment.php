@@ -58,7 +58,7 @@ class ThreadComment extends Model {
     }
 
     protected function editable(): Attribute {
-        return Attribute::make(fn() => Auth::user()?->can('update', $this));
+        return Attribute::make(get: fn() => Auth::user()?->can('update', $this));
     }
 
     protected $table = 'thread_comment';

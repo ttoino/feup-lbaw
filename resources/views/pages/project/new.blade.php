@@ -7,9 +7,8 @@
 
     <div class="form-floating">
         <input aria-describedby="name-feedback" placeholder=""
-            class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}"
-            id="name" type="text" name="name" value="{{ old('name') }}"
-            minlength="6" maxlength="512" required autofocus>
+            class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" id="name" type="text" name="name"
+            value="{{ old('name') }}" minlength="6" maxlength="512" required autofocus>
         <label for="name" class="form-label">Name</label>
         <div class="invalid-feedback" id="name-feedback">
             Invalid name
@@ -17,10 +16,8 @@
     </div>
 
     <div class="form-floating">
-        <textarea placeholder=""
-            class="form-control auto-resize {{ $errors->has('description') ? 'is-invalid' : '' }}"
-            aria-describedby="description-feedback" id="description" name="description"
-            minlength="6" maxlength="512" required>{{ old('description') }}</textarea>
+        <textarea placeholder="" class="form-control auto-resize {{ $errors->has('description') ? 'is-invalid' : '' }}"
+            aria-describedby="description-feedback" id="description" name="description" minlength="6" maxlength="512" required>{{ old('description') }}</textarea>
         <label for="description" class="form-label">Description</label>
         <div class="invalid-feedback" id="description-feedback">
             Invalid description

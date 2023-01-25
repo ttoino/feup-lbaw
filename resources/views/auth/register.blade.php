@@ -3,8 +3,7 @@
 @section('title', 'Register')
 
 @section('form')
-    <x-form.textfield name="name" autocomplete="username"
-        minlength=6 maxlength=255 required autofocus>
+    <x-form.textfield name="name" autocomplete="username" minlength=6 maxlength=255 required autofocus>
         Name
     </x-form.textfield>
 
@@ -24,8 +23,8 @@
         Register
     </x-button>
 
-    <x-button.gh/>
-    <x-button.google/>
+    <x-button.gh />
+    <x-button.google />
 
     <div class="text-center">Already have an account?
         <a class="link-primary" href="{{ route('login') }}">Login</a>

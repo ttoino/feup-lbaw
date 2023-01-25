@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller {
-    public function show() {
+    public function show(Request $request) {
 
-        $user = Auth::user();
+        $user = $request->user();
 
         if ($user === null)
             return response()->view('pages.home');

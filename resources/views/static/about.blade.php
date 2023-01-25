@@ -10,8 +10,7 @@
             without the need to manually
             keep track of what needs
             be done, we can help you. <br>
-            <a href={{ route('home') }}><strong
-                    class='text-primary'>Atrellado</strong></a> is a project
+            <a href={{ route('home') }}><strong class='text-primary'>Atrellado</strong></a> is a project
             developed by
             a small group of students as a product targeted at teams that
             want to manage projects effectively.

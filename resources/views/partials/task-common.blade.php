@@ -9,8 +9,7 @@
     </a>
 
     <div class="bottom-row">
-        <ul class="assignees" data-render-list="assignees,#assignee-template"
-            data-render-attr="assignees.length,length"
+        <ul class="assignees" data-render-list="assignees,#assignee-template" data-render-attr="assignees.length,length"
             data-length="{{ $task->assignees->count() }}">
             @each('partials.project.board.task-assignee', $task->assignees, 'assignee')</ul>
         <span class="comments" data-render-attr="comments.length,comment-count"
@@ -20,5 +19,4 @@
     </div>
 </div>
 
-<i data-render-class-condition="completed,d-none,false"
-    @class(['completed-check', 'd-none' => !$task->completed])></i>
+<i data-render-class-condition="completed,d-none,false" @class(['completed-check', 'd-none' => !$task->completed])></i>

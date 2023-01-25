@@ -30,7 +30,7 @@ class UserController extends Controller {
 
     public function showNotifications(Request $request) {
 
-        $user = Auth::user();
+        $user = $request->user();
 
         $notifications = $user->unreadNotifications()->cursorPaginate(10);
 
@@ -106,6 +106,7 @@ class UserController extends Controller {
         if (isset($data['profile_picture'])) {
             Files::convertToWebp($data['profile_picture'], 512, 1);
 
+            // TODO: change this to use accessor
             $path = Storage::putFileAs("public/users/", $data['profile_picture'], "$user->id.webp");
 
             if ($path === false) {
@@ -181,7 +182,7 @@ class UserController extends Controller {
 
         $report->reason = $requestData['reason'];
         $report->user_profile_id = $user->id;
-        $report->creator_id = Auth::user()->id;
+        $report->creator_id = $request->user()->id;
         $report->save();
 
         return redirect()->route('user.profile', ['user' => $user]);

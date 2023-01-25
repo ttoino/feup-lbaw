@@ -56,7 +56,7 @@ class ProjectController extends Controller {
     }
 
     public function leaveProject(Request $request, Project $project) {
-        $user = Auth::user();
+        $user = $request->user();
 
         $this->authorize('leaveProject', $project);
 
@@ -107,9 +107,9 @@ class ProjectController extends Controller {
             : redirect()->route('project.members', ['project' => $project]);
     }
 
-    public function searchProjects(string $searchTerm) {
+    public function searchProjects(Request $request, string $searchTerm) {
 
-        $userProjects = Auth::user()->projects();
+        $userProjects = $request->user()->projects();
 
         if (!empty($searchTerm))
             $userProjects = $userProjects->whereRaw('(fts_search @@ plainto_tsquery(\'english\', ?) OR project.name = ?)', [$searchTerm, $searchTerm])
@@ -239,7 +239,7 @@ class ProjectController extends Controller {
 
         $searchTerm = $request->query('q') ?? '';
 
-        $projects = $this->searchProjects($searchTerm)->withQueryString();
+        $projects = $this->searchProjects($request, $searchTerm)->withQueryString();
 
         return response()->view('pages.project.list', ['projects' => $projects]);
     }
@@ -270,7 +270,7 @@ class ProjectController extends Controller {
 
         $this->authorize('toggleFavorite', $project);
 
-        $member = $project->users()->get()->first(fn(User $user) => $user->id === Auth::user()->id);
+        $member = $project->users()->get()->first(fn(User $user) => $user->id === $request->user()->id);
 
         $member->pivot->is_favorite = !$member->pivot->is_favorite;
         $member->pivot->save();
@@ -408,7 +408,7 @@ class ProjectController extends Controller {
 
         $report->reason = $requestData['reason'];
         $report->project_id = $project->id;
-        $report->creator_id = Auth::user()->id;
+        $report->creator_id = $request->user()->id;
         $report->save();
 
         return redirect()->route('project', ['project' => $project]);

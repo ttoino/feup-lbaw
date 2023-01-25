@@ -32,18 +32,16 @@
                 searchable, such as projects, tasks or users.</li>
             <li><strong>Information</strong> - In the bottom of the page you can
                 find
-                the <a class="link-primary"
-                    href={{ route('static', ['name' => 'about']) }}>About
+                the <a class="link-primary" href={{ route('static', ['name' => 'about']) }}>About
                     us</a>
                 page,
                 where you'll find some information about this app.
-                Also, you can check some <a class="link-primary"
-                    href={{ route('static', ['name' => 'faq']) }}>Frequently Asked
+                Also, you can check some <a class="link-primary" href={{ route('static', ['name' => 'faq']) }}>Frequently
+                    Asked
                     Questions</a>
                 and see if any question you might have is already there and if not
                 you
-                can contact us in the <a class="link-primary"
-                    href={{ route('static', ['name' => 'contacts']) }}>Contacts</a>
+                can contact us in the <a class="link-primary" href={{ route('static', ['name' => 'contacts']) }}>Contacts</a>
                 page.</li>
         </section>
     </div>

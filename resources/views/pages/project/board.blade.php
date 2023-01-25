@@ -24,11 +24,10 @@
         @can('edit', $project)
             @include('partials.project.board.task-group')
 
-            <a id="new-task-button" data-bs-toggle="offcanvas" href="#new-task-offcanvas"
-                role="button" @class([
+            <a id="new-task-button" data-bs-toggle="offcanvas" href="#new-task-offcanvas" role="button"
+                @class([
                     'disabled' => $project->archived,
-                ])
-                aria-controls="new-task-offcanvas">
+                ]) aria-controls="new-task-offcanvas">
                 <i class="bi bi-plus"></i> Create task
             </a>
         @endcan
@@ -45,8 +44,8 @@
                 <h2 class="offcanvas-title h4" id="new-task-offcanvas-title">
                     New task
                 </h2>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-                    data-bs-target="#new-task-offcanvas" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#new-task-offcanvas"
+                    aria-label="Close"></button>
             </header>
             @include('partials.project.task.new')
         </aside>

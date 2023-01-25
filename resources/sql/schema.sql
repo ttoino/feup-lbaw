@@ -48,7 +48,8 @@ CREATE TABLE user_profile (
     blocked BOOLEAN NOT NULL DEFAULT false,
     is_admin BOOLEAN NOT NULL DEFAULT false,
     remember_token TEXT,
-    email_verified_at TIMESTAMP
+    email_verified_at TIMESTAMP,
+    profile_picture_path TEXT
 );
 
 CREATE TABLE oauth_user (

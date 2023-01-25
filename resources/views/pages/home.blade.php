@@ -10,15 +10,14 @@
         'p-4',
     ])>
         <div class="d-flex gap-4 align-items-center">
-            <img width="40" height="40" src="{{ asset('logo.svg') }}"
-                alt="{{ config('app.name', 'Laravel') }} logo"
+            <img width="40" height="40" src="{{ asset('logo.svg') }}" alt="{{ config('app.name', 'Laravel') }} logo"
                 class="d-none d-md-block" style="width: 200px; height: 200px">
 
             <div class="vstack text-center text-md-start" style="max-width: 40ch">
                 <h1 class="display-1">
                     <img width="40" height="40" src="{{ asset('logo.svg') }}"
-                        alt="{{ config('app.name', 'Laravel') }} logo"
-                        class="d-md-none w-auto align-top" style="height: 1.2em">
+                        alt="{{ config('app.name', 'Laravel') }} logo" class="d-md-none w-auto align-top"
+                        style="height: 1.2em">
                     {{ config('app.name', 'Laravel') }}
                 </h1>
 
@@ -26,14 +25,11 @@
                     Sign in or create an account to start
                     managing your projects with us!
                 </p>
-                <div
-                    class="hstack gap-4 mb-3 justify-content-center justify-content-md-start">
-                    <x-button href="{{ route('register') }}" type="link"
-                        color="light">
+                <div class="hstack gap-4 mb-3 justify-content-center justify-content-md-start">
+                    <x-button href="{{ route('register') }}" type="link" color="light">
                         Register
                     </x-button>
-                    <x-button href="{{ route('login') }}" type="link"
-                        color="light" outline>
+                    <x-button href="{{ route('login') }}" type="link" color="light" outline>
                         Login
                     </x-button>
                 </div>

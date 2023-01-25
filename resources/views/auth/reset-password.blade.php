@@ -5,8 +5,8 @@
 @section('action', route('password.reset-action'))
 
 @section('form')
-    <x-form.textfield type="email" name="email" autocomplete="email"
-        value="{{ request()->query('email') }}" required autofocus>
+    <x-form.textfield type="email" name="email" autocomplete="email" value="{{ request()->query('email') }}" required
+        autofocus>
         Email
     </x-form.textfield>
 

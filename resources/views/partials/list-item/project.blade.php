@@ -1,8 +1,7 @@
 <li class="list-group-item list-group-item-action position-relative d-flex flex-row align-items-center gap-2"
     data-project-id="{{ $item->id }}">
     <div class="vstack flex-fill">
-        <a href="{{ route('project', ['project' => $item]) }}"
-            class="stretched-link fw-bold">
+        <a href="{{ route('project', ['project' => $item]) }}" class="stretched-link fw-bold">
             {{ $item->name }}
         </a>
         <span>Coordinator:
@@ -14,8 +13,8 @@
     @endif
 
     @can('admin-action')
-        <a href="{{ route('admin.reports.project', ['project' => $item]) }}"
-            class="btn btn-outline-secondary" style="z-index: 5">Reports
+        <a href="{{ route('admin.reports.project', ['project' => $item]) }}" class="btn btn-outline-secondary"
+            style="z-index: 5">Reports
             ({{ $item->reports->count() }})</a>
     @endcan
 
