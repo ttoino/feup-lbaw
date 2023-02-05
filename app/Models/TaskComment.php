@@ -14,7 +14,8 @@ use Spatie\LaravelMarkdown\MarkdownRenderer;
 class TaskComment extends Model {
     use HasFactory;
 
-    public $timestamps = false;
+    protected $CREATED_AT = 'creation_date';
+    protected $UPDATED_AT = 'edit_date';
 
     /**
      * The attributes that are mass assignable.

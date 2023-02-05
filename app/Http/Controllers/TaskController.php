@@ -173,9 +173,6 @@ class TaskController extends Controller {
             $task->assignees()->save($assignee);
         }
 
-        if ($task->isDirty(['name', 'description']))
-            $task->edit_date = now();
-
         $task->push();
 
         return $task->fresh();

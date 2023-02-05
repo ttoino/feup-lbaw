@@ -113,9 +113,6 @@ class ThreadCommentController extends Controller {
         if (($data['content'] ??= null) !== null)
             $threadComment->content = $data['content'];
 
-        if ($threadComment->isDirty())
-            $threadComment->edit_date = now();
-
         $threadComment->save();
 
         return $threadComment->fresh();

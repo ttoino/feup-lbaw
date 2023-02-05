@@ -4,15 +4,15 @@ namespace App\Models;
 
 use App\Casts\Datetime;
 use App\Casts\Markdown;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Spatie\LaravelMarkdown\MarkdownRenderer;
 
 class Task extends Model {
     use Notifiable, HasFactory;
-    public $timestamps = false;
+
+    protected $CREATED_AT = 'creation_date';
+    protected $UPDATED_AT = 'edit_date';
 
     /**
      * The attributes that are mass assignable.

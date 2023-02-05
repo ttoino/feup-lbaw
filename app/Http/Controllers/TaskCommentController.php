@@ -109,9 +109,6 @@ class TaskCommentController extends Controller {
         if (($data['content'] ??= null) !== null)
             $taskComment->content = $data['content'];
 
-        if ($taskComment->isDirty())
-            $taskComment->edit_date = now();
-
         $taskComment->save();
 
         return $taskComment->fresh();
