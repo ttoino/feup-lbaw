@@ -6,7 +6,6 @@ use App\Models\ThreadComment;
 use App\Models\Thread;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
 
 class ThreadCommentController extends Controller {
     /**
@@ -33,34 +32,34 @@ class ThreadCommentController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
-        $requestData = $request->all();
+        $this->threadCommentCreationValidator($request)->validate();
 
-        $this->threadCommentCreationValidator($requestData)->validate();
-
-        $thread = Thread::findOrFail($requestData['thread_id']);
+        $thread = Thread::findOrFail($request->input('thread_id'));
 
         $this->authorize('edit', $thread->project);
         $this->authorize('create', [ThreadComment::class, $thread]);
 
-        $threadComment = $this->createThreadComment($requestData);
+        $threadComment = $this->createThreadComment($request, $thread);
 
         return response()->json($threadComment);
     }
 
-    public function threadCommentCreationValidator(array $data) {
-        return Validator::make($data, [
+    public function threadCommentCreationValidator(Request $request) {
+        return Validator::make($request->all(), [
             'content' => 'required|string|min:0|max:512',
             'thread_id' => 'required|integer',
         ]);
     }
 
-    public function createThreadComment(array $data) {
+    public function createThreadComment(Request $request, Thread $thread) {
 
         $threadComment = new ThreadComment();
 
+        $data = $request->only(['content']);
+
         $threadComment->content = $data['content'];
-        $threadComment->author_id = Auth::user()->id;
-        $threadComment->thread_id = $data['thread_id'];
+        $threadComment->author_id = $request->user()->id;
+        $threadComment->thread_id = $thread->id;
 
         $threadComment->save();
 
@@ -88,28 +87,28 @@ class ThreadCommentController extends Controller {
      */
     public function update(Request $request, ThreadComment $threadComment) {
 
-        $requestData = $request->all();
-
-        $this->threadCommentEditionValidator($requestData)->validate();
+        $this->threadCommentEditionValidator($request)->validate();
 
         $thread = $threadComment->thread;
 
         $this->authorize('edit', $thread->project);
         $this->authorize('update', $threadComment);
 
-        $threadComment = $this->updateThreadComment($threadComment, $requestData);
+        $threadComment = $this->updateThreadComment($threadComment, $request);
 
         return response()->json($threadComment);
 
     }
 
-    public function threadCommentEditionValidator(array $data) {
-        return Validator::make($data, [
+    public function threadCommentEditionValidator(Request $request) {
+        return Validator::make($request->all(), [
             'content' => 'string|min:0|max:512',
         ]);
     }
 
-    public function updateThreadComment(ThreadComment $threadComment, array $data) {
+    public function updateThreadComment(ThreadComment $threadComment, Request $request) {
+
+        $data = $request->all(['content']);
 
         if (($data['content'] ??= null) !== null)
             $threadComment->content = $data['content'];

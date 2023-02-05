@@ -18,25 +18,24 @@ class TagController extends Controller {
      */
     public function store(Request $request) {
 
-        $requestData = $request->all();
+        $this->tagCreationValidator($request)->validate();
 
-        $this->tagCreationValidator($requestData)->validate();
-
-        $project = Project::findOrFail($requestData['project_id']);
+        $project = Project::findOrFail($request->input('project_id'));
 
         $this->authorize('edit', $project);
         $this->authorize('create', [Tag::class, $project]);
 
-        $tag = $this->createTag($requestData, $project);
+        $tag = $this->createTag($project, $request);
 
         return $request->wantsJson()
             ? response()->json($tag->toArray(), 201)
             : redirect()->route('project.tag', ['project' => $project, 'tag' => $tag]);
     }
 
-    public function createTag(array $data, Project $project) {
+    public function createTag(Project $project, Request $request) {
 
         $tag = new Tag();
+        $data = $request->only(['title', 'color']);
 
         $tag->title = $data['title'];
         $tag->color = intval(substr($data['color'], 1), 16);
@@ -46,8 +45,8 @@ class TagController extends Controller {
         return $tag->fresh();
     }
 
-    public function tagCreationValidator(array $data) {
-        return Validator::make($data, [
+    public function tagCreationValidator(Request $request) {
+        return Validator::make($request->all(), [
             'title' => 'required|string|min:6|max:50',
             'color' => 'required|string|regex:/^#[0-9a-f]{6}$/',
         ]);
@@ -76,27 +75,26 @@ class TagController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Tag $tag) {
-
-        $requestData = $request->all();
-
-        $this->tagEditionValidator($requestData)->validate();
+        $this->tagEditionValidator($request)->validate();
 
         $this->authorize('edit', $tag->project);
         $this->authorize('update', $tag);
 
-        $tag = $this->editTag($tag, $requestData);
+        $tag = $this->editTag($tag, $request);
 
         return response()->json($tag);
     }
 
-    public function tagEditionValidator(array $data) {
-        return Validator::make($data, [
+    public function tagEditionValidator(Request $request) {
+        return Validator::make($request->all(), [
             'title' => 'required|string|min:6|max:50',
             'color' => 'required|string|regex:/^#[0-9a-f]{6}$/',
         ]);
     }
 
-    public function editTag(Tag $tag, array $data) {
+    public function editTag(Tag $tag, Request $request) {
+
+        $data = $request->only(['title', 'color']);
 
         if (($data['title'] ??= null) !== null)
             $tag->title = $data['title'];

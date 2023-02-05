@@ -126,13 +126,11 @@ class ProjectController extends Controller {
     }
 
     public function store(Request $request) {
-        $requestData = $request->all();
-
-        $this->projectCreationValidator($requestData)->validate();
+        $this->projectCreationValidator($request)->validate();
 
         $this->authorize('create', Project::class);
 
-        $project = $this->createProject($requestData);
+        $project = $this->createProject($request);
 
         return $request->wantsJson()
             ? response()->json($project, 201)
@@ -144,14 +142,15 @@ class ProjectController extends Controller {
      *
      * @return Project The project created.
      */
-    public function createProject(array $data) {
+    public function createProject(Request $request) {
 
         $project = new Project();
+        $data = $request->all();
 
         $project->name = $data['name'];
         $project->archived = FALSE;
         $project->description = $data['description'];
-        $project->coordinator_id = Auth::user()->id;
+        $project->coordinator_id = $request->user()->id;
         $project->save();
 
         return $project;
@@ -163,8 +162,8 @@ class ProjectController extends Controller {
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function projectCreationValidator(array $data) {
-        return Validator::make($data, [
+    protected function projectCreationValidator(Request $request) {
+        return Validator::make($request->all(), [
             'name' => 'required|string|min:6|max:255',
             'description' => 'string|min:6|max:512',
         ]);
@@ -172,14 +171,12 @@ class ProjectController extends Controller {
 
 
     public function update(Request $request, Project $project) {
-        $requestData = $request->all();
-
-        $this->projectUpdateValidator($requestData)->validate();
+        $this->projectUpdateValidator($request)->validate();
 
         // this is different than 'edit' in that only the project's coordinator can update the project's attributes
         $this->authorize('update', $project);
 
-        $project = $this->updateProject($project, $requestData);
+        $project = $this->updateProject($project, $request);
 
         return $request->wantsJson()
             ? response()->json($project)
@@ -191,7 +188,9 @@ class ProjectController extends Controller {
      *
      * @return Project The project created.
      */
-    public function updateProject(Project $project, array $data) {
+    public function updateProject(Project $project, Request $request) {
+
+        $data = $request->all();
 
         if (($data['name'] ??= null) !== null)
             $project->name = $data['name'];
@@ -219,8 +218,8 @@ class ProjectController extends Controller {
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function projectUpdateValidator(array $data) {
-        return Validator::make($data, [
+    protected function projectUpdateValidator(Request $request) {
+        return Validator::make($request->all(), [
             'name' => 'string|min:6|max:255',
             'description' => 'string|min:6|max:512',
             'coordinator_id' => 'integer',
@@ -398,9 +397,10 @@ class ProjectController extends Controller {
     }
 
     public function report(Request $request, Project $project) {
-        $requestData = $request->all();
+        
+        $this->reportValidator($request);
 
-        $this->reportValidator($requestData);
+        $requestData = $request->all();
 
         $this->authorize('report', $project);
 
@@ -414,8 +414,8 @@ class ProjectController extends Controller {
         return redirect()->route('project', ['project' => $project]);
     }
 
-    protected function reportValidator(array $data) {
-        return Validator::make($data, [
+    protected function reportValidator(Request $request) {
+        return Validator::make($request->all(), [
             'reason' => 'string|min:6|max:512'
         ]);
     }

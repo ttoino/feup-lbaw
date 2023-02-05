@@ -22,28 +22,27 @@ class TaskGroupController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
-        $requestData = $request->all();
+        $this->taskGroupCreationValidator($request)->validate();
 
-        $this->taskGroupCreationValidator($requestData)->validate();
-
-        $project = Project::findOrFail($requestData['project_id']);
+        $project = Project::findOrFail($request->input('project_id'));
 
         $this->authorize('edit', $project);
         $this->authorize('create', [TaskGroup::class, $project]);
 
-        $taskGroup = $this->createTaskGroup($requestData);
+        $taskGroup = $this->createTaskGroup($request, $project);
 
         return $request->wantsJson()
             ? response()->json($taskGroup, 201)
             : redirect()->route('project', ['project' => $project]);
     }
 
-    public function createTaskGroup(array $data) {
+    public function createTaskGroup(Request $request, Project $project) {
 
         $taskGroup = new TaskGroup();
+        $data = $request->only(['name']);
 
         $taskGroup->name = $data['name'];
-        $taskGroup->project_id = $data['project_id'];
+        $taskGroup->project_id = $project->id;
         $taskGroup->position = (TaskGroup::where('project_id', $taskGroup->project_id)->max('position') ?? 0) + 1;
         $taskGroup->save();
 
@@ -56,8 +55,8 @@ class TaskGroupController extends Controller {
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function taskGroupCreationValidator(array $data) {
-        return Validator::make($data, [
+    protected function taskGroupCreationValidator(Request $request) {
+        return Validator::make($request->all(), [
             'name' => 'required|string|min:4|max:255',
             'description' => 'string|min:6|max:512',
             'project_id' => 'required|integer'
@@ -66,27 +65,27 @@ class TaskGroupController extends Controller {
 
     public function update(Request $request, TaskGroup $taskGroup) {
 
-        $requestData = $request->all();
-
-        $this->taskGroupUpdateValidator($requestData)->validate();
+        $this->taskGroupUpdateValidator($request)->validate();
 
         $this->authorize('edit', $taskGroup->project);
         $this->authorize('update', $taskGroup);
 
-        $taskGroup = $this->updateTaskGroup($taskGroup, $requestData);
+        $taskGroup = $this->updateTaskGroup($taskGroup, $request);
 
         return response()->json($taskGroup);
     }
 
-    protected function taskGroupUpdateValidator(array $data) {
-        return Validator::make($data, [
+    protected function taskGroupUpdateValidator(Request $request) {
+        return Validator::make($request->all(), [
             'position' => 'integer|min:0',
             'name' => 'string|min:4|max:255',
             'description' => 'string|min:6|max:512',
         ]);
     }
 
-    public function updateTaskGroup(TaskGroup $taskGroup, array $data) {
+    public function updateTaskGroup(TaskGroup $taskGroup, Request $request) {
+
+        $data = $request->all();
 
         if (($data['position'] ??= null) !== null)
             $taskGroup->position = $data['position'];

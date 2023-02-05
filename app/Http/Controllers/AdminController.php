@@ -46,6 +46,8 @@ class AdminController extends Controller {
     public function createUser(Request $request){
         Gate::authorize('admin-action');
         
+        $this->userCreationValidator($request)->validate();
+
         User::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
@@ -55,15 +57,15 @@ class AdminController extends Controller {
         return redirect()->route('admin.users');
     }
 
-    public function userCreationValidator(array $data) {
-        return Validator::make($data, [
+    public function userCreationValidator(Request $request) {
+        return Validator::make($request->all(), [
             'name' => 'required|string|min:6|max:255',
             'email' => 'required|string|email|unique:user_profile',
             'password' => [
-              'required', 
-              'confirmed', 
-              Password::min(8)
-                ->letters()
+                'required', 
+                'confirmed', 
+                Password::min(8)
+                  ->letters()
             ]
           ]);
     }

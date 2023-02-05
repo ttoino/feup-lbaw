@@ -7,6 +7,7 @@ use App\Models\Project;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Laravel\Ui\Presets\React;
 
 class ThreadController extends Controller {
     /**
@@ -36,38 +37,36 @@ class ThreadController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
+        $this->threadCreationValidator($request)->validate();
 
-        $requestData = $request->all();
-
-        $this->threadCreationValidator($requestData)->validate();
-
-        $project = Project::findOrFail($requestData['project_id']);
+        $project = Project::findOrFail($request->input('project_id'));
 
         $this->authorize('edit', $project);
         $this->authorize('create', [Thread::class, $project]);
 
-        $thread = $this->createThread($requestData, $project);
+        $thread = $this->createThread($request, $project);
 
         return $request->wantsJson()
             ? response()->json($thread->toArray(), 201)
             : redirect()->route('project.thread', ['project' => $project, 'thread' => $thread]);
     }
 
-    public function createThread(array $data, Project $project) {
+    public function createThread(Request $request, Project $project) {
 
         $thread = new Thread();
+        $data = $request->only(['title', 'content']);
 
         $thread->title = $data['title'];
         $thread->content = $data['content'];
-        $thread->author_id = Auth::user()->id;
+        $thread->author_id = $request->user()->id;
 
         $project->threads()->save($thread);
 
         return $thread->fresh();
     }
 
-    public function threadCreationValidator(array $data) {
-        return Validator::make($data, [
+    public function threadCreationValidator(Request $request) {
+        return Validator::make($request->all(), [
             'title' => 'required|string|min:6|max:50',
             'content' => 'required|string|min:6|max:512',
         ]);
@@ -99,26 +98,26 @@ class ThreadController extends Controller {
      */
     public function update(Request $request, Thread $thread) {
 
-        $requestData = $request->all();
-
-        $this->threadEditionValidator($requestData)->validate();
+        $this->threadEditionValidator($request)->validate();
 
         $this->authorize('edit', $thread->project);
         $this->authorize('update', $thread);
 
-        $thread = $this->editThread($thread, $requestData);
+        $thread = $this->editThread($thread, $request);
 
         return response()->json($thread);
     }
 
-    public function threadEditionValidator(array $data) {
-        return Validator::make($data, [
+    public function threadEditionValidator(Request $request) {
+        return Validator::make($request->all(), [
             'title' => 'string|min:6|max:50',
             'content' => 'string|min:6|max:512',
         ]);
     }
 
-    public function editThread(Thread $thread, array $data) {
+    public function editThread(Thread $thread, Request $request) {
+
+        $data = $request->only(['title', 'content']);
 
         if (($data['title'] ??= null) !== null)
             $thread->title = $data['title'];

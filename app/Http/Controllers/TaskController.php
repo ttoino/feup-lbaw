@@ -12,37 +12,35 @@ use App\Notifications\TaskCompleted;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller {
 
     public function store(Request $request) {
-        $requestData = $request->all();
+        $this->taskCreationValidator($request)->validate();
 
-        $this->taskCreationValidator($requestData)->validate();
-
-        $task_group = TaskGroup::findOrFail($requestData['task_group_id']);
+        $task_group = TaskGroup::findOrFail($request->input('task_group_id'));
         $project = Project::findOrFail($task_group->project_id);
 
         $this->authorize('edit', $project);
         $this->authorize('create', [Task::class, $task_group]);
 
-        $task = $this->createTask($requestData);
+        $task = $this->createTask($request, $task_group);
 
         return $request->wantsJson()
             ? response()->json($task, 201)
             : redirect()->route('project', ['project' => $project]);
     }
 
-    public function createTask(array $data) {
+    public function createTask(Request $request, TaskGroup $task_group) {
 
         $task = new Task();
+        $data = $request->all();
 
         $task->name = $data['name'];
         $task->description = $data['description'] ?? '';
-        $task->task_group_id = $data['task_group_id'];
+        $task->task_group_id = $task_group->id;
         $task->position = (Task::where('task_group_id', $task->task_group_id)->max('position') ?? 0) + 1;
-        $task->creator_id = Auth::user()->id;
+        $task->creator_id = $request->user()->id;
 
         $task->save();
 
@@ -71,8 +69,8 @@ class TaskController extends Controller {
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function taskCreationValidator(array $data) {
-        return Validator::make($data, [
+    protected function taskCreationValidator(Request $request) {
+        return Validator::make($request->all(), [
             'name' => 'required|string|min:4|max:255',
             'description' => 'nullable|string|min:6|max:512',
             'task_group_id' => 'required|integer',
@@ -99,7 +97,7 @@ class TaskController extends Controller {
             $assignee->notify(new TaskCompleted($task));
         }
 
-        return response()->json($task->toArray());
+        return response()->json($task);
     }
 
     public function incomplete(Task $task) {
@@ -110,7 +108,7 @@ class TaskController extends Controller {
         $task->completed = false;
         $task->save();
 
-        return response()->json($task->toArray());
+        return response()->json($task);
     }
 
     /**
@@ -135,21 +133,21 @@ class TaskController extends Controller {
 
     public function update(Request $request, Project $project, Task $task) {
 
-        $requestData = $request->all();
-
-        $this->editTaskValidator($requestData)->validate();
+        $this->editTaskValidator($request)->validate();
 
         $this->authorize('edit', $task->project);
         $this->authorize('edit', $task);
 
-        $task = $this->editTask($task, $requestData);
+        $task = $this->editTask($task, $request);
 
         return $request->wantsJson()
             ? response()->json($task)
             : redirect()->route('project.task.info', ['project' => $project, 'task' => $task]);
     }
 
-    public function editTask(Task $task, array $data) {
+    public function editTask(Task $task, Request $request) {
+
+        $data = $request->all();
 
         if (($data['task_group_id'] ??= null) !== null)
             $task->task_group_id = $data['task_group_id'];
@@ -183,8 +181,8 @@ class TaskController extends Controller {
         return $task->fresh();
     }
 
-    public function editTaskValidator(array $data) {
-        return Validator::make($data, [
+    public function editTaskValidator(Request $request) {
+        return Validator::make($request->all(), [
             'name' => 'string|min:4|max:255',
             'description' => 'nullable|string|min:6|max:512',
             'task_group_id' => 'integer',

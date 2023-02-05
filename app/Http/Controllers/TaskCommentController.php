@@ -32,34 +32,32 @@ class TaskCommentController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
-        $requestData = $request->all();
+        $this->taskCommentCreationValidator($request)->validate();
 
-        $this->taskCommentCreationValidator($requestData)->validate();
-
-        $task = Task::findOrFail($requestData['task_id']);
+        $task = Task::findOrFail($request->input('task_id'));
 
         $this->authorize('edit', $task->project);
         $this->authorize('create', [TaskComment::class, $task]);
 
-        $taskComment = $this->createTaskComment($requestData);
+        $taskComment = $this->createTaskComment($request, $task);
 
         return response()->json($taskComment, 201);
     }
 
-    public function taskCommentCreationValidator(array $data) {
-        return Validator::make($data, [
+    public function taskCommentCreationValidator(Request $request) {
+        return Validator::make($request->all(), [
             'content' => 'required|string|min:0|max:512',
             'task_id' => 'required|integer',
         ]);
     }
 
-    public function createTaskComment(array $data) {
+    public function createTaskComment(Request $request, Task $task) {
 
         $taskComment = new TaskComment();
 
-        $taskComment->content = $data['content'];
-        $taskComment->author_id = Auth::user()->id;
-        $taskComment->task_id = $data['task_id'];
+        $taskComment->content = $request->input('content');
+        $taskComment->author_id = $request->user()->id;
+        $taskComment->task_id = $task->id;
 
         $taskComment->save();
 
@@ -86,29 +84,27 @@ class TaskCommentController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, TaskComment $taskComment) {
-        
-        $requestData = $request->all();
-
-        $this->taskCommentEditionValidator($requestData)->validate();
+        $this->taskCommentEditionValidator($request)->validate();
 
         $task = $taskComment->task;
 
         $this->authorize('edit', $task->project);
         $this->authorize('update', $taskComment);
 
-        $taskComment = $this->updateTaskComment($taskComment, $requestData);
+        $taskComment = $this->updateTaskComment($taskComment, $request);
 
         return response()->json($taskComment);
-
     }
 
-    public function taskCommentEditionValidator(array $data) {
-        return Validator::make($data, [
+    public function taskCommentEditionValidator(Request $request) {
+        return Validator::make($request->all(), [
             'content' => 'string|min:0|max:512',
         ]);
     }
 
-    public function updateTaskComment(TaskComment $taskComment, array $data) {
+    public function updateTaskComment(TaskComment $taskComment, Request $request) {
+
+        $data = $request->only(['content']);
 
         if (($data['content'] ??= null) !== null)
             $taskComment->content = $data['content'];

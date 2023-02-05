@@ -12,6 +12,7 @@ use Illuminate\Validation\Rules\File;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class UserController extends Controller {
 
@@ -47,16 +48,17 @@ class UserController extends Controller {
      */
     public function store(Request $request) {
 
-        $requestData = $request->all();
+        $this->userCreationValidator($request)->validate();
 
-        $this->userCreationValidator($requestData)->validate();
-
-        $user = $this->storeUser($requestData);
+        $user = $this->storeUser($request);
 
         return response()->json($user->toArray(), 201);
     }
 
-    public function storeUser(array $data) {
+    public function storeUser(Request $request) {
+        
+        $data = $request->all();
+        
         $user = new User();
 
         $user->name = $data['name'];
@@ -69,8 +71,8 @@ class UserController extends Controller {
         return $user;
     }
 
-    public function userCreationValidator(array $data) {
-        return Validator::make($data, [
+    public function userCreationValidator(Request $request) {
+        return Validator::make($request->all(), [
             'name' => 'required|string|min:6|max:255',
             'email' => 'required|string|email|unique:user_profile',
             'password' => [
@@ -86,20 +88,21 @@ class UserController extends Controller {
 
     public function update(Request $request, User $user) {
 
-        $requestData = $request->all();
-
-        $this->userEditionValidator($requestData)->validate();
+        $this->userEditionValidator($request)->validate();
 
         $this->authorize('update', $user);
 
-        $user = $this->updateUser($user, $requestData);
+        $user = $this->updateUser($user, $request);
 
         return $request->wantsJson()
             ? response()->json($user->toArray(), 201)
             : redirect()->route('user.profile', ['user' => $user]);
     }
 
-    public function updateUser(User $user, array $data) {
+    public function updateUser(User $user, Request $request) {
+
+        $data = $request->all();
+
         if (($data['name'] ??= null) !== null)
             $user->name = $data['name'];
 
@@ -125,8 +128,8 @@ class UserController extends Controller {
         return $user;
     }
 
-    protected function userEditionValidator(array $data) {
-        return Validator::make($data, [
+    protected function userEditionValidator(Request $request) {
+        return Validator::make($request->all(), [
             'name' => 'string|min:6|max:255',
             'profile_picture' => [
                 File::image()
@@ -172,15 +175,13 @@ class UserController extends Controller {
     }
 
     public function report(Request $request, User $user) {
-        $requestData = $request->all();
-
-        $this->reportValidator($requestData);
+        $this->reportValidator($request);
 
         $this->authorize('report', $user);
 
         $report = new Report();
 
-        $report->reason = $requestData['reason'];
+        $report->reason = $request->input('reason');
         $report->user_profile_id = $user->id;
         $report->creator_id = $request->user()->id;
         $report->save();
@@ -188,8 +189,8 @@ class UserController extends Controller {
         return redirect()->route('user.profile', ['user' => $user]);
     }
 
-    protected function reportValidator(array $data) {
-        return Validator::make($data, [
+    protected function reportValidator(Request $request) {
+        return Validator::make($request->all(), [
             'reason' => 'string|min:6|max:512'
         ]);
     }
