@@ -57,7 +57,7 @@ CREATE TABLE project (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     creation_date TODAY NOT NULL,
-    last_modification_date TIMESTAMP,
+    edit_date TIMESTAMP,
     archived BOOLEAN NOT NULL DEFAULT false,
     coordinator INTEGER NOT NULL,
     FOREIGN KEY (coordinator) REFERENCES user_profile ON DELETE RESTRICT

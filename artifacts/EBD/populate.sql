@@ -167,7 +167,7 @@ INSERT INTO
         id,
         name,
         creation_date,
-        last_modification_date,
+        edit_date,
         archived,
         coordinator
     )

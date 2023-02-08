@@ -17,9 +17,9 @@
             </p>
             <p>
                 Last edited
-                <time data-render-datetime="last_modification_date.iso" data-render-text="last_modification_date.long_diff"
-                    datetime="{{ $project->last_modification_date ? $project->last_modification_date['iso'] : '' }}">
-                    {{ $project->last_modification_date ? $project->last_modification_date['long_diff'] : 'never' }}
+                <time data-render-datetime="edit_date.iso" data-render-text="edit_date.long_diff"
+                    datetime="{{ $project->edit_date ? $project->edit_date['iso'] : '' }}">
+                    {{ $project->edit_date ? $project->edit_date['long_diff'] : 'never' }}
                 </time>
             </p>
         </header>

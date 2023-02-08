@@ -110,7 +110,7 @@ VALUES
   );
 
 INSERT INTO project(
-  name, creation_date, last_modification_date, 
+  name, creation_date, edit_date, 
   archived, coordinator_id
 ) 
 VALUES 

@@ -11,8 +11,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Task extends Model {
     use Notifiable, HasFactory;
 
-    protected $CREATED_AT = 'creation_date';
-    protected $UPDATED_AT = 'edit_date';
+    const CREATED_AT = 'creation_date';
+    const UPDATED_AT = 'edit_date';
 
     /**
      * The attributes that are mass assignable.

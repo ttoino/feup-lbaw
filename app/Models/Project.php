@@ -13,8 +13,8 @@ use Spatie\LaravelMarkdown\MarkdownRenderer;
 class Project extends Model {
     use HasFactory;
 
-    protected $CREATED_AT = 'creation_date';
-    protected $UPDATED_AT = 'last_modification_date';
+    const CREATED_AT = 'creation_date';
+    const UPDATED_AT = 'edit_date';
 
     /**
      * The attributes that are mass assignable.
@@ -26,7 +26,7 @@ class Project extends Model {
         'archived',
         'description',
         'coordinator_id',
-        'last_modification_date'
+        'edit_date'
     ];
 
     /**
@@ -40,7 +40,7 @@ class Project extends Model {
 
     protected $casts = [
         'creation_date' => Datetime::class,
-        'last_modification_date' => Datetime::class,
+        'edit_date' => Datetime::class,
         'description' => Markdown::class
     ];
 

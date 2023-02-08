@@ -35,7 +35,8 @@ class User extends Authenticatable implements MustVerifyEmail {
         'email',
         'password',
         'blocked',
-        'is_admin'
+        'is_admin',
+        'profile_picture_path'
     ];
 
     /**
@@ -50,10 +51,6 @@ class User extends Authenticatable implements MustVerifyEmail {
 
     protected $casts = [
         'is_admin' => 'boolean',
-    ];
-
-    protected $appends = [
-        'profile_pic'
     ];
 
     protected $dispatchesEvents = [
@@ -86,8 +83,8 @@ class User extends Authenticatable implements MustVerifyEmail {
     protected function profilePic(): Attribute {
         return Attribute::make(get: function ($_, $attributes) {
 
-            if (Storage::exists($attributes['profile_pic']))
-                return Storage::url($attributes['profile_pic']);
+            if ($attributes['profile_picture_path'] !== null && Storage::exists($attributes['profile_picture_path']))
+                return Storage::url($attributes['profile_picture_path']);
 
             if (Storage::exists("public/users/{$attributes['id']}.webp"))
                 return Storage::url("public/users/{$attributes['id']}.webp");

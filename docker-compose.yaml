@@ -46,6 +46,8 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: pg!password
+    ports:
+      - "5432:5432"
     expose:
       - "5432"
 
