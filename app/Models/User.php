@@ -83,8 +83,8 @@ class User extends Authenticatable implements MustVerifyEmail {
     protected function profilePic(): Attribute {
         return Attribute::make(get: function ($_, $attributes) {
 
-            if ($attributes['profile_picture_path'] !== null && Storage::exists($attributes['profile_picture_path']))
-                return Storage::url($attributes['profile_picture_path']);
+            if ($attributes['profile_picture_path'] !== null)
+                return $attributes['profile_picture_path'];
 
             if (Storage::exists("public/users/{$attributes['id']}.webp"))
                 return Storage::url("public/users/{$attributes['id']}.webp");

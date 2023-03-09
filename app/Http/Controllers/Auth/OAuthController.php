@@ -28,6 +28,7 @@ class OAuthController extends Controller {
                 'email' => $oAuthUser->getEmail(),
                 'name' => $oAuthUser->getName(),
                 'password' => bcrypt(Str::random()), // encrypt in case of data leaks
+                'profile_picture_path' => $oAuthUser->getAvatar()
             ]);
         }
 
