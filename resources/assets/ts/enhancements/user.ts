@@ -95,23 +95,22 @@ registerEnhancement<HTMLFormElement>({
         ),
 });
 
+// TODO: Move this to user page script
 registerEnhancement<HTMLElement>({
     selector: "main",
     onattach: (el) => {
-
-        const userId = [...location.pathname.matchAll(/user\/(\d+)/g)][0][1];
+        const userId = /user\/(\d+)/.exec(location.pathname)?.[0][1];
 
         if (!userId) return;
 
         const deleteUserButton =
             el.querySelector<HTMLButtonElement>("button.delete-user");
-        deleteUserButton?.addEventListener("click", async () => {
 
+        deleteUserButton?.addEventListener("click", async () => {
             const result = await tryRequest(deleteUser, undefined, userId);
 
             if (result)
                 window.location.reload();
-
         });
     }
 })
