@@ -19,7 +19,8 @@ class User extends Authenticatable implements MustVerifyEmail {
     const DELETED_USER = [
         'id' => 0,
         'name' => 'Deleted user',
-        'email' => 'Deleted user'
+        'email' => 'Deleted user',
+        'profile_picture_path' => 'public/logo.svg'
     ];
 
     // Don't add create and update timestamps in database.
