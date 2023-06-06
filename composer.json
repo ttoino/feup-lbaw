@@ -11,7 +11,6 @@
         "php": "^8.0",
         "ext-gd": "*",
         "fideloper/proxy": "^4.4",
-        "fruitcake/laravel-cors": "^3.0",
         "laravel/framework": "^9.0",
         "laravel/socialite": "^5.5",
         "laravel/ui": "^4.0",
