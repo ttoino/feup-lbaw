@@ -1,26 +1,20 @@
-# Atrellado
+# FEUP-LBAW-PROJ
 
-## lbaw2265
+Group project for the LBAW course unit at FEUP.
 
-### Release url
+[Old readme](README.old.md)\
+[Final website](https://atrellado.toino.pt/)
 
-<https://lbaw2265.lbaw.fe.up.pt>
+## Unit info
 
-## Docker command
+* **Name**: Laboratório de Bases de Dados e Aplicações Web (Database and Web Applications Laboratory)
+* **Date**: Year 3, Semester 1, 2022/23
+* [**More info**](https://sigarra.up.pt/feup/ucurr_geral.ficha_uc_view?pv_ocorrencia_id=501685)
 
-`docker run --rm -it -p 80:80 --name=lbaw2265-prod  --network=lbaw_default git.fe.up.pt:5050/lbaw/lbaw2223/lbaw2265`
+## Disclaimer
 
-### Credentials
+This repository (and all others with the name format `feup-*`) are for archival and educational purposes only.
 
-#### Administration
+If you don't understand some part of the code or anything else in this repo, feel free to ask (although I may not understand it myself anymore).
 
-| Username     | Email              | Password    |
-| ------------ | ------------------ | ----------- |
-| Opal Kautzer | admin0@example.com | password123 |
-
-#### Users
-
-| Role                | Username      | Email                   | Password    |
-| ------------------- | ------------- | ----------------------- | ----------- |
-| Project coordinator | Nuno Peartree | coordinator@example.com | password123 |
-| Project member      | John Anthony  | user@example.com        | password123 |
+Keep in mind that this repo is public. If you copy any code and use it in your school projects you may be flagged for plagiarism by automated tools.
